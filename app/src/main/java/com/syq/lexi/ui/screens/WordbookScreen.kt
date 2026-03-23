@@ -19,13 +19,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,31 +36,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-data class Wordbook(
-    val id: Int,
-    val name: String,
-    val wordCount: Int,
-    val masteredCount: Int,
-    val category: String
-)
+import com.syq.lexi.data.database.WordbookEntity
 
 @Composable
 fun WordbookScreen(
     onMenuClick: () -> Unit,
-    innerPadding: PaddingValues
+    innerPadding: PaddingValues,
+    viewModel: com.syq.lexi.ui.viewmodel.WordbookViewModel? = null,
+    onWordbookClick: (WordbookEntity) -> Unit = {}
 ) {
-    val wordbooks = remember {
-        mutableStateOf(
-            listOf(
-                Wordbook(1, "高考必背词汇", 3500, 1200, "高考"),
-                Wordbook(2, "四级词汇", 2500, 800, "四级"),
-                Wordbook(3, "六级词汇", 5500, 2100, "六级"),
-                Wordbook(4, "雅思词汇", 4000, 1500, "雅思"),
-                Wordbook(5, "托福词汇", 4500, 1800, "托福")
-            )
-        )
-    }
+    val wordbooks = viewModel?.wordbooks?.collectAsState()?.value ?: emptyList()
+    val isLoading = viewModel?.isLoading?.collectAsState()?.value ?: false
+    val showImportDialog = remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -81,32 +71,60 @@ fun WordbookScreen(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
-            Box(modifier = Modifier.size(48.dp))
+            IconButton(onClick = { showImportDialog.value = true }) {
+                Icon(Icons.Default.Add, contentDescription = "导入单词本")
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 单词本列表
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(bottom = 16.dp)
-        ) {
-            items(wordbooks.value) { wordbook ->
-                WordbookCard(wordbook)
+        if (isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
+            // 单词本列表
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(bottom = 16.dp)
+            ) {
+                items(wordbooks) { wordbook ->
+                    WordbookCard(
+                        wordbook = wordbook,
+                        onCardClick = { onWordbookClick(wordbook) }
+                    )
+                }
             }
         }
+    }
+
+    // 导入对话框
+    if (showImportDialog.value) {
+        ImportWordbookDialog(
+            onDismiss = { showImportDialog.value = false },
+            onImport = { name, description ->
+                // TODO: 实现导入逻辑
+                // 这里可以调用 viewModel 的方法来添加新的单词本
+            }
+        )
     }
 }
 
 @Composable
-fun WordbookCard(wordbook: Wordbook) {
+fun WordbookCard(
+    wordbook: WordbookEntity,
+    onCardClick: () -> Unit = {}
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { },
+            .clickable { onCardClick() },
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
@@ -134,12 +152,12 @@ fun WordbookCard(wordbook: Wordbook) {
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     Text(
-                        "共${wordbook.wordCount}词",
+                        "共${wordbook.totalWords}词",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
-                        "已掌握${wordbook.masteredCount}词",
+                        "分类: ${wordbook.category}",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -147,27 +165,12 @@ fun WordbookCard(wordbook: Wordbook) {
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // 进度条
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(6.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f),
-                            shape = RoundedCornerShape(3.dp)
-                        )
-                ) {
-                    val progress = wordbook.masteredCount.toFloat() / wordbook.wordCount
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(progress)
-                            .height(6.dp)
-                            .background(
-                                color = MaterialTheme.colorScheme.primary,
-                                shape = RoundedCornerShape(3.dp)
-                            )
-                    )
-                }
+                Text(
+                    wordbook.description,
+                    fontSize = 11.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1
+                )
             }
 
             Icon(

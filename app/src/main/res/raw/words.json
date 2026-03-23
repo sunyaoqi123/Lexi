@@ -1,0 +1,275 @@
+{
+  "wordbooks": [
+    {
+      "id": 1,
+      "name": "高考词汇",
+      "category": "高考",
+      "description": "高考必背词汇",
+      "totalWords": 26
+    },
+    {
+      "id": 2,
+      "name": "四级词汇",
+      "category": "四级",
+      "description": "英语四级考试词汇",
+      "totalWords": 26
+    },
+    {
+      "id": 3,
+      "name": "六级词汇",
+      "category": "六级",
+      "description": "英语六级考试词汇",
+      "totalWords": 26
+    },
+    {
+      "id": 4,
+      "name": "雅思词汇",
+      "category": "雅思",
+      "description": "雅思考试词汇",
+      "totalWords": 26
+    },
+    {
+      "id": 5,
+      "name": "托福词汇",
+      "category": "托福",
+      "description": "托福考试词汇",
+      "totalWords": 26
+    }
+  ],
+  "words": [
+    {
+      "wordbookId": 1,
+      "english": "abandon",
+      "chinese": "放弃",
+      "pronunciation": "əˈbændən",
+      "partOfSpeech": "v.",
+      "example": "Don't abandon your dreams.",
+      "exampleTranslation": "不要放弃你的梦想。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "brilliant",
+      "chinese": "杰出的",
+      "pronunciation": "ˈbrɪljənt",
+      "partOfSpeech": "adj.",
+      "example": "She is a brilliant student.",
+      "exampleTranslation": "她是一个杰出的学生。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "challenge",
+      "chinese": "挑战",
+      "pronunciation": "ˈtʃælɪndʒ",
+      "partOfSpeech": "n.",
+      "example": "This is a great challenge.",
+      "exampleTranslation": "这是一个很大的挑战。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "develop",
+      "chinese": "发展",
+      "pronunciation": "dɪˈveləp",
+      "partOfSpeech": "v.",
+      "example": "We need to develop new skills.",
+      "exampleTranslation": "我们需要发展新技能。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "excellent",
+      "chinese": "优秀的",
+      "pronunciation": "ˈeksələnt",
+      "partOfSpeech": "adj.",
+      "example": "Your work is excellent.",
+      "exampleTranslation": "你的工作很优秀。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "famous",
+      "chinese": "著名的",
+      "pronunciation": "ˈfeɪməs",
+      "partOfSpeech": "adj.",
+      "example": "He is a famous actor.",
+      "exampleTranslation": "他是一位著名的演员。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "generous",
+      "chinese": "慷慨的",
+      "pronunciation": "ˈdʒenərəs",
+      "partOfSpeech": "adj.",
+      "example": "He is very generous.",
+      "exampleTranslation": "他很慷慨。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "honest",
+      "chinese": "诚实的",
+      "pronunciation": "ˈɑːnɪst",
+      "partOfSpeech": "adj.",
+      "example": "Be honest with yourself.",
+      "exampleTranslation": "对自己要诚实。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "imagine",
+      "chinese": "想象",
+      "pronunciation": "ɪˈmædʒɪn",
+      "partOfSpeech": "v.",
+      "example": "Imagine a better future.",
+      "exampleTranslation": "想象一个更美好的未来。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "journey",
+      "chinese": "旅程",
+      "pronunciation": "ˈdʒɜːrni",
+      "partOfSpeech": "n.",
+      "example": "It was a long journey.",
+      "exampleTranslation": "这是一段漫长的旅程。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "knowledge",
+      "chinese": "知识",
+      "pronunciation": "ˈnɑːlɪdʒ",
+      "partOfSpeech": "n.",
+      "example": "Knowledge is power.",
+      "exampleTranslation": "知识就是力量。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "language",
+      "chinese": "语言",
+      "pronunciation": "ˈlæŋɡwɪdʒ",
+      "partOfSpeech": "n.",
+      "example": "English is a global language.",
+      "exampleTranslation": "英语是一种全球语言。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "memory",
+      "chinese": "记忆",
+      "pronunciation": "ˈmeməri",
+      "partOfSpeech": "n.",
+      "example": "I have a good memory.",
+      "exampleTranslation": "我有很好的记忆力。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "nature",
+      "chinese": "自然",
+      "pronunciation": "ˈneɪtʃər",
+      "partOfSpeech": "n.",
+      "example": "Nature is beautiful.",
+      "exampleTranslation": "自然很美。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "opportunity",
+      "chinese": "机会",
+      "pronunciation": "ˌɑːpərˈtuːnəti",
+      "partOfSpeech": "n.",
+      "example": "This is a great opportunity.",
+      "exampleTranslation": "这是一个很好的机会。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "patience",
+      "chinese": "耐心",
+      "pronunciation": "ˈpeɪʃəns",
+      "partOfSpeech": "n.",
+      "example": "Patience is a virtue.",
+      "exampleTranslation": "耐心是一种美德。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "quality",
+      "chinese": "质量",
+      "pronunciation": "ˈkwɑːləti",
+      "partOfSpeech": "n.",
+      "example": "Quality is important.",
+      "exampleTranslation": "质量很重要。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "respect",
+      "chinese": "尊重",
+      "pronunciation": "rɪˈspekt",
+      "partOfSpeech": "v.",
+      "example": "Respect others.",
+      "exampleTranslation": "尊重他人。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "success",
+      "chinese": "成功",
+      "pronunciation": "səkˈses",
+      "partOfSpeech": "n.",
+      "example": "Success requires hard work.",
+      "exampleTranslation": "成功需要努力工作。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "truth",
+      "chinese": "真理",
+      "pronunciation": "ˈtruːθ",
+      "partOfSpeech": "n.",
+      "example": "Truth is important.",
+      "exampleTranslation": "真理很重要。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "understand",
+      "chinese": "理解",
+      "pronunciation": "ˌʌndərˈstænd",
+      "partOfSpeech": "v.",
+      "example": "Do you understand?",
+      "exampleTranslation": "你理解吗？"
+    },
+    {
+      "wordbookId": 1,
+      "english": "value",
+      "chinese": "价值",
+      "pronunciation": "ˈvæljuː",
+      "partOfSpeech": "n.",
+      "example": "What is the value?",
+      "exampleTranslation": "价值是什么？"
+    },
+    {
+      "wordbookId": 1,
+      "english": "wisdom",
+      "chinese": "智慧",
+      "pronunciation": "ˈwɪzdəm",
+      "partOfSpeech": "n.",
+      "example": "Wisdom comes with age.",
+      "exampleTranslation": "智慧随年龄增长。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "xray",
+      "chinese": "X射线",
+      "pronunciation": "ˈeksreɪ",
+      "partOfSpeech": "n.",
+      "example": "The doctor ordered an xray.",
+      "exampleTranslation": "医生要求做X光检查。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "young",
+      "chinese": "年轻的",
+      "pronunciation": "jʌŋ",
+      "partOfSpeech": "adj.",
+      "example": "He is young.",
+      "exampleTranslation": "他很年轻。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "zero",
+      "chinese": "零",
+      "pronunciation": "ˈzɪroʊ",
+      "partOfSpeech": "n.",
+      "example": "The temperature is zero.",
+      "exampleTranslation": "温度是零。"
+    }
+  ]
+}
