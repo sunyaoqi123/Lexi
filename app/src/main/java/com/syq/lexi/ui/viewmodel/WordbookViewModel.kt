@@ -160,7 +160,7 @@ class WordbookViewModel(private val repository: WordbookRepository) : ViewModel(
         }
     }
 
-    fun addWordsToWordbook(wordbookId: Int, words: List<com.syq.lexi.ui.screens.ParsedWord>) {
+    fun addWordsToWordbook(wordbookId: Int, words: List<com.syq.lexi.ui.screens.ParsedWord>, onResult: ((added: Int, merged: Int, skipped: Int) -> Unit)? = null) {
         viewModelScope.launch {
             try {
                 val wordEntities = words.map { parsed ->
@@ -177,6 +177,7 @@ class WordbookViewModel(private val repository: WordbookRepository) : ViewModel(
                 repository.updateWordbook(wordbook.copy(totalWords = wordbook.totalWords + added))
 
                 Log.d("WordbookViewModel", "Words added=$added merged=$merged skipped=$skipped")
+                onResult?.invoke(added, merged, skipped)
             } catch (e: Exception) {
                 Log.e("WordbookViewModel", "Error adding words to wordbook", e)
             }

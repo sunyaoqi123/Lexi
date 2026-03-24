@@ -141,12 +141,14 @@ fun StudyScreenGrouped(
                     wordbookName = wordbookName,
                     onDismiss = { showAddWordsDialog.value = false },
                     onAdd = { words ->
-                        viewModel?.addWordsToWordbook(wordbookId, words)
-                        android.widget.Toast.makeText(
-                            context,
-                            "成功添加 ${words.size} 个单词",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        viewModel?.addWordsToWordbook(wordbookId, words) { added, merged, skipped ->
+                            val parts = mutableListOf<String>()
+                            if (added > 0) parts.add("新增${added}个单词")
+                            if (skipped > 0) parts.add("${skipped}个重复单词")
+                            if (merged > 0) parts.add("新增${merged}个释义")
+                            val msg = parts.joinToString("，")
+                            android.widget.Toast.makeText(context, msg, android.widget.Toast.LENGTH_SHORT).show()
+                        }
                     }
                 )
             }
