@@ -5,35 +5,35 @@
       "name": "高考词汇",
       "category": "高考",
       "description": "高考必背词汇",
-      "totalWords": 26
+      "totalWords": 200
     },
     {
       "id": 2,
       "name": "四级词汇",
       "category": "四级",
       "description": "英语四级考试词汇",
-      "totalWords": 26
+      "totalWords": 101
     },
     {
       "id": 3,
       "name": "六级词汇",
       "category": "六级",
       "description": "英语六级考试词汇",
-      "totalWords": 26
+      "totalWords": 100
     },
     {
       "id": 4,
       "name": "雅思词汇",
       "category": "雅思",
       "description": "雅思考试词汇",
-      "totalWords": 26
+      "totalWords": 100
     },
     {
       "id": 5,
       "name": "托福词汇",
       "category": "托福",
       "description": "托福考试词汇",
-      "totalWords": 26
+      "totalWords": 100
     }
   ],
   "words": [
@@ -41,235 +41,5410 @@
       "wordbookId": 1,
       "english": "abandon",
       "chinese": "放弃",
-      "pronunciation": "əˈbændən",
+      "pronunciation": "ebændən",
       "partOfSpeech": "v.",
-      "example": "Don't abandon your dreams.",
-      "exampleTranslation": "不要放弃你的梦想。"
+      "example": "Never abandon your dreams.",
+      "exampleTranslation": "永远不要放弃你的梦想。"
     },
     {
       "wordbookId": 1,
-      "english": "brilliant",
-      "chinese": "杰出的",
-      "pronunciation": "ˈbrɪljənt",
+      "english": "ability",
+      "chinese": "能力",
+      "pronunciation": "ebIleti",
+      "partOfSpeech": "n.",
+      "example": "She has great ability.",
+      "exampleTranslation": "她有很强的能力。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "absent",
+      "chinese": "缺席的",
+      "pronunciation": "æbsent",
       "partOfSpeech": "adj.",
-      "example": "She is a brilliant student.",
-      "exampleTranslation": "她是一个杰出的学生。"
+      "example": "He was absent today.",
+      "exampleTranslation": "他今天缺席了。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "accept",
+      "chinese": "接受",
+      "pronunciation": "eksept",
+      "partOfSpeech": "v.",
+      "example": "Accept the challenge.",
+      "exampleTranslation": "接受挑战。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "achieve",
+      "chinese": "实现",
+      "pronunciation": "etSiːv",
+      "partOfSpeech": "v.",
+      "example": "Achieve your goals.",
+      "exampleTranslation": "实现你的目标。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "active",
+      "chinese": "积极的",
+      "pronunciation": "æktIv",
+      "partOfSpeech": "adj.",
+      "example": "Stay active daily.",
+      "exampleTranslation": "每天保持积极。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "admit",
+      "chinese": "承认",
+      "pronunciation": "edmIt",
+      "partOfSpeech": "v.",
+      "example": "Admit your mistakes.",
+      "exampleTranslation": "承认你的错误。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "advance",
+      "chinese": "进步",
+      "pronunciation": "edvæns",
+      "partOfSpeech": "v.",
+      "example": "Science advances fast.",
+      "exampleTranslation": "科学快速进步。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "advantage",
+      "chinese": "优势",
+      "pronunciation": "edvɑːntIdZ",
+      "partOfSpeech": "n.",
+      "example": "Use your advantage.",
+      "exampleTranslation": "利用你的优势。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "affect",
+      "chinese": "影响",
+      "pronunciation": "efekt",
+      "partOfSpeech": "v.",
+      "example": "Music affects mood.",
+      "exampleTranslation": "音乐影响情绪。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "afford",
+      "chinese": "负担得起",
+      "pronunciation": "efɔːrd",
+      "partOfSpeech": "v.",
+      "example": "Can you afford it?",
+      "exampleTranslation": "你负担得起吗？"
+    },
+    {
+      "wordbookId": 1,
+      "english": "agree",
+      "chinese": "同意",
+      "pronunciation": "eɡriː",
+      "partOfSpeech": "v.",
+      "example": "I agree with you.",
+      "exampleTranslation": "我同意你。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "allow",
+      "chinese": "允许",
+      "pronunciation": "elaʊ",
+      "partOfSpeech": "v.",
+      "example": "Allow me to help.",
+      "exampleTranslation": "允许我帮忙。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "ambition",
+      "chinese": "抱负",
+      "pronunciation": "æmbISn",
+      "partOfSpeech": "n.",
+      "example": "She has high ambition.",
+      "exampleTranslation": "她有远大抱负。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "ancient",
+      "chinese": "古老的",
+      "pronunciation": "eInSent",
+      "partOfSpeech": "adj.",
+      "example": "An ancient temple.",
+      "exampleTranslation": "一座古老的寺庙。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "announce",
+      "chinese": "宣布",
+      "pronunciation": "enaʊns",
+      "partOfSpeech": "v.",
+      "example": "Announce the winner.",
+      "exampleTranslation": "宣布获胜者。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "appear",
+      "chinese": "出现",
+      "pronunciation": "epIr",
+      "partOfSpeech": "v.",
+      "example": "Stars appear at night.",
+      "exampleTranslation": "星星夜晚出现。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "apply",
+      "chinese": "申请",
+      "pronunciation": "eplaI",
+      "partOfSpeech": "v.",
+      "example": "Apply for the job.",
+      "exampleTranslation": "申请这份工作。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "appreciate",
+      "chinese": "感谢",
+      "pronunciation": "epriːSIeIt",
+      "partOfSpeech": "v.",
+      "example": "I appreciate your help.",
+      "exampleTranslation": "我感谢你的帮助。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "argue",
+      "chinese": "争论",
+      "pronunciation": "ɑːrɡjuː",
+      "partOfSpeech": "v.",
+      "example": "Do not argue here.",
+      "exampleTranslation": "不要在这里争论。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "arrange",
+      "chinese": "安排",
+      "pronunciation": "ereIndZ",
+      "partOfSpeech": "v.",
+      "example": "Arrange the schedule.",
+      "exampleTranslation": "安排日程。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "attempt",
+      "chinese": "尝试",
+      "pronunciation": "etempt",
+      "partOfSpeech": "v.",
+      "example": "Attempt every question.",
+      "exampleTranslation": "尝试每道题。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "attend",
+      "chinese": "参加",
+      "pronunciation": "etend",
+      "partOfSpeech": "v.",
+      "example": "Attend every class.",
+      "exampleTranslation": "参加每节课。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "attract",
+      "chinese": "吸引",
+      "pronunciation": "etrækt",
+      "partOfSpeech": "v.",
+      "example": "Flowers attract bees.",
+      "exampleTranslation": "花吸引蜜蜂。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "avoid",
+      "chinese": "避免",
+      "pronunciation": "evɔId",
+      "partOfSpeech": "v.",
+      "example": "Avoid bad habits.",
+      "exampleTranslation": "避免坏习惯。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "aware",
+      "chinese": "知道的",
+      "pronunciation": "ewer",
+      "partOfSpeech": "adj.",
+      "example": "Be aware of risks.",
+      "exampleTranslation": "注意风险。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "benefit",
+      "chinese": "好处",
+      "pronunciation": "benIfIt",
+      "partOfSpeech": "n.",
+      "example": "Reading has benefits.",
+      "exampleTranslation": "阅读有好处。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "brave",
+      "chinese": "勇敢的",
+      "pronunciation": "breIv",
+      "partOfSpeech": "adj.",
+      "example": "Be brave always.",
+      "exampleTranslation": "永远要勇敢。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "build",
+      "chinese": "建造",
+      "pronunciation": "bIld",
+      "partOfSpeech": "v.",
+      "example": "Build your future.",
+      "exampleTranslation": "建设你的未来。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "calm",
+      "chinese": "冷静的",
+      "pronunciation": "kɑːm",
+      "partOfSpeech": "adj.",
+      "example": "Stay calm always.",
+      "exampleTranslation": "永远保持冷静。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "carry",
+      "chinese": "携带",
+      "pronunciation": "kæri",
+      "partOfSpeech": "v.",
+      "example": "Carry your ID card.",
+      "exampleTranslation": "携带身份证。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "cause",
+      "chinese": "原因",
+      "pronunciation": "kɔːz",
+      "partOfSpeech": "n.",
+      "example": "Find the root cause.",
+      "exampleTranslation": "找到根本原因。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "celebrate",
+      "chinese": "庆祝",
+      "pronunciation": "selIbreIt",
+      "partOfSpeech": "v.",
+      "example": "Celebrate your wins.",
+      "exampleTranslation": "庆祝你的胜利。"
     },
     {
       "wordbookId": 1,
       "english": "challenge",
       "chinese": "挑战",
-      "pronunciation": "ˈtʃælɪndʒ",
+      "pronunciation": "tSælIndZ",
       "partOfSpeech": "n.",
-      "example": "This is a great challenge.",
-      "exampleTranslation": "这是一个很大的挑战。"
+      "example": "Face every challenge.",
+      "exampleTranslation": "面对每个挑战。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "change",
+      "chinese": "改变",
+      "pronunciation": "tSeIndZ",
+      "partOfSpeech": "v.",
+      "example": "Change for the better.",
+      "exampleTranslation": "向更好改变。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "character",
+      "chinese": "品质",
+      "pronunciation": "kærektər",
+      "partOfSpeech": "n.",
+      "example": "Build good character.",
+      "exampleTranslation": "培养好品质。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "choose",
+      "chinese": "选择",
+      "pronunciation": "tSuːz",
+      "partOfSpeech": "v.",
+      "example": "Choose wisely.",
+      "exampleTranslation": "明智地选择。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "collect",
+      "chinese": "收集",
+      "pronunciation": "kelekt",
+      "partOfSpeech": "v.",
+      "example": "Collect useful data.",
+      "exampleTranslation": "收集有用数据。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "communicate",
+      "chinese": "交流",
+      "pronunciation": "kemjuːnIkeIt",
+      "partOfSpeech": "v.",
+      "example": "Communicate clearly.",
+      "exampleTranslation": "清晰地交流。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "compare",
+      "chinese": "比较",
+      "pronunciation": "kemper",
+      "partOfSpeech": "v.",
+      "example": "Compare and contrast.",
+      "exampleTranslation": "比较并对比。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "compete",
+      "chinese": "竞争",
+      "pronunciation": "kempiːt",
+      "partOfSpeech": "v.",
+      "example": "Compete with yourself.",
+      "exampleTranslation": "与自己竞争。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "complete",
+      "chinese": "完成",
+      "pronunciation": "kempliːt",
+      "partOfSpeech": "v.",
+      "example": "Complete the task.",
+      "exampleTranslation": "完成任务。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "consider",
+      "chinese": "考虑",
+      "pronunciation": "kensIder",
+      "partOfSpeech": "v.",
+      "example": "Consider all options.",
+      "exampleTranslation": "考虑所有选项。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "continue",
+      "chinese": "继续",
+      "pronunciation": "kentInjuː",
+      "partOfSpeech": "v.",
+      "example": "Continue your effort.",
+      "exampleTranslation": "继续你的努力。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "control",
+      "chinese": "控制",
+      "pronunciation": "kentrool",
+      "partOfSpeech": "v.",
+      "example": "Control your temper.",
+      "exampleTranslation": "控制你的脾气。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "create",
+      "chinese": "创造",
+      "pronunciation": "kriːeIt",
+      "partOfSpeech": "v.",
+      "example": "Create your destiny.",
+      "exampleTranslation": "创造你的命运。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "culture",
+      "chinese": "文化",
+      "pronunciation": "kʌltSer",
+      "partOfSpeech": "n.",
+      "example": "Respect every culture.",
+      "exampleTranslation": "尊重每种文化。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "curious",
+      "chinese": "好奇的",
+      "pronunciation": "kjʊries",
+      "partOfSpeech": "adj.",
+      "example": "Stay curious always.",
+      "exampleTranslation": "保持好奇心。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "damage",
+      "chinese": "损坏",
+      "pronunciation": "dæmIdZ",
+      "partOfSpeech": "v.",
+      "example": "Protect from damage.",
+      "exampleTranslation": "防止损坏。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "decide",
+      "chinese": "决定",
+      "pronunciation": "dIsaId",
+      "partOfSpeech": "v.",
+      "example": "Decide with care.",
+      "exampleTranslation": "谨慎地决定。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "decrease",
+      "chinese": "减少",
+      "pronunciation": "dIkriːs",
+      "partOfSpeech": "v.",
+      "example": "Costs decreased sharply.",
+      "exampleTranslation": "成本大幅减少。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "deliver",
+      "chinese": "递送",
+      "pronunciation": "dIlIver",
+      "partOfSpeech": "v.",
+      "example": "Deliver on promises.",
+      "exampleTranslation": "履行承诺。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "depend",
+      "chinese": "依靠",
+      "pronunciation": "dIpend",
+      "partOfSpeech": "v.",
+      "example": "Depend on yourself.",
+      "exampleTranslation": "依靠自己。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "describe",
+      "chinese": "描述",
+      "pronunciation": "dIskraIb",
+      "partOfSpeech": "v.",
+      "example": "Describe the scene.",
+      "exampleTranslation": "描述场景。"
     },
     {
       "wordbookId": 1,
       "english": "develop",
       "chinese": "发展",
-      "pronunciation": "dɪˈveləp",
+      "pronunciation": "dIvelep",
       "partOfSpeech": "v.",
-      "example": "We need to develop new skills.",
-      "exampleTranslation": "我们需要发展新技能。"
+      "example": "Develop new skills.",
+      "exampleTranslation": "发展新技能。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "difficult",
+      "chinese": "困难的",
+      "pronunciation": "dIfIkelt",
+      "partOfSpeech": "adj.",
+      "example": "Difficult but possible.",
+      "exampleTranslation": "困难但可能。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "discover",
+      "chinese": "发现",
+      "pronunciation": "dIskʌver",
+      "partOfSpeech": "v.",
+      "example": "Discover your passion.",
+      "exampleTranslation": "发现你的热情。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "discuss",
+      "chinese": "讨论",
+      "pronunciation": "dIskʌs",
+      "partOfSpeech": "v.",
+      "example": "Discuss ideas freely.",
+      "exampleTranslation": "自由讨论想法。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "dream",
+      "chinese": "梦想",
+      "pronunciation": "driːm",
+      "partOfSpeech": "n.",
+      "example": "Chase your dream.",
+      "exampleTranslation": "追逐你的梦想。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "earn",
+      "chinese": "赚取",
+      "pronunciation": "ɜːrn",
+      "partOfSpeech": "v.",
+      "example": "Earn through hard work.",
+      "exampleTranslation": "通过努力赚取。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "effort",
+      "chinese": "努力",
+      "pronunciation": "efert",
+      "partOfSpeech": "n.",
+      "example": "Every effort counts.",
+      "exampleTranslation": "每份努力都算数。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "encourage",
+      "chinese": "鼓励",
+      "pronunciation": "InkɜːrIdZ",
+      "partOfSpeech": "v.",
+      "example": "Encourage each other.",
+      "exampleTranslation": "互相鼓励。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "energy",
+      "chinese": "能量",
+      "pronunciation": "enerDZi",
+      "partOfSpeech": "n.",
+      "example": "Save energy daily.",
+      "exampleTranslation": "每天节约能源。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "enjoy",
+      "chinese": "享受",
+      "pronunciation": "IndZOI",
+      "partOfSpeech": "v.",
+      "example": "Enjoy the process.",
+      "exampleTranslation": "享受过程。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "environment",
+      "chinese": "环境",
+      "pronunciation": "InvaIernment",
+      "partOfSpeech": "n.",
+      "example": "Protect the environment.",
+      "exampleTranslation": "保护环境。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "escape",
+      "chinese": "逃脱",
+      "pronunciation": "IskeIp",
+      "partOfSpeech": "v.",
+      "example": "No escape from duty.",
+      "exampleTranslation": "无法逃避职责。"
     },
     {
       "wordbookId": 1,
       "english": "excellent",
       "chinese": "优秀的",
-      "pronunciation": "ˈeksələnt",
+      "pronunciation": "ekseLent",
       "partOfSpeech": "adj.",
-      "example": "Your work is excellent.",
-      "exampleTranslation": "你的工作很优秀。"
+      "example": "Excellent performance!",
+      "exampleTranslation": "优秀的表现！"
+    },
+    {
+      "wordbookId": 1,
+      "english": "exercise",
+      "chinese": "锻炼",
+      "pronunciation": "eksersaIz",
+      "partOfSpeech": "v.",
+      "example": "Exercise every morning.",
+      "exampleTranslation": "每天早上锻炼。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "experience",
+      "chinese": "经验",
+      "pronunciation": "IkspIriens",
+      "partOfSpeech": "n.",
+      "example": "Learn from experience.",
+      "exampleTranslation": "从经验中学习。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "explain",
+      "chinese": "解释",
+      "pronunciation": "IkspleIn",
+      "partOfSpeech": "v.",
+      "example": "Explain it simply.",
+      "exampleTranslation": "简单地解释。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "express",
+      "chinese": "表达",
+      "pronunciation": "Ikspres",
+      "partOfSpeech": "v.",
+      "example": "Express your ideas.",
+      "exampleTranslation": "表达你的想法。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "face",
+      "chinese": "面对",
+      "pronunciation": "feIs",
+      "partOfSpeech": "v.",
+      "example": "Face difficulties bravely.",
+      "exampleTranslation": "勇敢面对困难。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "fail",
+      "chinese": "失败",
+      "pronunciation": "feIl",
+      "partOfSpeech": "v.",
+      "example": "Fail and try again.",
+      "exampleTranslation": "失败后再尝试。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "familiar",
+      "chinese": "熟悉的",
+      "pronunciation": "femIlier",
+      "partOfSpeech": "adj.",
+      "example": "A familiar face.",
+      "exampleTranslation": "一张熟悉的脸。"
     },
     {
       "wordbookId": 1,
       "english": "famous",
       "chinese": "著名的",
-      "pronunciation": "ˈfeɪməs",
+      "pronunciation": "feImes",
       "partOfSpeech": "adj.",
-      "example": "He is a famous actor.",
-      "exampleTranslation": "他是一位著名的演员。"
+      "example": "A famous landmark.",
+      "exampleTranslation": "一个著名地标。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "focus",
+      "chinese": "专注",
+      "pronunciation": "foʊkes",
+      "partOfSpeech": "v.",
+      "example": "Focus on your goal.",
+      "exampleTranslation": "专注于你的目标。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "follow",
+      "chinese": "遵循",
+      "pronunciation": "fɑːloʊ",
+      "partOfSpeech": "v.",
+      "example": "Follow your heart.",
+      "exampleTranslation": "跟随你的内心。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "forget",
+      "chinese": "忘记",
+      "pronunciation": "ferɡet",
+      "partOfSpeech": "v.",
+      "example": "Never forget kindness.",
+      "exampleTranslation": "永远不忘善意。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "freedom",
+      "chinese": "自由",
+      "pronunciation": "friːdem",
+      "partOfSpeech": "n.",
+      "example": "Value your freedom.",
+      "exampleTranslation": "珍视你的自由。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "friendly",
+      "chinese": "友好的",
+      "pronunciation": "frendli",
+      "partOfSpeech": "adj.",
+      "example": "Be friendly always.",
+      "exampleTranslation": "永远要友好。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "future",
+      "chinese": "未来",
+      "pronunciation": "fjuːtSer",
+      "partOfSpeech": "n.",
+      "example": "Build a bright future.",
+      "exampleTranslation": "建设光明的未来。"
     },
     {
       "wordbookId": 1,
       "english": "generous",
       "chinese": "慷慨的",
-      "pronunciation": "ˈdʒenərəs",
+      "pronunciation": "DZeneres",
       "partOfSpeech": "adj.",
-      "example": "He is very generous.",
-      "exampleTranslation": "他很慷慨。"
+      "example": "Be generous to others.",
+      "exampleTranslation": "对他人慷慨。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "goal",
+      "chinese": "目标",
+      "pronunciation": "ɡoʊl",
+      "partOfSpeech": "n.",
+      "example": "Reach your goal.",
+      "exampleTranslation": "达到你的目标。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "grateful",
+      "chinese": "感激的",
+      "pronunciation": "ɡreItfl",
+      "partOfSpeech": "adj.",
+      "example": "Stay grateful daily.",
+      "exampleTranslation": "每天保持感激。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "grow",
+      "chinese": "成长",
+      "pronunciation": "ɡroʊ",
+      "partOfSpeech": "v.",
+      "example": "Grow through challenges.",
+      "exampleTranslation": "在挑战中成长。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "happen",
+      "chinese": "发生",
+      "pronunciation": "hæpen",
+      "partOfSpeech": "v.",
+      "example": "Good things happen.",
+      "exampleTranslation": "好事会发生。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "health",
+      "chinese": "健康",
+      "pronunciation": "helθ",
+      "partOfSpeech": "n.",
+      "example": "Health is everything.",
+      "exampleTranslation": "健康就是一切。"
     },
     {
       "wordbookId": 1,
       "english": "honest",
       "chinese": "诚实的",
-      "pronunciation": "ˈɑːnɪst",
+      "pronunciation": "ɑːnIst",
       "partOfSpeech": "adj.",
-      "example": "Be honest with yourself.",
-      "exampleTranslation": "对自己要诚实。"
+      "example": "Always be honest.",
+      "exampleTranslation": "永远要诚实。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "hope",
+      "chinese": "希望",
+      "pronunciation": "hoʊp",
+      "partOfSpeech": "n.",
+      "example": "Hope for the best.",
+      "exampleTranslation": "希望最好。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "ignore",
+      "chinese": "忽视",
+      "pronunciation": "IɡnɔːR",
+      "partOfSpeech": "v.",
+      "example": "Ignore negativity.",
+      "exampleTranslation": "忽视负面情绪。"
     },
     {
       "wordbookId": 1,
       "english": "imagine",
       "chinese": "想象",
-      "pronunciation": "ɪˈmædʒɪn",
+      "pronunciation": "ImæDZIn",
       "partOfSpeech": "v.",
-      "example": "Imagine a better future.",
-      "exampleTranslation": "想象一个更美好的未来。"
+      "example": "Imagine a better world.",
+      "exampleTranslation": "想象更好的世界。"
     },
     {
       "wordbookId": 1,
-      "english": "journey",
-      "chinese": "旅程",
-      "pronunciation": "ˈdʒɜːrni",
+      "english": "improve",
+      "chinese": "改善",
+      "pronunciation": "Impruːv",
+      "partOfSpeech": "v.",
+      "example": "Improve every day.",
+      "exampleTranslation": "每天进步。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "include",
+      "chinese": "包括",
+      "pronunciation": "InkluːD",
+      "partOfSpeech": "v.",
+      "example": "Include everyone.",
+      "exampleTranslation": "包括所有人。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "increase",
+      "chinese": "增加",
+      "pronunciation": "InkriːS",
+      "partOfSpeech": "v.",
+      "example": "Increase your knowledge.",
+      "exampleTranslation": "增加你的知识。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "influence",
+      "chinese": "影响",
+      "pronunciation": "Influens",
       "partOfSpeech": "n.",
-      "example": "It was a long journey.",
-      "exampleTranslation": "这是一段漫长的旅程。"
+      "example": "Have positive influence.",
+      "exampleTranslation": "产生积极影响。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "insist",
+      "chinese": "坚持",
+      "pronunciation": "InsIst",
+      "partOfSpeech": "v.",
+      "example": "Insist on quality.",
+      "exampleTranslation": "坚持质量。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "inspire",
+      "chinese": "激励",
+      "pronunciation": "InspaIer",
+      "partOfSpeech": "v.",
+      "example": "Inspire those around you.",
+      "exampleTranslation": "激励身边的人。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "interest",
+      "chinese": "兴趣",
+      "pronunciation": "Intrest",
+      "partOfSpeech": "n.",
+      "example": "Follow your interests.",
+      "exampleTranslation": "追随你的兴趣。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "join",
+      "chinese": "参加",
+      "pronunciation": "DZOIn",
+      "partOfSpeech": "v.",
+      "example": "Join the discussion.",
+      "exampleTranslation": "参加讨论。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "judge",
+      "chinese": "判断",
+      "pronunciation": "DZʌDZ",
+      "partOfSpeech": "v.",
+      "example": "Judge fairly always.",
+      "exampleTranslation": "永远公平地判断。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "keep",
+      "chinese": "保持",
+      "pronunciation": "kiːp",
+      "partOfSpeech": "v.",
+      "example": "Keep moving forward.",
+      "exampleTranslation": "继续前进。"
     },
     {
       "wordbookId": 1,
       "english": "knowledge",
       "chinese": "知识",
-      "pronunciation": "ˈnɑːlɪdʒ",
+      "pronunciation": "nɑːlIdZ",
       "partOfSpeech": "n.",
       "example": "Knowledge is power.",
       "exampleTranslation": "知识就是力量。"
     },
     {
       "wordbookId": 1,
-      "english": "language",
-      "chinese": "语言",
-      "pronunciation": "ˈlæŋɡwɪdʒ",
+      "english": "lead",
+      "chinese": "领导",
+      "pronunciation": "liːd",
+      "partOfSpeech": "v.",
+      "example": "Lead by example.",
+      "exampleTranslation": "以身作则。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "learn",
+      "chinese": "学习",
+      "pronunciation": "lɜːrn",
+      "partOfSpeech": "v.",
+      "example": "Learn something new daily.",
+      "exampleTranslation": "每天学习新事物。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "limit",
+      "chinese": "限制",
+      "pronunciation": "lImIt",
       "partOfSpeech": "n.",
-      "example": "English is a global language.",
-      "exampleTranslation": "英语是一种全球语言。"
+      "example": "Push your limits.",
+      "exampleTranslation": "突破你的极限。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "listen",
+      "chinese": "倾听",
+      "pronunciation": "lIsen",
+      "partOfSpeech": "v.",
+      "example": "Listen more than talk.",
+      "exampleTranslation": "多听少说。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "manage",
+      "chinese": "管理",
+      "pronunciation": "mænIdZ",
+      "partOfSpeech": "v.",
+      "example": "Manage your time well.",
+      "exampleTranslation": "合理管理时间。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "matter",
+      "chinese": "重要",
+      "pronunciation": "mæter",
+      "partOfSpeech": "v.",
+      "example": "Your opinion matters.",
+      "exampleTranslation": "你的意见很重要。"
     },
     {
       "wordbookId": 1,
       "english": "memory",
       "chinese": "记忆",
-      "pronunciation": "ˈmeməri",
+      "pronunciation": "memeri",
       "partOfSpeech": "n.",
-      "example": "I have a good memory.",
-      "exampleTranslation": "我有很好的记忆力。"
+      "example": "Create happy memories.",
+      "exampleTranslation": "创造快乐的记忆。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "method",
+      "chinese": "方法",
+      "pronunciation": "meθed",
+      "partOfSpeech": "n.",
+      "example": "Find the best method.",
+      "exampleTranslation": "找到最好的方法。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "mistake",
+      "chinese": "错误",
+      "pronunciation": "mIsteIk",
+      "partOfSpeech": "n.",
+      "example": "Learn from mistakes.",
+      "exampleTranslation": "从错误中学习。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "motivate",
+      "chinese": "激励",
+      "pronunciation": "moʊtIveIt",
+      "partOfSpeech": "v.",
+      "example": "Motivate yourself daily.",
+      "exampleTranslation": "每天激励自己。"
     },
     {
       "wordbookId": 1,
       "english": "nature",
       "chinese": "自然",
-      "pronunciation": "ˈneɪtʃər",
+      "pronunciation": "neItSer",
       "partOfSpeech": "n.",
-      "example": "Nature is beautiful.",
-      "exampleTranslation": "自然很美。"
+      "example": "Respect nature always.",
+      "exampleTranslation": "永远尊重自然。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "necessary",
+      "chinese": "必要的",
+      "pronunciation": "nesIseri",
+      "partOfSpeech": "adj.",
+      "example": "Change is necessary.",
+      "exampleTranslation": "改变是必要的。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "notice",
+      "chinese": "注意",
+      "pronunciation": "noʊtIs",
+      "partOfSpeech": "v.",
+      "example": "Notice small details.",
+      "exampleTranslation": "注意细节。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "offer",
+      "chinese": "提供",
+      "pronunciation": "ɑːfer",
+      "partOfSpeech": "v.",
+      "example": "Offer help to others.",
+      "exampleTranslation": "向他人提供帮助。"
     },
     {
       "wordbookId": 1,
       "english": "opportunity",
       "chinese": "机会",
-      "pronunciation": "ˌɑːpərˈtuːnəti",
+      "pronunciation": "ɑːpertjuːnIti",
       "partOfSpeech": "n.",
-      "example": "This is a great opportunity.",
-      "exampleTranslation": "这是一个很好的机会。"
+      "example": "Seize every opportunity.",
+      "exampleTranslation": "抓住每个机会。"
     },
     {
       "wordbookId": 1,
-      "english": "patience",
-      "chinese": "耐心",
-      "pronunciation": "ˈpeɪʃəns",
+      "english": "organize",
+      "chinese": "组织",
+      "pronunciation": "ɔːrɡenaIz",
+      "partOfSpeech": "v.",
+      "example": "Organize your thoughts.",
+      "exampleTranslation": "整理你的思路。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "overcome",
+      "chinese": "克服",
+      "pronunciation": "oʊverkʌm",
+      "partOfSpeech": "v.",
+      "example": "Overcome your fears.",
+      "exampleTranslation": "克服你的恐惧。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "participate",
+      "chinese": "参与",
+      "pronunciation": "pɑːrtIsIpeIt",
+      "partOfSpeech": "v.",
+      "example": "Participate actively.",
+      "exampleTranslation": "积极参与。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "patient",
+      "chinese": "耐心的",
+      "pronunciation": "peISent",
+      "partOfSpeech": "adj.",
+      "example": "Be patient with yourself.",
+      "exampleTranslation": "对自己有耐心。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "perform",
+      "chinese": "表现",
+      "pronunciation": "perfɔːrm",
+      "partOfSpeech": "v.",
+      "example": "Perform your best.",
+      "exampleTranslation": "发挥最佳水平。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "persist",
+      "chinese": "坚持",
+      "pronunciation": "persIst",
+      "partOfSpeech": "v.",
+      "example": "Persist through hardship.",
+      "exampleTranslation": "坚持度过困难。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "plan",
+      "chinese": "计划",
+      "pronunciation": "plæn",
       "partOfSpeech": "n.",
-      "example": "Patience is a virtue.",
-      "exampleTranslation": "耐心是一种美德。"
+      "example": "Make a solid plan.",
+      "exampleTranslation": "制定一个扎实的计划。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "positive",
+      "chinese": "积极的",
+      "pronunciation": "pɑːzetIv",
+      "partOfSpeech": "adj.",
+      "example": "Stay positive always.",
+      "exampleTranslation": "始终保持积极。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "practice",
+      "chinese": "练习",
+      "pronunciation": "præktIs",
+      "partOfSpeech": "v.",
+      "example": "Practice makes perfect.",
+      "exampleTranslation": "熟能生巧。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "prepare",
+      "chinese": "准备",
+      "pronunciation": "prIper",
+      "partOfSpeech": "v.",
+      "example": "Prepare for success.",
+      "exampleTranslation": "为成功做准备。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "present",
+      "chinese": "展示",
+      "pronunciation": "prezent",
+      "partOfSpeech": "v.",
+      "example": "Present your ideas clearly.",
+      "exampleTranslation": "清楚地展示你的想法。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "problem",
+      "chinese": "问题",
+      "pronunciation": "prɑːblem",
+      "partOfSpeech": "n.",
+      "example": "Solve every problem.",
+      "exampleTranslation": "解决每个问题。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "process",
+      "chinese": "过程",
+      "pronunciation": "prɑːses",
+      "partOfSpeech": "n.",
+      "example": "Enjoy the process.",
+      "exampleTranslation": "享受过程。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "progress",
+      "chinese": "进步",
+      "pronunciation": "prɑːɡres",
+      "partOfSpeech": "n.",
+      "example": "Track your progress.",
+      "exampleTranslation": "追踪你的进步。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "protect",
+      "chinese": "保护",
+      "pronunciation": "pretek t",
+      "partOfSpeech": "v.",
+      "example": "Protect what you love.",
+      "exampleTranslation": "保护你所爱的。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "provide",
+      "chinese": "提供",
+      "pronunciation": "prIvaId",
+      "partOfSpeech": "v.",
+      "example": "Provide value to others.",
+      "exampleTranslation": "为他人提供价值。"
     },
     {
       "wordbookId": 1,
       "english": "quality",
       "chinese": "质量",
-      "pronunciation": "ˈkwɑːləti",
+      "pronunciation": "kwɑːlIti",
       "partOfSpeech": "n.",
-      "example": "Quality is important.",
-      "exampleTranslation": "质量很重要。"
+      "example": "Focus on quality.",
+      "exampleTranslation": "专注于质量。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "question",
+      "chinese": "质疑",
+      "pronunciation": "kwestSen",
+      "partOfSpeech": "v.",
+      "example": "Question everything.",
+      "exampleTranslation": "质疑一切。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "realize",
+      "chinese": "意识到",
+      "pronunciation": "riːelaIz",
+      "partOfSpeech": "v.",
+      "example": "Realize your potential.",
+      "exampleTranslation": "实现你的潜力。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "receive",
+      "chinese": "接收",
+      "pronunciation": "rIsiv",
+      "partOfSpeech": "v.",
+      "example": "Receive feedback gracefully.",
+      "exampleTranslation": "优雅地接受反馈。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "recognize",
+      "chinese": "认识",
+      "pronunciation": "rekEɡnaIz",
+      "partOfSpeech": "v.",
+      "example": "Recognize your strengths.",
+      "exampleTranslation": "认识你的优势。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "reduce",
+      "chinese": "减少",
+      "pronunciation": "rIduːs",
+      "partOfSpeech": "v.",
+      "example": "Reduce waste daily.",
+      "exampleTranslation": "每天减少浪费。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "reflect",
+      "chinese": "反思",
+      "pronunciation": "rIfLekt",
+      "partOfSpeech": "v.",
+      "example": "Reflect on your actions.",
+      "exampleTranslation": "反思你的行为。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "remember",
+      "chinese": "记住",
+      "pronunciation": "rImember",
+      "partOfSpeech": "v.",
+      "example": "Remember important lessons.",
+      "exampleTranslation": "记住重要的教训。"
     },
     {
       "wordbookId": 1,
       "english": "respect",
       "chinese": "尊重",
-      "pronunciation": "rɪˈspekt",
+      "pronunciation": "rIspekt",
       "partOfSpeech": "v.",
-      "example": "Respect others.",
-      "exampleTranslation": "尊重他人。"
+      "example": "Respect everyone equally.",
+      "exampleTranslation": "平等地尊重每个人。"
     },
     {
       "wordbookId": 1,
-      "english": "success",
-      "chinese": "成功",
-      "pronunciation": "səkˈses",
+      "english": "responsibility",
+      "chinese": "责任",
+      "pronunciation": "rIspɑːnsIbIlIti",
       "partOfSpeech": "n.",
-      "example": "Success requires hard work.",
-      "exampleTranslation": "成功需要努力工作。"
+      "example": "Take responsibility.",
+      "exampleTranslation": "承担责任。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "result",
+      "chinese": "结果",
+      "pronunciation": "rIzʌlt",
+      "partOfSpeech": "n.",
+      "example": "Work for good results.",
+      "exampleTranslation": "努力取得好成绩。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "review",
+      "chinese": "复习",
+      "pronunciation": "rIvjuː",
+      "partOfSpeech": "v.",
+      "example": "Review your notes daily.",
+      "exampleTranslation": "每天复习笔记。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "reward",
+      "chinese": "奖励",
+      "pronunciation": "rIwɔːrd",
+      "partOfSpeech": "n.",
+      "example": "Hard work brings reward.",
+      "exampleTranslation": "努力带来回报。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "risk",
+      "chinese": "风险",
+      "pronunciation": "rIsk",
+      "partOfSpeech": "n.",
+      "example": "Take calculated risks.",
+      "exampleTranslation": "承担经过计算的风险。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "solve",
+      "chinese": "解决",
+      "pronunciation": "sɑːlv",
+      "partOfSpeech": "v.",
+      "example": "Solve problems creatively.",
+      "exampleTranslation": "创造性地解决问题。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "speak",
+      "chinese": "说话",
+      "pronunciation": "spiːk",
+      "partOfSpeech": "v.",
+      "example": "Speak with confidence.",
+      "exampleTranslation": "自信地说话。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "succeed",
+      "chinese": "成功",
+      "pronunciation": "seksed",
+      "partOfSpeech": "v.",
+      "example": "You will succeed.",
+      "exampleTranslation": "你会成功的。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "support",
+      "chinese": "支持",
+      "pronunciation": "seport",
+      "partOfSpeech": "v.",
+      "example": "Support each other.",
+      "exampleTranslation": "互相支持。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "talent",
+      "chinese": "天赋",
+      "pronunciation": "tæLent",
+      "partOfSpeech": "n.",
+      "example": "Use your talent well.",
+      "exampleTranslation": "善用你的天赋。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "task",
+      "chinese": "任务",
+      "pronunciation": "tæsk",
+      "partOfSpeech": "n.",
+      "example": "Complete every task.",
+      "exampleTranslation": "完成每项任务。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "teach",
+      "chinese": "教导",
+      "pronunciation": "tiːtS",
+      "partOfSpeech": "v.",
+      "example": "Teach with passion.",
+      "exampleTranslation": "充满热情地教导。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "teamwork",
+      "chinese": "团队合作",
+      "pronunciation": "tiːmwɜːrk",
+      "partOfSpeech": "n.",
+      "example": "Teamwork makes dreams work.",
+      "exampleTranslation": "团队合作使梦想成真。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "technology",
+      "chinese": "技术",
+      "pronunciation": "teknɑːleDZi",
+      "partOfSpeech": "n.",
+      "example": "Technology changes life.",
+      "exampleTranslation": "技术改变生活。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "think",
+      "chinese": "思考",
+      "pronunciation": "θIŋk",
+      "partOfSpeech": "v.",
+      "example": "Think before you act.",
+      "exampleTranslation": "行动前先思考。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "travel",
+      "chinese": "旅行",
+      "pronunciation": "trævel",
+      "partOfSpeech": "v.",
+      "example": "Travel broadens the mind.",
+      "exampleTranslation": "旅行开阔眼界。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "trust",
+      "chinese": "信任",
+      "pronunciation": "trʌst",
+      "partOfSpeech": "v.",
+      "example": "Trust takes time to build.",
+      "exampleTranslation": "信任需要时间建立。"
     },
     {
       "wordbookId": 1,
       "english": "truth",
-      "chinese": "真理",
-      "pronunciation": "ˈtruːθ",
+      "chinese": "真相",
+      "pronunciation": "truːθ",
       "partOfSpeech": "n.",
-      "example": "Truth is important.",
-      "exampleTranslation": "真理很重要。"
+      "example": "Always tell the truth.",
+      "exampleTranslation": "永远说实话。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "try",
+      "chinese": "尝试",
+      "pronunciation": "traI",
+      "partOfSpeech": "v.",
+      "example": "Try your best.",
+      "exampleTranslation": "尽力而为。"
     },
     {
       "wordbookId": 1,
       "english": "understand",
       "chinese": "理解",
-      "pronunciation": "ˌʌndərˈstænd",
+      "pronunciation": "ʌnderstænd",
       "partOfSpeech": "v.",
-      "example": "Do you understand?",
-      "exampleTranslation": "你理解吗？"
+      "example": "Understand before judging.",
+      "exampleTranslation": "理解后再评判。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "unique",
+      "chinese": "独特的",
+      "pronunciation": "juːniːk",
+      "partOfSpeech": "adj.",
+      "example": "You are unique.",
+      "exampleTranslation": "你是独特的。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "useful",
+      "chinese": "有用的",
+      "pronunciation": "juːsfel",
+      "partOfSpeech": "adj.",
+      "example": "Be useful to society.",
+      "exampleTranslation": "对社会有用。"
     },
     {
       "wordbookId": 1,
       "english": "value",
       "chinese": "价值",
-      "pronunciation": "ˈvæljuː",
+      "pronunciation": "væljuː",
       "partOfSpeech": "n.",
-      "example": "What is the value?",
-      "exampleTranslation": "价值是什么？"
+      "example": "Know your own value.",
+      "exampleTranslation": "了解自己的价值。"
     },
     {
       "wordbookId": 1,
-      "english": "wisdom",
-      "chinese": "智慧",
-      "pronunciation": "ˈwɪzdəm",
+      "english": "variety",
+      "chinese": "多样性",
+      "pronunciation": "veraIeti",
       "partOfSpeech": "n.",
-      "example": "Wisdom comes with age.",
-      "exampleTranslation": "智慧随年龄增长。"
+      "example": "Variety is the spice of life.",
+      "exampleTranslation": "多样性是生活的调味品。"
     },
     {
       "wordbookId": 1,
-      "english": "xray",
-      "chinese": "X射线",
-      "pronunciation": "ˈeksreɪ",
+      "english": "view",
+      "chinese": "观点",
+      "pronunciation": "vjuː",
       "partOfSpeech": "n.",
-      "example": "The doctor ordered an xray.",
-      "exampleTranslation": "医生要求做X光检查。"
+      "example": "Share your views.",
+      "exampleTranslation": "分享你的观点。"
     },
     {
       "wordbookId": 1,
-      "english": "young",
-      "chinese": "年轻的",
-      "pronunciation": "jʌŋ",
+      "english": "vision",
+      "chinese": "愿景",
+      "pronunciation": "vIZen",
+      "partOfSpeech": "n.",
+      "example": "Have a clear vision.",
+      "exampleTranslation": "有清晰的愿景。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "volunteer",
+      "chinese": "志愿者",
+      "pronunciation": "vɑːLentIr",
+      "partOfSpeech": "v.",
+      "example": "Volunteer in your community.",
+      "exampleTranslation": "在社区做志愿者。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "wonder",
+      "chinese": "惊奇",
+      "pronunciation": "wʌnder",
+      "partOfSpeech": "v.",
+      "example": "Wonder about the world.",
+      "exampleTranslation": "对世界感到惊奇。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "work",
+      "chinese": "工作",
+      "pronunciation": "wɜːrk",
+      "partOfSpeech": "v.",
+      "example": "Work hard every day.",
+      "exampleTranslation": "每天努力工作。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "worry",
+      "chinese": "担心",
+      "pronunciation": "wɜːri",
+      "partOfSpeech": "v.",
+      "example": "Do not worry too much.",
+      "exampleTranslation": "不要太担心。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "worth",
+      "chinese": "值得",
+      "pronunciation": "wɜːrθ",
       "partOfSpeech": "adj.",
-      "example": "He is young.",
-      "exampleTranslation": "他很年轻。"
+      "example": "It is worth the effort.",
+      "exampleTranslation": "这份努力是值得的。"
     },
     {
       "wordbookId": 1,
-      "english": "zero",
-      "chinese": "零",
-      "pronunciation": "ˈzɪroʊ",
+      "english": "write",
+      "chinese": "写作",
+      "pronunciation": "raIt",
+      "partOfSpeech": "v.",
+      "example": "Write down your goals.",
+      "exampleTranslation": "写下你的目标。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "achieve",
+      "chinese": "达成",
+      "pronunciation": "etSiːv",
+      "partOfSpeech": "v.",
+      "example": "Achieve great things.",
+      "exampleTranslation": "达成伟大的事情。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "action",
+      "chinese": "行动",
+      "pronunciation": "ækSen",
       "partOfSpeech": "n.",
-      "example": "The temperature is zero.",
-      "exampleTranslation": "温度是零。"
+      "example": "Take action now.",
+      "exampleTranslation": "现在采取行动。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "adapt",
+      "chinese": "适应",
+      "pronunciation": "edæpt",
+      "partOfSpeech": "v.",
+      "example": "Adapt to new situations.",
+      "exampleTranslation": "适应新情况。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "address",
+      "chinese": "解决",
+      "pronunciation": "edres",
+      "partOfSpeech": "v.",
+      "example": "Address the issue directly.",
+      "exampleTranslation": "直接解决问题。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "adopt",
+      "chinese": "采用",
+      "pronunciation": "edɑːpt",
+      "partOfSpeech": "v.",
+      "example": "Adopt healthy habits.",
+      "exampleTranslation": "采用健康的习惯。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "analysis",
+      "chinese": "分析",
+      "pronunciation": "enælesIs",
+      "partOfSpeech": "n.",
+      "example": "Do a careful analysis.",
+      "exampleTranslation": "做仔细的分析。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "apply",
+      "chinese": "运用",
+      "pronunciation": "eplaI",
+      "partOfSpeech": "v.",
+      "example": "Apply what you learn.",
+      "exampleTranslation": "运用你所学的。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "approach",
+      "chinese": "方式",
+      "pronunciation": "eproʊtS",
+      "partOfSpeech": "n.",
+      "example": "Try a different approach.",
+      "exampleTranslation": "尝试不同的方式。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "attitude",
+      "chinese": "态度",
+      "pronunciation": "ætItuːd",
+      "partOfSpeech": "n.",
+      "example": "Attitude determines success.",
+      "exampleTranslation": "态度决定成功。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "balance",
+      "chinese": "平衡",
+      "pronunciation": "bæLens",
+      "partOfSpeech": "n.",
+      "example": "Maintain a work-life balance.",
+      "exampleTranslation": "保持工作与生活的平衡。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "career",
+      "chinese": "职业",
+      "pronunciation": "kerIr",
+      "partOfSpeech": "n.",
+      "example": "Plan your career early.",
+      "exampleTranslation": "尽早规划你的职业。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "citizen",
+      "chinese": "公民",
+      "pronunciation": "sItIzen",
+      "partOfSpeech": "n.",
+      "example": "Be a responsible citizen.",
+      "exampleTranslation": "成为负责任的公民。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "community",
+      "chinese": "社区",
+      "pronunciation": "kemjuːnIti",
+      "partOfSpeech": "n.",
+      "example": "Give back to your community.",
+      "exampleTranslation": "回馈你的社区。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "conclusion",
+      "chinese": "结论",
+      "pronunciation": "kenkluzSen",
+      "partOfSpeech": "n.",
+      "example": "Draw a clear conclusion.",
+      "exampleTranslation": "得出清晰的结论。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "confidence",
+      "chinese": "自信",
+      "pronunciation": "kɑːnfIdents",
+      "partOfSpeech": "n.",
+      "example": "Build your confidence daily.",
+      "exampleTranslation": "每天建立自信。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "connect",
+      "chinese": "连接",
+      "pronunciation": "kenekt",
+      "partOfSpeech": "v.",
+      "example": "Connect with good people.",
+      "exampleTranslation": "与好人建立联系。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "contribute",
+      "chinese": "贡献",
+      "pronunciation": "kentrIbjuːt",
+      "partOfSpeech": "v.",
+      "example": "Contribute to the team.",
+      "exampleTranslation": "为团队做贡献。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "courage",
+      "chinese": "勇气",
+      "pronunciation": "kɜːrIdZ",
+      "partOfSpeech": "n.",
+      "example": "Have the courage to change.",
+      "exampleTranslation": "有改变的勇气。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "creative",
+      "chinese": "有创意的",
+      "pronunciation": "kriːeItIv",
+      "partOfSpeech": "adj.",
+      "example": "Be creative in thinking.",
+      "exampleTranslation": "在思考中有创意。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "critical",
+      "chinese": "关键的",
+      "pronunciation": "krItIkel",
+      "partOfSpeech": "adj.",
+      "example": "Critical thinking is vital.",
+      "exampleTranslation": "批判性思维至关重要。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "curiosity",
+      "chinese": "好奇心",
+      "pronunciation": "kjʊriɑːsIti",
+      "partOfSpeech": "n.",
+      "example": "Curiosity drives learning.",
+      "exampleTranslation": "好奇心驱动学习。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "dedicate",
+      "chinese": "致力于",
+      "pronunciation": "dedIkeIt",
+      "partOfSpeech": "v.",
+      "example": "Dedicate time to study.",
+      "exampleTranslation": "将时间用于学习。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "determination",
+      "chinese": "决心",
+      "pronunciation": "dItɜːrmIneISen",
+      "partOfSpeech": "n.",
+      "example": "Success needs determination.",
+      "exampleTranslation": "成功需要决心。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "discipline",
+      "chinese": "纪律",
+      "pronunciation": "dIsIplIn",
+      "partOfSpeech": "n.",
+      "example": "Discipline leads to freedom.",
+      "exampleTranslation": "纪律带来自由。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "education",
+      "chinese": "教育",
+      "pronunciation": "eDZukeISen",
+      "partOfSpeech": "n.",
+      "example": "Education opens doors.",
+      "exampleTranslation": "教育打开大门。"
+    },
+    {
+      "wordbookId": 1,
+      "english": "effective",
+      "chinese": "有效的",
+      "pronunciation": "IfektIv",
+      "partOfSpeech": "adj.",
+      "example": "Find effective solutions.",
+      "exampleTranslation": "找到有效的解决方案。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "academic",
+      "chinese": "学术的",
+      "pronunciation": "ækEdemIk",
+      "partOfSpeech": "adj.",
+      "example": "Academic performance matters.",
+      "exampleTranslation": "学术表现很重要。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "accelerate",
+      "chinese": "加速",
+      "pronunciation": "ekseLereIt",
+      "partOfSpeech": "v.",
+      "example": "Accelerate your learning.",
+      "exampleTranslation": "加速你的学习。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "accommodate",
+      "chinese": "容纳",
+      "pronunciation": "ekɑːmEdeIt",
+      "partOfSpeech": "v.",
+      "example": "Accommodate different views.",
+      "exampleTranslation": "容纳不同观点。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "accomplish",
+      "chinese": "完成",
+      "pronunciation": "ekɑːmplIS",
+      "partOfSpeech": "v.",
+      "example": "Accomplish your daily goals.",
+      "exampleTranslation": "完成你的每日目标。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "account",
+      "chinese": "账户",
+      "pronunciation": "ekaʊnt",
+      "partOfSpeech": "n.",
+      "example": "Open a bank account.",
+      "exampleTranslation": "开一个银行账户。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "accurate",
+      "chinese": "准确的",
+      "pronunciation": "ækjUret",
+      "partOfSpeech": "adj.",
+      "example": "Be accurate in your work.",
+      "exampleTranslation": "工作要准确。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "adapt",
+      "chinese": "适应",
+      "pronunciation": "edæpt",
+      "partOfSpeech": "v.",
+      "example": "Adapt to change quickly.",
+      "exampleTranslation": "快速适应变化。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "adequate",
+      "chinese": "足够的",
+      "pronunciation": "ædIkwet",
+      "partOfSpeech": "adj.",
+      "example": "Ensure adequate preparation.",
+      "exampleTranslation": "确保充分的准备。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "adjust",
+      "chinese": "调整",
+      "pronunciation": "eDZʌst",
+      "partOfSpeech": "v.",
+      "example": "Adjust your strategy.",
+      "exampleTranslation": "调整你的策略。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "administration",
+      "chinese": "管理",
+      "pronunciation": "edmInIstreISen",
+      "partOfSpeech": "n.",
+      "example": "Good administration is key.",
+      "exampleTranslation": "良好的管理是关键。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "adopt",
+      "chinese": "采纳",
+      "pronunciation": "edɑːpt",
+      "partOfSpeech": "v.",
+      "example": "Adopt a positive mindset.",
+      "exampleTranslation": "采纳积极的心态。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "advocate",
+      "chinese": "倡导",
+      "pronunciation": "ædvekeIt",
+      "partOfSpeech": "v.",
+      "example": "Advocate for equal rights.",
+      "exampleTranslation": "倡导平等权利。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "analyze",
+      "chinese": "分析",
+      "pronunciation": "ænElaIz",
+      "partOfSpeech": "v.",
+      "example": "Analyze the data carefully.",
+      "exampleTranslation": "仔细分析数据。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "annual",
+      "chinese": "年度的",
+      "pronunciation": "ænjuEl",
+      "partOfSpeech": "adj.",
+      "example": "The annual report is ready.",
+      "exampleTranslation": "年度报告准备好了。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "anticipate",
+      "chinese": "预期",
+      "pronunciation": "æntIsIpeIt",
+      "partOfSpeech": "v.",
+      "example": "Anticipate problems in advance.",
+      "exampleTranslation": "提前预期问题。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "anxiety",
+      "chinese": "焦虑",
+      "pronunciation": "æŋzaIEti",
+      "partOfSpeech": "n.",
+      "example": "Manage your anxiety well.",
+      "exampleTranslation": "好好管理你的焦虑。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "appeal",
+      "chinese": "吸引",
+      "pronunciation": "EpiːL",
+      "partOfSpeech": "v.",
+      "example": "This course appeals to me.",
+      "exampleTranslation": "这门课对我很有吸引力。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "assess",
+      "chinese": "评估",
+      "pronunciation": "EseS",
+      "partOfSpeech": "v.",
+      "example": "Assess your progress regularly.",
+      "exampleTranslation": "定期评估你的进度。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "assign",
+      "chinese": "分配",
+      "pronunciation": "EsaIn",
+      "partOfSpeech": "v.",
+      "example": "Assign tasks to team members.",
+      "exampleTranslation": "给团队成员分配任务。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "assume",
+      "chinese": "假设",
+      "pronunciation": "EsjuːM",
+      "partOfSpeech": "v.",
+      "example": "Never assume without facts.",
+      "exampleTranslation": "没有事实不要假设。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "attitude",
+      "chinese": "态度",
+      "pronunciation": "ætItuːd",
+      "partOfSpeech": "n.",
+      "example": "A positive attitude helps.",
+      "exampleTranslation": "积极的态度有帮助。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "attribute",
+      "chinese": "归因于",
+      "pronunciation": "EtrIbjuːt",
+      "partOfSpeech": "v.",
+      "example": "Attribute success to effort.",
+      "exampleTranslation": "将成功归因于努力。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "authority",
+      "chinese": "权威",
+      "pronunciation": "EθɔːrIti",
+      "partOfSpeech": "n.",
+      "example": "Respect those in authority.",
+      "exampleTranslation": "尊重权威人士。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "aware",
+      "chinese": "意识到",
+      "pronunciation": "Ewer",
+      "partOfSpeech": "adj.",
+      "example": "Be aware of your weaknesses.",
+      "exampleTranslation": "了解你的弱点。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "balance",
+      "chinese": "平衡",
+      "pronunciation": "bæLens",
+      "partOfSpeech": "n.",
+      "example": "Balance work and rest.",
+      "exampleTranslation": "平衡工作和休息。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "barrier",
+      "chinese": "障碍",
+      "pronunciation": "bærier",
+      "partOfSpeech": "n.",
+      "example": "Break down every barrier.",
+      "exampleTranslation": "打破每一个障碍。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "behavior",
+      "chinese": "行为",
+      "pronunciation": "bIheIvjer",
+      "partOfSpeech": "n.",
+      "example": "Good behavior earns respect.",
+      "exampleTranslation": "良好的行为赢得尊重。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "budget",
+      "chinese": "预算",
+      "pronunciation": "bʌDZet",
+      "partOfSpeech": "n.",
+      "example": "Stick to your budget.",
+      "exampleTranslation": "坚持你的预算。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "capable",
+      "chinese": "有能力的",
+      "pronunciation": "keIpEbel",
+      "partOfSpeech": "adj.",
+      "example": "You are capable of success.",
+      "exampleTranslation": "你有能力成功。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "career",
+      "chinese": "职业",
+      "pronunciation": "kerIr",
+      "partOfSpeech": "n.",
+      "example": "Choose a career you love.",
+      "exampleTranslation": "选择你热爱的职业。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "circumstance",
+      "chinese": "情况",
+      "pronunciation": "sɜːrKemstæns",
+      "partOfSpeech": "n.",
+      "example": "Adapt to circumstances.",
+      "exampleTranslation": "适应情况。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "citizen",
+      "chinese": "公民",
+      "pronunciation": "sItIzen",
+      "partOfSpeech": "n.",
+      "example": "Be an active citizen.",
+      "exampleTranslation": "成为积极的公民。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "clarify",
+      "chinese": "澄清",
+      "pronunciation": "klærEfaI",
+      "partOfSpeech": "v.",
+      "example": "Clarify your objectives.",
+      "exampleTranslation": "澄清你的目标。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "classify",
+      "chinese": "分类",
+      "pronunciation": "klæsEfaI",
+      "partOfSpeech": "v.",
+      "example": "Classify the information.",
+      "exampleTranslation": "对信息进行分类。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "colleague",
+      "chinese": "同事",
+      "pronunciation": "kɑːliːg",
+      "partOfSpeech": "n.",
+      "example": "Support your colleagues.",
+      "exampleTranslation": "支持你的同事。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "commitment",
+      "chinese": "承诺",
+      "pronunciation": "kEmItment",
+      "partOfSpeech": "n.",
+      "example": "Show commitment to your work.",
+      "exampleTranslation": "对工作表现出承诺。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "competent",
+      "chinese": "有能力的",
+      "pronunciation": "kɑːmpEtent",
+      "partOfSpeech": "adj.",
+      "example": "Become competent in your field.",
+      "exampleTranslation": "在你的领域变得有能力。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "concentrate",
+      "chinese": "集中",
+      "pronunciation": "kɑːnsenreIt",
+      "partOfSpeech": "v.",
+      "example": "Concentrate on one thing.",
+      "exampleTranslation": "专注于一件事。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "conclusion",
+      "chinese": "结论",
+      "pronunciation": "kenkluzSen",
+      "partOfSpeech": "n.",
+      "example": "Reach a logical conclusion.",
+      "exampleTranslation": "得出合理的结论。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "conflict",
+      "chinese": "冲突",
+      "pronunciation": "kɑːnflIkt",
+      "partOfSpeech": "n.",
+      "example": "Resolve conflict peacefully.",
+      "exampleTranslation": "和平解决冲突。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "consequence",
+      "chinese": "后果",
+      "pronunciation": "kɑːnsIkwens",
+      "partOfSpeech": "n.",
+      "example": "Think about the consequences.",
+      "exampleTranslation": "考虑后果。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "consistent",
+      "chinese": "一致的",
+      "pronunciation": "kensIstent",
+      "partOfSpeech": "adj.",
+      "example": "Be consistent in your efforts.",
+      "exampleTranslation": "在努力上保持一致。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "contribute",
+      "chinese": "贡献",
+      "pronunciation": "kentrIbjuːt",
+      "partOfSpeech": "v.",
+      "example": "Contribute to group projects.",
+      "exampleTranslation": "为团队项目做贡献。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "cooperate",
+      "chinese": "合作",
+      "pronunciation": "koʊɑːpEreIt",
+      "partOfSpeech": "v.",
+      "example": "Cooperate with your team.",
+      "exampleTranslation": "与团队合作。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "cope",
+      "chinese": "应对",
+      "pronunciation": "koʊp",
+      "partOfSpeech": "v.",
+      "example": "Cope with stress effectively.",
+      "exampleTranslation": "有效应对压力。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "crucial",
+      "chinese": "关键的",
+      "pronunciation": "kruːSel",
+      "partOfSpeech": "adj.",
+      "example": "Time management is crucial.",
+      "exampleTranslation": "时间管理至关重要。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "curriculum",
+      "chinese": "课程",
+      "pronunciation": "kerIkjElem",
+      "partOfSpeech": "n.",
+      "example": "The curriculum is well designed.",
+      "exampleTranslation": "课程设计得很好。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "deadline",
+      "chinese": "截止日期",
+      "pronunciation": "dedlaIn",
+      "partOfSpeech": "n.",
+      "example": "Meet every deadline.",
+      "exampleTranslation": "在每个截止日期前完成。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "debate",
+      "chinese": "辩论",
+      "pronunciation": "dIbeIt",
+      "partOfSpeech": "v.",
+      "example": "Debate ideas respectfully.",
+      "exampleTranslation": "尊重地辩论想法。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "declare",
+      "chinese": "宣布",
+      "pronunciation": "dIkler",
+      "partOfSpeech": "v.",
+      "example": "Declare your intentions clearly.",
+      "exampleTranslation": "清楚地宣布你的意图。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "demonstrate",
+      "chinese": "展示",
+      "pronunciation": "demenstReIt",
+      "partOfSpeech": "v.",
+      "example": "Demonstrate your skills.",
+      "exampleTranslation": "展示你的技能。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "design",
+      "chinese": "设计",
+      "pronunciation": "dIzaIn",
+      "partOfSpeech": "v.",
+      "example": "Design a creative solution.",
+      "exampleTranslation": "设计一个创意解决方案。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "determine",
+      "chinese": "决定",
+      "pronunciation": "dItɜːrmIn",
+      "partOfSpeech": "v.",
+      "example": "Determine your priorities.",
+      "exampleTranslation": "确定你的优先事项。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "diverse",
+      "chinese": "多样的",
+      "pronunciation": "daIvɜːrs",
+      "partOfSpeech": "adj.",
+      "example": "Embrace diverse perspectives.",
+      "exampleTranslation": "拥抱多元化的观点。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "dominate",
+      "chinese": "主导",
+      "pronunciation": "dɑːmIneIt",
+      "partOfSpeech": "v.",
+      "example": "Do not dominate the conversation.",
+      "exampleTranslation": "不要主导对话。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "efficient",
+      "chinese": "高效的",
+      "pronunciation": "IfISEnt",
+      "partOfSpeech": "adj.",
+      "example": "Work in an efficient manner.",
+      "exampleTranslation": "以高效的方式工作。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "eliminate",
+      "chinese": "消除",
+      "pronunciation": "IlImEneIt",
+      "partOfSpeech": "v.",
+      "example": "Eliminate bad habits.",
+      "exampleTranslation": "消除坏习惯。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "emerge",
+      "chinese": "出现",
+      "pronunciation": "ImɜːrDZ",
+      "partOfSpeech": "v.",
+      "example": "New ideas emerge daily.",
+      "exampleTranslation": "新想法每天涌现。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "emphasis",
+      "chinese": "强调",
+      "pronunciation": "emfEsIs",
+      "partOfSpeech": "n.",
+      "example": "Put emphasis on quality.",
+      "exampleTranslation": "强调质量。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "enable",
+      "chinese": "使能够",
+      "pronunciation": "Ineɪbl",
+      "partOfSpeech": "v.",
+      "example": "Education enables success.",
+      "exampleTranslation": "教育使成功成为可能。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "enhance",
+      "chinese": "提高",
+      "pronunciation": "Inhæns",
+      "partOfSpeech": "v.",
+      "example": "Enhance your communication skills.",
+      "exampleTranslation": "提高你的沟通技巧。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "enthusiasm",
+      "chinese": "热情",
+      "pronunciation": "InθjuːziæzEm",
+      "partOfSpeech": "n.",
+      "example": "Work with enthusiasm.",
+      "exampleTranslation": "充满热情地工作。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "evaluate",
+      "chinese": "评估",
+      "pronunciation": "IvæLjueIt",
+      "partOfSpeech": "v.",
+      "example": "Evaluate your performance.",
+      "exampleTranslation": "评估你的表现。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "evidence",
+      "chinese": "证据",
+      "pronunciation": "evIdents",
+      "partOfSpeech": "n.",
+      "example": "Provide strong evidence.",
+      "exampleTranslation": "提供有力证据。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "examine",
+      "chinese": "检查",
+      "pronunciation": "IɡzæmIn",
+      "partOfSpeech": "v.",
+      "example": "Examine the problem carefully.",
+      "exampleTranslation": "仔细检查问题。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "expand",
+      "chinese": "扩展",
+      "pronunciation": "IkspæNd",
+      "partOfSpeech": "v.",
+      "example": "Expand your knowledge base.",
+      "exampleTranslation": "扩展你的知识库。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "expectation",
+      "chinese": "期望",
+      "pronunciation": "ekspekteISen",
+      "partOfSpeech": "n.",
+      "example": "Meet expectations consistently.",
+      "exampleTranslation": "持续达到期望。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "faculty",
+      "chinese": "能力",
+      "pronunciation": "fækElti",
+      "partOfSpeech": "n.",
+      "example": "Use all your mental faculties.",
+      "exampleTranslation": "发挥你所有的心理能力。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "failure",
+      "chinese": "失败",
+      "pronunciation": "feILjer",
+      "partOfSpeech": "n.",
+      "example": "Failure is a stepping stone.",
+      "exampleTranslation": "失败是垫脚石。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "feature",
+      "chinese": "特征",
+      "pronunciation": "fiːtSer",
+      "partOfSpeech": "n.",
+      "example": "Highlight key features.",
+      "exampleTranslation": "突出关键特征。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "flexible",
+      "chinese": "灵活的",
+      "pronunciation": "fleksEbel",
+      "partOfSpeech": "adj.",
+      "example": "Be flexible in your approach.",
+      "exampleTranslation": "在方法上保持灵活。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "foundation",
+      "chinese": "基础",
+      "pronunciation": "faʊndeISen",
+      "partOfSpeech": "n.",
+      "example": "Build a strong foundation.",
+      "exampleTranslation": "建立坚实的基础。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "function",
+      "chinese": "功能",
+      "pronunciation": "fʌŋkSen",
+      "partOfSpeech": "n.",
+      "example": "Understand the function first.",
+      "exampleTranslation": "先了解功能。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "fundamental",
+      "chinese": "基本的",
+      "pronunciation": "fʌndEmEntEl",
+      "partOfSpeech": "adj.",
+      "example": "Learn fundamental concepts.",
+      "exampleTranslation": "学习基本概念。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "generate",
+      "chinese": "产生",
+      "pronunciation": "DZenEreIt",
+      "partOfSpeech": "v.",
+      "example": "Generate creative ideas.",
+      "exampleTranslation": "产生创意想法。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "global",
+      "chinese": "全球的",
+      "pronunciation": "gloʊbEl",
+      "partOfSpeech": "adj.",
+      "example": "Think global, act local.",
+      "exampleTranslation": "全球思考，本地行动。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "guideline",
+      "chinese": "指导方针",
+      "pronunciation": "gaIdlaIn",
+      "partOfSpeech": "n.",
+      "example": "Follow the guidelines.",
+      "exampleTranslation": "遵循指导方针。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "hypothesis",
+      "chinese": "假设",
+      "pronunciation": "haIpɑːθEsIs",
+      "partOfSpeech": "n.",
+      "example": "Test your hypothesis.",
+      "exampleTranslation": "检验你的假设。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "identify",
+      "chinese": "识别",
+      "pronunciation": "aIdentEfaI",
+      "partOfSpeech": "v.",
+      "example": "Identify your strengths.",
+      "exampleTranslation": "识别你的优势。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "implement",
+      "chinese": "实施",
+      "pronunciation": "ImplEment",
+      "partOfSpeech": "v.",
+      "example": "Implement your plan step by step.",
+      "exampleTranslation": "一步步实施你的计划。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "imply",
+      "chinese": "暗示",
+      "pronunciation": "ImplaI",
+      "partOfSpeech": "v.",
+      "example": "What does this data imply?",
+      "exampleTranslation": "这些数据暗示什么？"
+    },
+    {
+      "wordbookId": 2,
+      "english": "individual",
+      "chinese": "个人",
+      "pronunciation": "IndEvIDZuEl",
+      "partOfSpeech": "n.",
+      "example": "Every individual is important.",
+      "exampleTranslation": "每个人都很重要。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "innovative",
+      "chinese": "创新的",
+      "pronunciation": "InEveItIv",
+      "partOfSpeech": "adj.",
+      "example": "Be innovative in thinking.",
+      "exampleTranslation": "在思考上有创新。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "insight",
+      "chinese": "洞察力",
+      "pronunciation": "InsaIt",
+      "partOfSpeech": "n.",
+      "example": "Gain insight through reading.",
+      "exampleTranslation": "通过阅读获得洞察力。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "integrate",
+      "chinese": "整合",
+      "pronunciation": "IntEgreIt",
+      "partOfSpeech": "v.",
+      "example": "Integrate new ideas smoothly.",
+      "exampleTranslation": "顺利整合新想法。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "interpret",
+      "chinese": "解释",
+      "pronunciation": "IntɜːrprEt",
+      "partOfSpeech": "v.",
+      "example": "Interpret data correctly.",
+      "exampleTranslation": "正确解释数据。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "investigate",
+      "chinese": "调查",
+      "pronunciation": "InvestEgeIt",
+      "partOfSpeech": "v.",
+      "example": "Investigate before concluding.",
+      "exampleTranslation": "在得出结论前调查。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "involve",
+      "chinese": "涉及",
+      "pronunciation": "InvɑːLv",
+      "partOfSpeech": "v.",
+      "example": "Involve everyone in planning.",
+      "exampleTranslation": "让每个人都参与计划。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "issue",
+      "chinese": "问题",
+      "pronunciation": "ISuː",
+      "partOfSpeech": "n.",
+      "example": "Address the issue promptly.",
+      "exampleTranslation": "及时解决问题。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "justify",
+      "chinese": "证明",
+      "pronunciation": "DZʌstEfaI",
+      "partOfSpeech": "v.",
+      "example": "Justify your decisions.",
+      "exampleTranslation": "证明你的决定是合理的。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "logical",
+      "chinese": "有逻辑的",
+      "pronunciation": "lɑːDZIkEl",
+      "partOfSpeech": "adj.",
+      "example": "Think in a logical way.",
+      "exampleTranslation": "以有逻辑的方式思考。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "maintain",
+      "chinese": "保持",
+      "pronunciation": "meInteIn",
+      "partOfSpeech": "v.",
+      "example": "Maintain high standards.",
+      "exampleTranslation": "保持高标准。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "major",
+      "chinese": "主要的",
+      "pronunciation": "meIDZer",
+      "partOfSpeech": "adj.",
+      "example": "This is a major step.",
+      "exampleTranslation": "这是重要的一步。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "maximize",
+      "chinese": "最大化",
+      "pronunciation": "mæksEmaIz",
+      "partOfSpeech": "v.",
+      "example": "Maximize your potential.",
+      "exampleTranslation": "最大化你的潜力。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "mechanism",
+      "chinese": "机制",
+      "pronunciation": "mekEnIzEm",
+      "partOfSpeech": "n.",
+      "example": "Understand the mechanism.",
+      "exampleTranslation": "了解机制。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "minimize",
+      "chinese": "最小化",
+      "pronunciation": "mInEmaIz",
+      "partOfSpeech": "v.",
+      "example": "Minimize unnecessary risks.",
+      "exampleTranslation": "最小化不必要的风险。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "monitor",
+      "chinese": "监控",
+      "pronunciation": "mɑːnEter",
+      "partOfSpeech": "v.",
+      "example": "Monitor your health regularly.",
+      "exampleTranslation": "定期监控你的健康。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "motivate",
+      "chinese": "激励",
+      "pronunciation": "moʊtEveIt",
+      "partOfSpeech": "v.",
+      "example": "Motivate your team daily.",
+      "exampleTranslation": "每天激励你的团队。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "negative",
+      "chinese": "消极的",
+      "pronunciation": "negEtIv",
+      "partOfSpeech": "adj.",
+      "example": "Avoid negative thoughts.",
+      "exampleTranslation": "避免消极想法。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "objective",
+      "chinese": "目标",
+      "pronunciation": "EbDZektIv",
+      "partOfSpeech": "n.",
+      "example": "Set clear objectives.",
+      "exampleTranslation": "设定明确的目标。"
+    },
+    {
+      "wordbookId": 2,
+      "english": "obvious",
+      "chinese": "明显的",
+      "pronunciation": "ɑːbviEs",
+      "partOfSpeech": "adj.",
+      "example": "The answer is obvious.",
+      "exampleTranslation": "答案很明显。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "abolish",
+      "chinese": "废除",
+      "pronunciation": "EbɑːlIS",
+      "partOfSpeech": "v.",
+      "example": "Abolish unfair laws.",
+      "exampleTranslation": "废除不公平的法律。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "abstract",
+      "chinese": "抽象的",
+      "pronunciation": "æbstrækt",
+      "partOfSpeech": "adj.",
+      "example": "Abstract thinking is important.",
+      "exampleTranslation": "抽象思维很重要。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "accessible",
+      "chinese": "可获取的",
+      "pronunciation": "EksesEbel",
+      "partOfSpeech": "adj.",
+      "example": "Make education accessible.",
+      "exampleTranslation": "使教育易于获取。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "acknowledge",
+      "chinese": "承认",
+      "pronunciation": "EknɑːlIDZ",
+      "partOfSpeech": "v.",
+      "example": "Acknowledge others contributions.",
+      "exampleTranslation": "承认他人的贡献。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "acquire",
+      "chinese": "获得",
+      "pronunciation": "EkwaIEr",
+      "partOfSpeech": "v.",
+      "example": "Acquire new skills continuously.",
+      "exampleTranslation": "持续获得新技能。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "aggravate",
+      "chinese": "加重",
+      "pronunciation": "ægrEveIt",
+      "partOfSpeech": "v.",
+      "example": "Stress aggravates health problems.",
+      "exampleTranslation": "压力加重健康问题。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "albeit",
+      "chinese": "尽管",
+      "pronunciation": "ɔːlbiːIt",
+      "partOfSpeech": "conj.",
+      "example": "Albeit difficult, it is possible.",
+      "exampleTranslation": "尽管困难，但这是可能的。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "allocate",
+      "chinese": "分配",
+      "pronunciation": "æLEkeIt",
+      "partOfSpeech": "v.",
+      "example": "Allocate resources wisely.",
+      "exampleTranslation": "明智地分配资源。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "alternative",
+      "chinese": "替代的",
+      "pronunciation": "ɔːltɜːrnEtIv",
+      "partOfSpeech": "adj.",
+      "example": "Seek alternative solutions.",
+      "exampleTranslation": "寻求替代解决方案。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "ambiguous",
+      "chinese": "模糊的",
+      "pronunciation": "æmbIgjuEs",
+      "partOfSpeech": "adj.",
+      "example": "Avoid ambiguous language.",
+      "exampleTranslation": "避免模糊的语言。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "amplify",
+      "chinese": "放大",
+      "pronunciation": "æmplIfaI",
+      "partOfSpeech": "v.",
+      "example": "Amplify your strengths.",
+      "exampleTranslation": "放大你的优势。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "analogous",
+      "chinese": "类似的",
+      "pronunciation": "EnæLEgEs",
+      "partOfSpeech": "adj.",
+      "example": "The situations are analogous.",
+      "exampleTranslation": "这些情况是类似的。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "anticipate",
+      "chinese": "预期",
+      "pronunciation": "æntIsIpeIt",
+      "partOfSpeech": "v.",
+      "example": "Anticipate future challenges.",
+      "exampleTranslation": "预期未来的挑战。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "arbitrary",
+      "chinese": "任意的",
+      "pronunciation": "ɑːrbrEteri",
+      "partOfSpeech": "adj.",
+      "example": "Avoid arbitrary decisions.",
+      "exampleTranslation": "避免任意的决定。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "articulate",
+      "chinese": "清晰表达",
+      "pronunciation": "ɑːrtIkjEleIt",
+      "partOfSpeech": "v.",
+      "example": "Articulate your thoughts clearly.",
+      "exampleTranslation": "清晰地表达你的想法。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "aspire",
+      "chinese": "渴望",
+      "pronunciation": "EspaIEr",
+      "partOfSpeech": "v.",
+      "example": "Aspire to greatness.",
+      "exampleTranslation": "渴望伟大。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "assess",
+      "chinese": "评估",
+      "pronunciation": "EseS",
+      "partOfSpeech": "v.",
+      "example": "Assess risks before acting.",
+      "exampleTranslation": "行动前评估风险。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "assign",
+      "chinese": "分配",
+      "pronunciation": "EsaIn",
+      "partOfSpeech": "v.",
+      "example": "Assign priorities carefully.",
+      "exampleTranslation": "谨慎地分配优先级。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "assimilate",
+      "chinese": "吸收",
+      "pronunciation": "EsImEleIt",
+      "partOfSpeech": "v.",
+      "example": "Assimilate new information quickly.",
+      "exampleTranslation": "快速吸收新信息。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "attain",
+      "chinese": "达到",
+      "pronunciation": "EteIn",
+      "partOfSpeech": "v.",
+      "example": "Attain your highest potential.",
+      "exampleTranslation": "达到你的最高潜力。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "augment",
+      "chinese": "增强",
+      "pronunciation": "ɔːgment",
+      "partOfSpeech": "v.",
+      "example": "Augment your skills with practice.",
+      "exampleTranslation": "通过练习增强你的技能。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "autonomous",
+      "chinese": "自主的",
+      "pronunciation": "ɔːtɑːnEmes",
+      "partOfSpeech": "adj.",
+      "example": "Become an autonomous learner.",
+      "exampleTranslation": "成为自主学习者。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "benchmark",
+      "chinese": "基准",
+      "pronunciation": "bentSmɑːrk",
+      "partOfSpeech": "n.",
+      "example": "Set a high benchmark.",
+      "exampleTranslation": "设定高基准。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "bias",
+      "chinese": "偏见",
+      "pronunciation": "baIEs",
+      "partOfSpeech": "n.",
+      "example": "Overcome your biases.",
+      "exampleTranslation": "克服你的偏见。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "bolster",
+      "chinese": "支撑",
+      "pronunciation": "boʊlster",
+      "partOfSpeech": "v.",
+      "example": "Bolster your confidence.",
+      "exampleTranslation": "增强你的信心。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "broaden",
+      "chinese": "拓宽",
+      "pronunciation": "brɔːden",
+      "partOfSpeech": "v.",
+      "example": "Broaden your horizons.",
+      "exampleTranslation": "拓宽你的视野。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "catalyst",
+      "chinese": "催化剂",
+      "pronunciation": "kætELIst",
+      "partOfSpeech": "n.",
+      "example": "Be a catalyst for change.",
+      "exampleTranslation": "成为改变的催化剂。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "chronic",
+      "chinese": "长期的",
+      "pronunciation": "krɑːnIk",
+      "partOfSpeech": "adj.",
+      "example": "Address chronic problems early.",
+      "exampleTranslation": "尽早解决长期问题。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "circumstance",
+      "chinese": "情况",
+      "pronunciation": "sɜːrkEmstæns",
+      "partOfSpeech": "n.",
+      "example": "Adapt to any circumstance.",
+      "exampleTranslation": "适应任何情况。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "cognitive",
+      "chinese": "认知的",
+      "pronunciation": "kɑːgnItIv",
+      "partOfSpeech": "adj.",
+      "example": "Develop cognitive skills.",
+      "exampleTranslation": "发展认知技能。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "coherent",
+      "chinese": "连贯的",
+      "pronunciation": "koʊhIrEnt",
+      "partOfSpeech": "adj.",
+      "example": "Write coherent arguments.",
+      "exampleTranslation": "写出连贯的论点。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "collaborate",
+      "chinese": "合作",
+      "pronunciation": "kELæbEreIt",
+      "partOfSpeech": "v.",
+      "example": "Collaborate across differences.",
+      "exampleTranslation": "跨越差异进行合作。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "commence",
+      "chinese": "开始",
+      "pronunciation": "kEmeNs",
+      "partOfSpeech": "v.",
+      "example": "Commence your project today.",
+      "exampleTranslation": "今天开始你的项目。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "compensate",
+      "chinese": "补偿",
+      "pronunciation": "kɑːmpEnseIt",
+      "partOfSpeech": "v.",
+      "example": "Compensate for your weaknesses.",
+      "exampleTranslation": "弥补你的弱点。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "complement",
+      "chinese": "补充",
+      "pronunciation": "kɑːmplEment",
+      "partOfSpeech": "v.",
+      "example": "Let skills complement each other.",
+      "exampleTranslation": "让技能互相补充。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "comply",
+      "chinese": "遵守",
+      "pronunciation": "kEmplaI",
+      "partOfSpeech": "v.",
+      "example": "Comply with the regulations.",
+      "exampleTranslation": "遵守规定。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "comprehensive",
+      "chinese": "全面的",
+      "pronunciation": "kɑːmprEhensIv",
+      "partOfSpeech": "adj.",
+      "example": "Write a comprehensive report.",
+      "exampleTranslation": "写一份全面的报告。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "conceive",
+      "chinese": "构思",
+      "pronunciation": "kEnsiːv",
+      "partOfSpeech": "v.",
+      "example": "Conceive innovative ideas.",
+      "exampleTranslation": "构思创新的想法。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "conducive",
+      "chinese": "有助于",
+      "pronunciation": "kEndjeːsIv",
+      "partOfSpeech": "adj.",
+      "example": "Create a conducive environment.",
+      "exampleTranslation": "创造有利的环境。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "constitute",
+      "chinese": "构成",
+      "pronunciation": "kɑːnstEtuːt",
+      "partOfSpeech": "v.",
+      "example": "What constitutes success?",
+      "exampleTranslation": "什么构成了成功？"
+    },
+    {
+      "wordbookId": 3,
+      "english": "contemplate",
+      "chinese": "考虑",
+      "pronunciation": "kɑːntEmpleIt",
+      "partOfSpeech": "v.",
+      "example": "Contemplate your next steps.",
+      "exampleTranslation": "考虑你的下一步。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "contradict",
+      "chinese": "反驳",
+      "pronunciation": "kɑːntrEdIkt",
+      "partOfSpeech": "v.",
+      "example": "Never contradict facts.",
+      "exampleTranslation": "永远不要反驳事实。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "controversial",
+      "chinese": "有争议的",
+      "pronunciation": "kɑːntErvɜːrSEl",
+      "partOfSpeech": "adj.",
+      "example": "Approach controversial topics carefully.",
+      "exampleTranslation": "谨慎处理有争议的话题。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "convey",
+      "chinese": "传达",
+      "pronunciation": "kEnveI",
+      "partOfSpeech": "v.",
+      "example": "Convey your message clearly.",
+      "exampleTranslation": "清晰地传达你的信息。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "correlate",
+      "chinese": "相关",
+      "pronunciation": "kɔːrEleIt",
+      "partOfSpeech": "v.",
+      "example": "Success correlates with effort.",
+      "exampleTranslation": "成功与努力相关。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "criterion",
+      "chinese": "标准",
+      "pronunciation": "kraItIriEn",
+      "partOfSpeech": "n.",
+      "example": "Meet every criterion.",
+      "exampleTranslation": "满足每个标准。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "cultivate",
+      "chinese": "培养",
+      "pronunciation": "kʌltEveIt",
+      "partOfSpeech": "v.",
+      "example": "Cultivate good relationships.",
+      "exampleTranslation": "培养良好的关系。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "deduce",
+      "chinese": "推断",
+      "pronunciation": "dIdjuːs",
+      "partOfSpeech": "v.",
+      "example": "Deduce the answer logically.",
+      "exampleTranslation": "用逻辑推断答案。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "deficiency",
+      "chinese": "不足",
+      "pronunciation": "dIfISEnsi",
+      "partOfSpeech": "n.",
+      "example": "Identify areas of deficiency.",
+      "exampleTranslation": "找出不足之处。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "deliberate",
+      "chinese": "慎重的",
+      "pronunciation": "dIlIbEret",
+      "partOfSpeech": "adj.",
+      "example": "Make deliberate choices.",
+      "exampleTranslation": "做出慎重的选择。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "derive",
+      "chinese": "源于",
+      "pronunciation": "dIraIv",
+      "partOfSpeech": "v.",
+      "example": "Derive lessons from failure.",
+      "exampleTranslation": "从失败中汲取教训。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "deteriorate",
+      "chinese": "恶化",
+      "pronunciation": "dItIriEreIt",
+      "partOfSpeech": "v.",
+      "example": "Prevent conditions from deteriorating.",
+      "exampleTranslation": "防止情况恶化。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "dilemma",
+      "chinese": "困境",
+      "pronunciation": "dIlemE",
+      "partOfSpeech": "n.",
+      "example": "Face every dilemma with courage.",
+      "exampleTranslation": "勇敢面对每个困境。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "discern",
+      "chinese": "辨别",
+      "pronunciation": "dIsɜːrn",
+      "partOfSpeech": "v.",
+      "example": "Discern fact from opinion.",
+      "exampleTranslation": "辨别事实与观点。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "discourse",
+      "chinese": "论述",
+      "pronunciation": "dIskɔːrs",
+      "partOfSpeech": "n.",
+      "example": "Engage in meaningful discourse.",
+      "exampleTranslation": "参与有意义的论述。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "disparity",
+      "chinese": "差距",
+      "pronunciation": "dIspærEti",
+      "partOfSpeech": "n.",
+      "example": "Reduce economic disparity.",
+      "exampleTranslation": "减少经济差距。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "disrupt",
+      "chinese": "扰乱",
+      "pronunciation": "dIsrʌpt",
+      "partOfSpeech": "v.",
+      "example": "Disrupt outdated systems.",
+      "exampleTranslation": "打破过时的系统。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "distinguish",
+      "chinese": "区分",
+      "pronunciation": "dIstIŋgwIS",
+      "partOfSpeech": "v.",
+      "example": "Distinguish right from wrong.",
+      "exampleTranslation": "区分对错。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "diverse",
+      "chinese": "多样的",
+      "pronunciation": "daIvɜːrs",
+      "partOfSpeech": "adj.",
+      "example": "Value diverse opinions.",
+      "exampleTranslation": "重视多样化的意见。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "dominate",
+      "chinese": "主宰",
+      "pronunciation": "dɑːmEneIt",
+      "partOfSpeech": "v.",
+      "example": "Do not let fear dominate you.",
+      "exampleTranslation": "不要让恐惧主宰你。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "dynamic",
+      "chinese": "动态的",
+      "pronunciation": "daInæmIk",
+      "partOfSpeech": "adj.",
+      "example": "Embrace a dynamic environment.",
+      "exampleTranslation": "拥抱动态环境。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "elaborate",
+      "chinese": "详细说明",
+      "pronunciation": "IlæbEreIt",
+      "partOfSpeech": "v.",
+      "example": "Elaborate on your main points.",
+      "exampleTranslation": "详细说明你的要点。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "eloquent",
+      "chinese": "雄辩的",
+      "pronunciation": "elEkwEnt",
+      "partOfSpeech": "adj.",
+      "example": "Become an eloquent speaker.",
+      "exampleTranslation": "成为雄辩的演说者。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "empirical",
+      "chinese": "经验的",
+      "pronunciation": "EmpIrIkEl",
+      "partOfSpeech": "adj.",
+      "example": "Use empirical evidence.",
+      "exampleTranslation": "使用经验证据。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "endorse",
+      "chinese": "支持",
+      "pronunciation": "IndɔːrS",
+      "partOfSpeech": "v.",
+      "example": "Endorse positive initiatives.",
+      "exampleTranslation": "支持积极的倡议。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "enforce",
+      "chinese": "执行",
+      "pronunciation": "InfɔːrS",
+      "partOfSpeech": "v.",
+      "example": "Enforce rules consistently.",
+      "exampleTranslation": "一致地执行规则。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "engage",
+      "chinese": "参与",
+      "pronunciation": "IngeIDZ",
+      "partOfSpeech": "v.",
+      "example": "Engage fully in tasks.",
+      "exampleTranslation": "全身心投入任务。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "enormous",
+      "chinese": "巨大的",
+      "pronunciation": "InɔːrmEs",
+      "partOfSpeech": "adj.",
+      "example": "The impact was enormous.",
+      "exampleTranslation": "影响是巨大的。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "ensure",
+      "chinese": "确保",
+      "pronunciation": "InSUr",
+      "partOfSpeech": "v.",
+      "example": "Ensure quality in all work.",
+      "exampleTranslation": "确保所有工作的质量。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "ethical",
+      "chinese": "道德的",
+      "pronunciation": "eθIkEl",
+      "partOfSpeech": "adj.",
+      "example": "Make ethical decisions.",
+      "exampleTranslation": "做出道德的决定。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "evident",
+      "chinese": "明显的",
+      "pronunciation": "evIdEnt",
+      "partOfSpeech": "adj.",
+      "example": "The progress is evident.",
+      "exampleTranslation": "进步是明显的。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "evolve",
+      "chinese": "演变",
+      "pronunciation": "IvɑːLv",
+      "partOfSpeech": "v.",
+      "example": "Allow yourself to evolve.",
+      "exampleTranslation": "允许自己演变。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "exceed",
+      "chinese": "超过",
+      "pronunciation": "IksiːD",
+      "partOfSpeech": "v.",
+      "example": "Exceed expectations always.",
+      "exampleTranslation": "始终超越期望。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "explicit",
+      "chinese": "明确的",
+      "pronunciation": "IksplIsIt",
+      "partOfSpeech": "adj.",
+      "example": "Give explicit instructions.",
+      "exampleTranslation": "给出明确的指示。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "exploit",
+      "chinese": "利用",
+      "pronunciation": "IksplɔIt",
+      "partOfSpeech": "v.",
+      "example": "Exploit every opportunity.",
+      "exampleTranslation": "充分利用每个机会。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "facilitate",
+      "chinese": "促进",
+      "pronunciation": "fEsIlEteIt",
+      "partOfSpeech": "v.",
+      "example": "Facilitate open communication.",
+      "exampleTranslation": "促进开放的沟通。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "fallacy",
+      "chinese": "谬论",
+      "pronunciation": "fæLEsi",
+      "partOfSpeech": "n.",
+      "example": "Identify logical fallacies.",
+      "exampleTranslation": "识别逻辑谬论。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "fluctuate",
+      "chinese": "波动",
+      "pronunciation": "flʌktSEeIt",
+      "partOfSpeech": "v.",
+      "example": "Emotions fluctuate naturally.",
+      "exampleTranslation": "情绪自然地波动。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "formulate",
+      "chinese": "制定",
+      "pronunciation": "fɔːrmjEleIt",
+      "partOfSpeech": "v.",
+      "example": "Formulate a clear strategy.",
+      "exampleTranslation": "制定清晰的策略。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "fundamental",
+      "chinese": "根本的",
+      "pronunciation": "fʌndEmentEl",
+      "partOfSpeech": "adj.",
+      "example": "Respect is fundamental.",
+      "exampleTranslation": "尊重是根本的。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "generate",
+      "chinese": "产生",
+      "pronunciation": "DZenEreIt",
+      "partOfSpeech": "v.",
+      "example": "Generate innovative solutions.",
+      "exampleTranslation": "产生创新解决方案。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "generic",
+      "chinese": "通用的",
+      "pronunciation": "DZEnErIk",
+      "partOfSpeech": "adj.",
+      "example": "Avoid generic responses.",
+      "exampleTranslation": "避免通用的回应。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "global",
+      "chinese": "全球的",
+      "pronunciation": "gloʊbEl",
+      "partOfSpeech": "adj.",
+      "example": "Think with a global mindset.",
+      "exampleTranslation": "以全球思维思考。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "guideline",
+      "chinese": "指导方针",
+      "pronunciation": "gaIdlaIn",
+      "partOfSpeech": "n.",
+      "example": "Establish clear guidelines.",
+      "exampleTranslation": "建立明确的指导方针。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "hierarchy",
+      "chinese": "层级",
+      "pronunciation": "haIErɑːrki",
+      "partOfSpeech": "n.",
+      "example": "Understand the hierarchy.",
+      "exampleTranslation": "了解层级结构。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "highlight",
+      "chinese": "强调",
+      "pronunciation": "haIlaIt",
+      "partOfSpeech": "v.",
+      "example": "Highlight your achievements.",
+      "exampleTranslation": "强调你的成就。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "hypothesis",
+      "chinese": "假说",
+      "pronunciation": "haIpɑːθEsIs",
+      "partOfSpeech": "n.",
+      "example": "Prove your hypothesis.",
+      "exampleTranslation": "证明你的假说。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "illuminate",
+      "chinese": "阐明",
+      "pronunciation": "IluːmEneIt",
+      "partOfSpeech": "v.",
+      "example": "Illuminate complex ideas.",
+      "exampleTranslation": "阐明复杂的想法。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "implicit",
+      "chinese": "隐含的",
+      "pronunciation": "ImplIsIt",
+      "partOfSpeech": "adj.",
+      "example": "Note the implicit meaning.",
+      "exampleTranslation": "注意隐含的意义。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "inevitable",
+      "chinese": "不可避免的",
+      "pronunciation": "InevItEbel",
+      "partOfSpeech": "adj.",
+      "example": "Change is inevitable.",
+      "exampleTranslation": "变化是不可避免的。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "inherent",
+      "chinese": "固有的",
+      "pronunciation": "InhIrEnt",
+      "partOfSpeech": "adj.",
+      "example": "Use your inherent strengths.",
+      "exampleTranslation": "发挥你固有的优势。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "innovative",
+      "chinese": "创新的",
+      "pronunciation": "InEveItIv",
+      "partOfSpeech": "adj.",
+      "example": "Be innovative in problem solving.",
+      "exampleTranslation": "在解决问题上有创新。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "integrate",
+      "chinese": "融合",
+      "pronunciation": "IntEgreIt",
+      "partOfSpeech": "v.",
+      "example": "Integrate theory with practice.",
+      "exampleTranslation": "将理论与实践融合。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "intellectual",
+      "chinese": "智力的",
+      "pronunciation": "IntElektSuEl",
+      "partOfSpeech": "adj.",
+      "example": "Pursue intellectual growth.",
+      "exampleTranslation": "追求智力成长。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "intervene",
+      "chinese": "干预",
+      "pronunciation": "IntErvIn",
+      "partOfSpeech": "v.",
+      "example": "Intervene when necessary.",
+      "exampleTranslation": "必要时进行干预。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "intrinsic",
+      "chinese": "内在的",
+      "pronunciation": "IntrInsIk",
+      "partOfSpeech": "adj.",
+      "example": "Find intrinsic motivation.",
+      "exampleTranslation": "找到内在动力。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "intuition",
+      "chinese": "直觉",
+      "pronunciation": "IntjuːISEn",
+      "partOfSpeech": "n.",
+      "example": "Trust your intuition.",
+      "exampleTranslation": "相信你的直觉。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "justify",
+      "chinese": "证明合理",
+      "pronunciation": "DZʌstEfaI",
+      "partOfSpeech": "v.",
+      "example": "Justify every important decision.",
+      "exampleTranslation": "证明每个重要决定的合理性。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "leverage",
+      "chinese": "利用",
+      "pronunciation": "levErIDZ",
+      "partOfSpeech": "v.",
+      "example": "Leverage your unique strengths.",
+      "exampleTranslation": "利用你独特的优势。"
+    },
+    {
+      "wordbookId": 3,
+      "english": "magnitude",
+      "chinese": "规模",
+      "pronunciation": "mægnEtjuːd",
+      "partOfSpeech": "n.",
+      "example": "Understand the magnitude of change.",
+      "exampleTranslation": "了解变化的规模。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "abolish",
+      "chinese": "废除",
+      "pronunciation": "EbɑːlIS",
+      "partOfSpeech": "v.",
+      "example": "Abolish outdated practices.",
+      "exampleTranslation": "废除过时的做法。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "abstract",
+      "chinese": "摘要",
+      "pronunciation": "æbstrækt",
+      "partOfSpeech": "n.",
+      "example": "Write a clear abstract.",
+      "exampleTranslation": "写一个清晰的摘要。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "accommodate",
+      "chinese": "适应",
+      "pronunciation": "EkɑːmEdeIt",
+      "partOfSpeech": "v.",
+      "example": "Accommodate different learning styles.",
+      "exampleTranslation": "适应不同的学习风格。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "accumulate",
+      "chinese": "积累",
+      "pronunciation": "EkjuːmjEleIt",
+      "partOfSpeech": "v.",
+      "example": "Accumulate knowledge over time.",
+      "exampleTranslation": "随时间积累知识。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "adequate",
+      "chinese": "充分的",
+      "pronunciation": "ædEkwEt",
+      "partOfSpeech": "adj.",
+      "example": "Ensure adequate preparation.",
+      "exampleTranslation": "确保充分的准备。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "advocate",
+      "chinese": "支持者",
+      "pronunciation": "ædvEkEt",
+      "partOfSpeech": "n.",
+      "example": "Be an advocate for change.",
+      "exampleTranslation": "成为变革的支持者。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "aesthetic",
+      "chinese": "美学的",
+      "pronunciation": "esθetIk",
+      "partOfSpeech": "adj.",
+      "example": "Appreciate aesthetic beauty.",
+      "exampleTranslation": "欣赏美学之美。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "aggregate",
+      "chinese": "总计",
+      "pronunciation": "ægrEgEt",
+      "partOfSpeech": "v.",
+      "example": "Aggregate data for analysis.",
+      "exampleTranslation": "汇总数据用于分析。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "allocate",
+      "chinese": "分配",
+      "pronunciation": "æLEkeIt",
+      "partOfSpeech": "v.",
+      "example": "Allocate time for each subject.",
+      "exampleTranslation": "为每门学科分配时间。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "ambiguity",
+      "chinese": "模糊性",
+      "pronunciation": "æmbIgjuːEti",
+      "partOfSpeech": "n.",
+      "example": "Reduce ambiguity in writing.",
+      "exampleTranslation": "减少写作中的模糊性。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "amplify",
+      "chinese": "扩大",
+      "pronunciation": "æmplIfaI",
+      "partOfSpeech": "v.",
+      "example": "Amplify positive messages.",
+      "exampleTranslation": "扩大积极的信息。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "analogous",
+      "chinese": "类比的",
+      "pronunciation": "EnæLEgEs",
+      "partOfSpeech": "adj.",
+      "example": "Use analogous examples.",
+      "exampleTranslation": "使用类比例子。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "articulate",
+      "chinese": "表达",
+      "pronunciation": "ɑːrtIkjEleIt",
+      "partOfSpeech": "v.",
+      "example": "Articulate ideas with precision.",
+      "exampleTranslation": "精确地表达想法。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "assert",
+      "chinese": "断言",
+      "pronunciation": "EsɜːrT",
+      "partOfSpeech": "v.",
+      "example": "Assert your position clearly.",
+      "exampleTranslation": "清楚地表明你的立场。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "assess",
+      "chinese": "评定",
+      "pronunciation": "EseS",
+      "partOfSpeech": "v.",
+      "example": "Assess writing quality carefully.",
+      "exampleTranslation": "仔细评定写作质量。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "attain",
+      "chinese": "获得",
+      "pronunciation": "EteIn",
+      "partOfSpeech": "v.",
+      "example": "Attain a high band score.",
+      "exampleTranslation": "获得高分。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "attribute",
+      "chinese": "属性",
+      "pronunciation": "ætrEbjuːt",
+      "partOfSpeech": "n.",
+      "example": "List key attributes of success.",
+      "exampleTranslation": "列出成功的关键属性。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "authentic",
+      "chinese": "真实的",
+      "pronunciation": "ɔːθentIk",
+      "partOfSpeech": "adj.",
+      "example": "Be authentic in your writing.",
+      "exampleTranslation": "在写作中保持真实。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "bias",
+      "chinese": "偏见",
+      "pronunciation": "baIEs",
+      "partOfSpeech": "n.",
+      "example": "Identify and eliminate bias.",
+      "exampleTranslation": "识别并消除偏见。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "bolster",
+      "chinese": "加强",
+      "pronunciation": "boʊlster",
+      "partOfSpeech": "v.",
+      "example": "Bolster your arguments with evidence.",
+      "exampleTranslation": "用证据加强你的论点。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "catalyst",
+      "chinese": "催化剂",
+      "pronunciation": "kætElIst",
+      "partOfSpeech": "n.",
+      "example": "Education is a catalyst for growth.",
+      "exampleTranslation": "教育是成长的催化剂。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "chronological",
+      "chinese": "按时间顺序的",
+      "pronunciation": "krɑːnElɑːDZIkEl",
+      "partOfSpeech": "adj.",
+      "example": "Organize events chronologically.",
+      "exampleTranslation": "按时间顺序整理事件。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "cite",
+      "chinese": "引用",
+      "pronunciation": "saIt",
+      "partOfSpeech": "v.",
+      "example": "Cite reliable sources.",
+      "exampleTranslation": "引用可靠的来源。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "clarify",
+      "chinese": "澄清",
+      "pronunciation": "klærEfaI",
+      "partOfSpeech": "v.",
+      "example": "Clarify complex points.",
+      "exampleTranslation": "澄清复杂的要点。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "coherence",
+      "chinese": "连贯性",
+      "pronunciation": "koʊhIrEns",
+      "partOfSpeech": "n.",
+      "example": "Ensure coherence in your essay.",
+      "exampleTranslation": "确保文章的连贯性。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "cohesion",
+      "chinese": "凝聚力",
+      "pronunciation": "koʊhiːZEn",
+      "partOfSpeech": "n.",
+      "example": "Use cohesion devices in writing.",
+      "exampleTranslation": "在写作中使用衔接手段。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "colloquial",
+      "chinese": "口语的",
+      "pronunciation": "kElEkwiEl",
+      "partOfSpeech": "adj.",
+      "example": "Avoid colloquial expressions.",
+      "exampleTranslation": "避免口语表达。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "complex",
+      "chinese": "复杂的",
+      "pronunciation": "kɑːmpleks",
+      "partOfSpeech": "adj.",
+      "example": "Handle complex topics well.",
+      "exampleTranslation": "很好地处理复杂话题。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "concise",
+      "chinese": "简洁的",
+      "pronunciation": "kEnsaIs",
+      "partOfSpeech": "adj.",
+      "example": "Write in a concise manner.",
+      "exampleTranslation": "以简洁的方式写作。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "conclude",
+      "chinese": "总结",
+      "pronunciation": "kEnkluːd",
+      "partOfSpeech": "v.",
+      "example": "Conclude with a strong statement.",
+      "exampleTranslation": "以有力的陈述作结。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "consequence",
+      "chinese": "后果",
+      "pronunciation": "kɑːnsEkwEns",
+      "partOfSpeech": "n.",
+      "example": "Consider long-term consequences.",
+      "exampleTranslation": "考虑长期后果。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "contemporary",
+      "chinese": "当代的",
+      "pronunciation": "kEntempErEri",
+      "partOfSpeech": "adj.",
+      "example": "Discuss contemporary issues.",
+      "exampleTranslation": "讨论当代问题。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "context",
+      "chinese": "语境",
+      "pronunciation": "kɑːntekst",
+      "partOfSpeech": "n.",
+      "example": "Understand the full context.",
+      "exampleTranslation": "理解完整的语境。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "contradict",
+      "chinese": "矛盾",
+      "pronunciation": "kɑːntrEdIkt",
+      "partOfSpeech": "v.",
+      "example": "Do not contradict your argument.",
+      "exampleTranslation": "不要与你的论点矛盾。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "convention",
+      "chinese": "惯例",
+      "pronunciation": "kEnvenSEn",
+      "partOfSpeech": "n.",
+      "example": "Follow writing conventions.",
+      "exampleTranslation": "遵循写作惯例。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "convey",
+      "chinese": "表达",
+      "pronunciation": "kEnveI",
+      "partOfSpeech": "v.",
+      "example": "Convey meaning effectively.",
+      "exampleTranslation": "有效地传达意义。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "credible",
+      "chinese": "可信的",
+      "pronunciation": "kredEbEl",
+      "partOfSpeech": "adj.",
+      "example": "Use credible sources only.",
+      "exampleTranslation": "只使用可信的来源。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "criterion",
+      "chinese": "标准",
+      "pronunciation": "kraItIriEn",
+      "partOfSpeech": "n.",
+      "example": "Apply the marking criteria.",
+      "exampleTranslation": "应用评分标准。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "critique",
+      "chinese": "批评",
+      "pronunciation": "krItiːk",
+      "partOfSpeech": "v.",
+      "example": "Critique ideas constructively.",
+      "exampleTranslation": "建设性地批评想法。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "deduce",
+      "chinese": "推断",
+      "pronunciation": "dIdjuːs",
+      "partOfSpeech": "v.",
+      "example": "Deduce meaning from context.",
+      "exampleTranslation": "从语境中推断意义。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "depict",
+      "chinese": "描绘",
+      "pronunciation": "dIpIkt",
+      "partOfSpeech": "v.",
+      "example": "Depict trends in a graph.",
+      "exampleTranslation": "在图表中描绘趋势。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "derive",
+      "chinese": "得出",
+      "pronunciation": "dIraIv",
+      "partOfSpeech": "v.",
+      "example": "Derive meaning from data.",
+      "exampleTranslation": "从数据中得出意义。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "discourse",
+      "chinese": "话语",
+      "pronunciation": "dIskɔːrs",
+      "partOfSpeech": "n.",
+      "example": "Analyze academic discourse.",
+      "exampleTranslation": "分析学术话语。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "display",
+      "chinese": "展示",
+      "pronunciation": "dIspleI",
+      "partOfSpeech": "v.",
+      "example": "Display data in a table.",
+      "exampleTranslation": "在表格中展示数据。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "distinguish",
+      "chinese": "区别",
+      "pronunciation": "dIstIŋgwIS",
+      "partOfSpeech": "v.",
+      "example": "Distinguish main and supporting ideas.",
+      "exampleTranslation": "区别主要和支持性想法。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "diverse",
+      "chinese": "多元的",
+      "pronunciation": "daIvɜːrs",
+      "partOfSpeech": "adj.",
+      "example": "Include diverse viewpoints.",
+      "exampleTranslation": "包括多元化的观点。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "elaborate",
+      "chinese": "阐述",
+      "pronunciation": "IlæbEreIt",
+      "partOfSpeech": "v.",
+      "example": "Elaborate on each point fully.",
+      "exampleTranslation": "充分阐述每个要点。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "emerge",
+      "chinese": "浮现",
+      "pronunciation": "ImɜːrDZ",
+      "partOfSpeech": "v.",
+      "example": "New patterns emerge in data.",
+      "exampleTranslation": "数据中浮现出新模式。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "emphasis",
+      "chinese": "重点",
+      "pronunciation": "emfEsIs",
+      "partOfSpeech": "n.",
+      "example": "Place emphasis on key points.",
+      "exampleTranslation": "将重点放在关键要点上。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "empirical",
+      "chinese": "实证的",
+      "pronunciation": "EmpIrIkEl",
+      "partOfSpeech": "adj.",
+      "example": "Support claims with empirical data.",
+      "exampleTranslation": "用实证数据支持主张。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "enhance",
+      "chinese": "增强",
+      "pronunciation": "Inhæns",
+      "partOfSpeech": "v.",
+      "example": "Enhance vocabulary through reading.",
+      "exampleTranslation": "通过阅读增强词汇量。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "evaluate",
+      "chinese": "评价",
+      "pronunciation": "IvæLjueIt",
+      "partOfSpeech": "v.",
+      "example": "Evaluate both sides objectively.",
+      "exampleTranslation": "客观地评价双方。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "evident",
+      "chinese": "显而易见的",
+      "pronunciation": "evIdEnt",
+      "partOfSpeech": "adj.",
+      "example": "The trend is evident.",
+      "exampleTranslation": "趋势显而易见。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "explicit",
+      "chinese": "明确的",
+      "pronunciation": "IksplIsIt",
+      "partOfSpeech": "adj.",
+      "example": "Give explicit examples.",
+      "exampleTranslation": "给出明确的例子。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "facilitate",
+      "chinese": "便利",
+      "pronunciation": "fEsIlEteIt",
+      "partOfSpeech": "v.",
+      "example": "Facilitate group discussions.",
+      "exampleTranslation": "便利小组讨论。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "fluctuate",
+      "chinese": "起伏",
+      "pronunciation": "flʌktSEeIt",
+      "partOfSpeech": "v.",
+      "example": "Prices fluctuate with demand.",
+      "exampleTranslation": "价格随需求起伏。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "formulate",
+      "chinese": "拟定",
+      "pronunciation": "fɔːrmjEleIt",
+      "partOfSpeech": "v.",
+      "example": "Formulate a clear thesis.",
+      "exampleTranslation": "拟定清晰的论点。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "highlight",
+      "chinese": "突出",
+      "pronunciation": "haIlaIt",
+      "partOfSpeech": "v.",
+      "example": "Highlight key trends.",
+      "exampleTranslation": "突出关键趋势。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "illustrate",
+      "chinese": "说明",
+      "pronunciation": "IlEstreIt",
+      "partOfSpeech": "v.",
+      "example": "Illustrate points with examples.",
+      "exampleTranslation": "用例子说明要点。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "imply",
+      "chinese": "暗示",
+      "pronunciation": "ImplaI",
+      "partOfSpeech": "v.",
+      "example": "The graph implies a rise.",
+      "exampleTranslation": "图表暗示上升。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "incorporate",
+      "chinese": "纳入",
+      "pronunciation": "InkɔːrpEreIt",
+      "partOfSpeech": "v.",
+      "example": "Incorporate feedback into writing.",
+      "exampleTranslation": "将反馈纳入写作。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "indicate",
+      "chinese": "表明",
+      "pronunciation": "IndEkeIt",
+      "partOfSpeech": "v.",
+      "example": "The data indicates a trend.",
+      "exampleTranslation": "数据表明一种趋势。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "infer",
+      "chinese": "推断",
+      "pronunciation": "InfɜːR",
+      "partOfSpeech": "v.",
+      "example": "Infer meaning from context.",
+      "exampleTranslation": "从语境推断意义。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "integrate",
+      "chinese": "综合",
+      "pronunciation": "IntEgreIt",
+      "partOfSpeech": "v.",
+      "example": "Integrate ideas from sources.",
+      "exampleTranslation": "综合来源中的想法。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "interpret",
+      "chinese": "诠释",
+      "pronunciation": "IntɜːrprEt",
+      "partOfSpeech": "v.",
+      "example": "Interpret charts accurately.",
+      "exampleTranslation": "准确诠释图表。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "justify",
+      "chinese": "为观点辩护",
+      "pronunciation": "DZʌstEfaI",
+      "partOfSpeech": "v.",
+      "example": "Justify your view with evidence.",
+      "exampleTranslation": "用证据为观点辩护。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "maintain",
+      "chinese": "保持",
+      "pronunciation": "meInteIn",
+      "partOfSpeech": "v.",
+      "example": "Maintain a formal style.",
+      "exampleTranslation": "保持正式的文体。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "methodology",
+      "chinese": "方法论",
+      "pronunciation": "meθEdɑːlEDZi",
+      "partOfSpeech": "n.",
+      "example": "Explain your methodology.",
+      "exampleTranslation": "解释你的方法论。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "nuance",
+      "chinese": "细微差别",
+      "pronunciation": "njuːɑːns",
+      "partOfSpeech": "n.",
+      "example": "Capture nuance in writing.",
+      "exampleTranslation": "在写作中捕捉细微差别。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "objective",
+      "chinese": "客观的",
+      "pronunciation": "EbDZektIv",
+      "partOfSpeech": "adj.",
+      "example": "Remain objective in essays.",
+      "exampleTranslation": "在论文中保持客观。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "paraphrase",
+      "chinese": "释义",
+      "pronunciation": "pærEfreIz",
+      "partOfSpeech": "v.",
+      "example": "Paraphrase to avoid plagiarism.",
+      "exampleTranslation": "通过释义避免抄袭。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "perceive",
+      "chinese": "感知",
+      "pronunciation": "pErsIv",
+      "partOfSpeech": "v.",
+      "example": "Perceive subtle differences.",
+      "exampleTranslation": "感知细微差别。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "perspective",
+      "chinese": "观点",
+      "pronunciation": "pErspeKtIv",
+      "partOfSpeech": "n.",
+      "example": "Include multiple perspectives.",
+      "exampleTranslation": "包含多种观点。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "phenomenon",
+      "chinese": "现象",
+      "pronunciation": "fEnɑːmEnEn",
+      "partOfSpeech": "n.",
+      "example": "Explain the phenomenon clearly.",
+      "exampleTranslation": "清楚地解释现象。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "precise",
+      "chinese": "精确的",
+      "pronunciation": "prIsaIs",
+      "partOfSpeech": "adj.",
+      "example": "Use precise vocabulary.",
+      "exampleTranslation": "使用精确的词汇。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "propose",
+      "chinese": "提议",
+      "pronunciation": "prEpoʊZ",
+      "partOfSpeech": "v.",
+      "example": "Propose a clear solution.",
+      "exampleTranslation": "提议明确的解决方案。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "refute",
+      "chinese": "反驳",
+      "pronunciation": "rIfjuːt",
+      "partOfSpeech": "v.",
+      "example": "Refute opposing arguments.",
+      "exampleTranslation": "反驳对立的论点。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "relevant",
+      "chinese": "相关的",
+      "pronunciation": "relEvEnt",
+      "partOfSpeech": "adj.",
+      "example": "Include only relevant information.",
+      "exampleTranslation": "只包含相关信息。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "significant",
+      "chinese": "重要的",
+      "pronunciation": "sIgnIfIkEnt",
+      "partOfSpeech": "adj.",
+      "example": "Note significant changes.",
+      "exampleTranslation": "注意重要的变化。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "summarize",
+      "chinese": "总结",
+      "pronunciation": "sʌmEraIz",
+      "partOfSpeech": "v.",
+      "example": "Summarize the main findings.",
+      "exampleTranslation": "总结主要发现。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "synthesis",
+      "chinese": "综合",
+      "pronunciation": "sInθEsIs",
+      "partOfSpeech": "n.",
+      "example": "Achieve synthesis of ideas.",
+      "exampleTranslation": "实现想法的综合。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "trend",
+      "chinese": "趋势",
+      "pronunciation": "trend",
+      "partOfSpeech": "n.",
+      "example": "Describe the upward trend.",
+      "exampleTranslation": "描述上升趋势。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "underlying",
+      "chinese": "潜在的",
+      "pronunciation": "ʌndErlaIIŋ",
+      "partOfSpeech": "adj.",
+      "example": "Find the underlying causes.",
+      "exampleTranslation": "找到潜在的原因。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "validate",
+      "chinese": "验证",
+      "pronunciation": "vælEdeIt",
+      "partOfSpeech": "v.",
+      "example": "Validate your claims.",
+      "exampleTranslation": "验证你的主张。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "variable",
+      "chinese": "变量",
+      "pronunciation": "veriEbEl",
+      "partOfSpeech": "n.",
+      "example": "Control for all variables.",
+      "exampleTranslation": "控制所有变量。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "verify",
+      "chinese": "核实",
+      "pronunciation": "verEfaI",
+      "partOfSpeech": "v.",
+      "example": "Verify the data sources.",
+      "exampleTranslation": "核实数据来源。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "viable",
+      "chinese": "可行的",
+      "pronunciation": "vaIEbEl",
+      "partOfSpeech": "adj.",
+      "example": "Propose a viable solution.",
+      "exampleTranslation": "提出可行的解决方案。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "vocabulary",
+      "chinese": "词汇",
+      "pronunciation": "voʊkæbjElEri",
+      "partOfSpeech": "n.",
+      "example": "Expand your vocabulary daily.",
+      "exampleTranslation": "每天扩展词汇量。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "widespread",
+      "chinese": "广泛的",
+      "pronunciation": "waIdspred",
+      "partOfSpeech": "adj.",
+      "example": "The problem is widespread.",
+      "exampleTranslation": "这个问题很普遍。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "yield",
+      "chinese": "产生",
+      "pronunciation": "jiːld",
+      "partOfSpeech": "v.",
+      "example": "Hard work yields results.",
+      "exampleTranslation": "努力产生成果。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "abstract",
+      "chinese": "提炼",
+      "pronunciation": "æbstrækt",
+      "partOfSpeech": "v.",
+      "example": "Abstract the key ideas.",
+      "exampleTranslation": "提炼关键想法。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "coherent",
+      "chinese": "连贯的",
+      "pronunciation": "koʊhIrEnt",
+      "partOfSpeech": "adj.",
+      "example": "Write a coherent argument.",
+      "exampleTranslation": "写出连贯的论点。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "consistent",
+      "chinese": "一贯的",
+      "pronunciation": "kEnsIstEnt",
+      "partOfSpeech": "adj.",
+      "example": "Be consistent in your style.",
+      "exampleTranslation": "在风格上保持一贯。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "contrast",
+      "chinese": "对比",
+      "pronunciation": "kɑːntræst",
+      "partOfSpeech": "v.",
+      "example": "Contrast two different views.",
+      "exampleTranslation": "对比两种不同观点。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "deduce",
+      "chinese": "推断",
+      "pronunciation": "dIdjuːs",
+      "partOfSpeech": "v.",
+      "example": "Deduce the main argument.",
+      "exampleTranslation": "推断主要论点。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "depict",
+      "chinese": "描述",
+      "pronunciation": "dIpIkt",
+      "partOfSpeech": "v.",
+      "example": "Depict information graphically.",
+      "exampleTranslation": "以图形方式描述信息。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "distinguish",
+      "chinese": "辨别",
+      "pronunciation": "dIstIŋgwIS",
+      "partOfSpeech": "v.",
+      "example": "Distinguish key differences.",
+      "exampleTranslation": "辨别关键差异。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "elaborate",
+      "chinese": "详述",
+      "pronunciation": "IlæbEreIt",
+      "partOfSpeech": "v.",
+      "example": "Elaborate on each argument.",
+      "exampleTranslation": "详述每个论点。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "establish",
+      "chinese": "建立",
+      "pronunciation": "IstæblIS",
+      "partOfSpeech": "v.",
+      "example": "Establish a clear structure.",
+      "exampleTranslation": "建立清晰的结构。"
+    },
+    {
+      "wordbookId": 4,
+      "english": "logical",
+      "chinese": "符合逻辑的",
+      "pronunciation": "lɑːDZIkEl",
+      "partOfSpeech": "adj.",
+      "example": "Build a logical structure.",
+      "exampleTranslation": "建立符合逻辑的结构。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "aberrant",
+      "chinese": "异常的",
+      "pronunciation": "æbErEnt",
+      "partOfSpeech": "adj.",
+      "example": "Aberrant behavior disrupts learning.",
+      "exampleTranslation": "异常行为扰乱学习。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "abolish",
+      "chinese": "废止",
+      "pronunciation": "EbɑːlIS",
+      "partOfSpeech": "v.",
+      "example": "Abolish outdated policies.",
+      "exampleTranslation": "废止过时的政策。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "abstract",
+      "chinese": "摘要",
+      "pronunciation": "æbstrækt",
+      "partOfSpeech": "n.",
+      "example": "Write a concise abstract.",
+      "exampleTranslation": "写一个简洁的摘要。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "abundant",
+      "chinese": "丰富的",
+      "pronunciation": "EbʌndEnt",
+      "partOfSpeech": "adj.",
+      "example": "Abundant resources help growth.",
+      "exampleTranslation": "丰富的资源有助于成长。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "accelerate",
+      "chinese": "加快",
+      "pronunciation": "EkselEreIt",
+      "partOfSpeech": "v.",
+      "example": "Accelerate your progress.",
+      "exampleTranslation": "加快你的进步。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "accommodate",
+      "chinese": "容纳",
+      "pronunciation": "EkɑːmEdeIt",
+      "partOfSpeech": "v.",
+      "example": "Accommodate various perspectives.",
+      "exampleTranslation": "容纳各种观点。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "accumulate",
+      "chinese": "累积",
+      "pronunciation": "EkjuːmjEleIt",
+      "partOfSpeech": "v.",
+      "example": "Accumulate sufficient evidence.",
+      "exampleTranslation": "累积足够的证据。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "accurate",
+      "chinese": "精确的",
+      "pronunciation": "ækjErEt",
+      "partOfSpeech": "adj.",
+      "example": "Provide accurate information.",
+      "exampleTranslation": "提供精确的信息。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "advocate",
+      "chinese": "提倡",
+      "pronunciation": "ædvEkeIt",
+      "partOfSpeech": "v.",
+      "example": "Advocate for academic integrity.",
+      "exampleTranslation": "提倡学术诚信。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "alleviate",
+      "chinese": "减轻",
+      "pronunciation": "EliːviEt",
+      "partOfSpeech": "v.",
+      "example": "Alleviate academic pressure.",
+      "exampleTranslation": "减轻学业压力。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "ambiguous",
+      "chinese": "含糊的",
+      "pronunciation": "æmbIgjuEs",
+      "partOfSpeech": "adj.",
+      "example": "Clarify ambiguous statements.",
+      "exampleTranslation": "澄清含糊的陈述。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "ameliorate",
+      "chinese": "改善",
+      "pronunciation": "EmiːliEreIt",
+      "partOfSpeech": "v.",
+      "example": "Ameliorate difficult conditions.",
+      "exampleTranslation": "改善困难的条件。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "analogy",
+      "chinese": "类比",
+      "pronunciation": "EnæLEDZi",
+      "partOfSpeech": "n.",
+      "example": "Use an analogy to explain.",
+      "exampleTranslation": "用类比来解释。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "analyze",
+      "chinese": "分析",
+      "pronunciation": "ænElaIz",
+      "partOfSpeech": "v.",
+      "example": "Analyze the argument critically.",
+      "exampleTranslation": "批判性地分析论点。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "anecdote",
+      "chinese": "轶事",
+      "pronunciation": "ænEkdoʊt",
+      "partOfSpeech": "n.",
+      "example": "Support points with anecdotes.",
+      "exampleTranslation": "用轶事支持要点。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "annotate",
+      "chinese": "注释",
+      "pronunciation": "ænEteIt",
+      "partOfSpeech": "v.",
+      "example": "Annotate your reading notes.",
+      "exampleTranslation": "注释你的阅读笔记。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "anticipate",
+      "chinese": "预见",
+      "pronunciation": "æntIsIpeIt",
+      "partOfSpeech": "v.",
+      "example": "Anticipate counterarguments.",
+      "exampleTranslation": "预见反驳论点。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "apparent",
+      "chinese": "明显的",
+      "pronunciation": "EpærEnt",
+      "partOfSpeech": "adj.",
+      "example": "The flaw is apparent.",
+      "exampleTranslation": "缺陷是明显的。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "arbitrary",
+      "chinese": "武断的",
+      "pronunciation": "ɑːrbrEteri",
+      "partOfSpeech": "adj.",
+      "example": "Avoid arbitrary reasoning.",
+      "exampleTranslation": "避免武断的推理。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "articulate",
+      "chinese": "清晰表述",
+      "pronunciation": "ɑːrtIkjEleIt",
+      "partOfSpeech": "v.",
+      "example": "Articulate complex ideas simply.",
+      "exampleTranslation": "简单地表述复杂想法。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "assert",
+      "chinese": "主张",
+      "pronunciation": "EsɜːrT",
+      "partOfSpeech": "v.",
+      "example": "Assert your thesis boldly.",
+      "exampleTranslation": "大胆地主张你的论点。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "assess",
+      "chinese": "评估",
+      "pronunciation": "EseS",
+      "partOfSpeech": "v.",
+      "example": "Assess the strength of evidence.",
+      "exampleTranslation": "评估证据的强度。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "attain",
+      "chinese": "达到",
+      "pronunciation": "EteIn",
+      "partOfSpeech": "v.",
+      "example": "Attain the highest score.",
+      "exampleTranslation": "达到最高分。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "augment",
+      "chinese": "增加",
+      "pronunciation": "ɔːgment",
+      "partOfSpeech": "v.",
+      "example": "Augment arguments with data.",
+      "exampleTranslation": "用数据增加论点。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "autonomous",
+      "chinese": "自主的",
+      "pronunciation": "ɔːtɑːnEmes",
+      "partOfSpeech": "adj.",
+      "example": "Become an autonomous thinker.",
+      "exampleTranslation": "成为自主思考者。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "bias",
+      "chinese": "偏向",
+      "pronunciation": "baIEs",
+      "partOfSpeech": "n.",
+      "example": "Recognize your own bias.",
+      "exampleTranslation": "认识自己的偏向。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "bolster",
+      "chinese": "支持",
+      "pronunciation": "boʊlster",
+      "partOfSpeech": "v.",
+      "example": "Bolster claims with evidence.",
+      "exampleTranslation": "用证据支持主张。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "brevity",
+      "chinese": "简洁",
+      "pronunciation": "brevEti",
+      "partOfSpeech": "n.",
+      "example": "Embrace brevity in writing.",
+      "exampleTranslation": "在写作中追求简洁。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "candid",
+      "chinese": "坦诚的",
+      "pronunciation": "kændId",
+      "partOfSpeech": "adj.",
+      "example": "Be candid in your response.",
+      "exampleTranslation": "在回应中坦诚。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "categorize",
+      "chinese": "归类",
+      "pronunciation": "kætEgEraIz",
+      "partOfSpeech": "v.",
+      "example": "Categorize ideas effectively.",
+      "exampleTranslation": "有效地归类想法。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "causal",
+      "chinese": "因果的",
+      "pronunciation": "kɔːzEl",
+      "partOfSpeech": "adj.",
+      "example": "Identify causal relationships.",
+      "exampleTranslation": "识别因果关系。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "chronological",
+      "chinese": "按时间的",
+      "pronunciation": "krɑːnElɑːDZIkEl",
+      "partOfSpeech": "adj.",
+      "example": "List events in chronological order.",
+      "exampleTranslation": "按时间顺序列出事件。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "cite",
+      "chinese": "援引",
+      "pronunciation": "saIt",
+      "partOfSpeech": "v.",
+      "example": "Cite authoritative sources.",
+      "exampleTranslation": "援引权威来源。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "clarify",
+      "chinese": "说明",
+      "pronunciation": "klærEfaI",
+      "partOfSpeech": "v.",
+      "example": "Clarify your main argument.",
+      "exampleTranslation": "说明你的主要论点。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "coherence",
+      "chinese": "连贯",
+      "pronunciation": "koʊhIrEns",
+      "partOfSpeech": "n.",
+      "example": "Ensure logical coherence.",
+      "exampleTranslation": "确保逻辑连贯。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "colloquial",
+      "chinese": "口头的",
+      "pronunciation": "kElEkwiEl",
+      "partOfSpeech": "adj.",
+      "example": "Avoid colloquial language.",
+      "exampleTranslation": "避免口头语言。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "compelling",
+      "chinese": "令人信服的",
+      "pronunciation": "kEmpelIŋ",
+      "partOfSpeech": "adj.",
+      "example": "Build a compelling argument.",
+      "exampleTranslation": "建立令人信服的论点。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "complement",
+      "chinese": "补充",
+      "pronunciation": "kɑːmplEment",
+      "partOfSpeech": "v.",
+      "example": "Let evidence complement claims.",
+      "exampleTranslation": "让证据补充主张。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "concede",
+      "chinese": "承认",
+      "pronunciation": "kEnsiːd",
+      "partOfSpeech": "v.",
+      "example": "Concede valid counterpoints.",
+      "exampleTranslation": "承认有效的反驳点。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "concise",
+      "chinese": "简明的",
+      "pronunciation": "kEnsaIs",
+      "partOfSpeech": "adj.",
+      "example": "Keep writing concise.",
+      "exampleTranslation": "保持写作简明。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "conclude",
+      "chinese": "得出结论",
+      "pronunciation": "kEnkluːd",
+      "partOfSpeech": "v.",
+      "example": "Conclude with a strong thesis.",
+      "exampleTranslation": "以有力的论点作结。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "conducive",
+      "chinese": "有利的",
+      "pronunciation": "kEndjuːsIv",
+      "partOfSpeech": "adj.",
+      "example": "Create a conducive study space.",
+      "exampleTranslation": "创造有利的学习空间。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "connotation",
+      "chinese": "含义",
+      "pronunciation": "kɑːnEteISEn",
+      "partOfSpeech": "n.",
+      "example": "Consider word connotations.",
+      "exampleTranslation": "考虑词语的含义。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "contend",
+      "chinese": "主张",
+      "pronunciation": "kEntend",
+      "partOfSpeech": "v.",
+      "example": "Contend that change is needed.",
+      "exampleTranslation": "主张需要改变。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "context",
+      "chinese": "背景",
+      "pronunciation": "kɑːntekst",
+      "partOfSpeech": "n.",
+      "example": "Consider the historical context.",
+      "exampleTranslation": "考虑历史背景。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "contradict",
+      "chinese": "与…矛盾",
+      "pronunciation": "kɑːntrEdIkt",
+      "partOfSpeech": "v.",
+      "example": "Do not contradict the evidence.",
+      "exampleTranslation": "不要与证据矛盾。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "controversial",
+      "chinese": "有争议的",
+      "pronunciation": "kɑːntErvɜːrSEl",
+      "partOfSpeech": "adj.",
+      "example": "Handle controversial topics carefully.",
+      "exampleTranslation": "谨慎处理有争议的话题。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "convey",
+      "chinese": "传达",
+      "pronunciation": "kEnveI",
+      "partOfSpeech": "v.",
+      "example": "Convey your argument persuasively.",
+      "exampleTranslation": "有说服力地传达你的论点。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "corroborate",
+      "chinese": "证实",
+      "pronunciation": "kErɑːbEreIt",
+      "partOfSpeech": "v.",
+      "example": "Corroborate claims with data.",
+      "exampleTranslation": "用数据证实主张。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "credible",
+      "chinese": "可靠的",
+      "pronunciation": "kredEbEl",
+      "partOfSpeech": "adj.",
+      "example": "Use only credible sources.",
+      "exampleTranslation": "只使用可靠的来源。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "deduce",
+      "chinese": "推断",
+      "pronunciation": "dIdjuːs",
+      "partOfSpeech": "v.",
+      "example": "Deduce conclusions logically.",
+      "exampleTranslation": "逻辑性地推断结论。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "deliberate",
+      "chinese": "深思熟虑的",
+      "pronunciation": "dIlIbErEt",
+      "partOfSpeech": "adj.",
+      "example": "Make deliberate word choices.",
+      "exampleTranslation": "深思熟虑地选词。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "depict",
+      "chinese": "描绘",
+      "pronunciation": "dIpIkt",
+      "partOfSpeech": "v.",
+      "example": "Depict the situation accurately.",
+      "exampleTranslation": "准确描绘情况。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "derive",
+      "chinese": "推导",
+      "pronunciation": "dIraIv",
+      "partOfSpeech": "v.",
+      "example": "Derive conclusions from data.",
+      "exampleTranslation": "从数据推导结论。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "diffuse",
+      "chinese": "传播",
+      "pronunciation": "dIfjuːz",
+      "partOfSpeech": "v.",
+      "example": "Diffuse knowledge widely.",
+      "exampleTranslation": "广泛传播知识。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "discern",
+      "chinese": "识别",
+      "pronunciation": "dIsɜːrn",
+      "partOfSpeech": "v.",
+      "example": "Discern strong from weak arguments.",
+      "exampleTranslation": "识别强弱论点。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "discourse",
+      "chinese": "论述",
+      "pronunciation": "dIskɔːrs",
+      "partOfSpeech": "n.",
+      "example": "Engage in academic discourse.",
+      "exampleTranslation": "参与学术论述。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "disparity",
+      "chinese": "差异",
+      "pronunciation": "dIspærEti",
+      "partOfSpeech": "n.",
+      "example": "Discuss economic disparity.",
+      "exampleTranslation": "讨论经济差异。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "disrupt",
+      "chinese": "颠覆",
+      "pronunciation": "dIsrʌpt",
+      "partOfSpeech": "v.",
+      "example": "New ideas disrupt old thinking.",
+      "exampleTranslation": "新想法颠覆旧思维。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "divergent",
+      "chinese": "分歧的",
+      "pronunciation": "daIvɜːrDZEnt",
+      "partOfSpeech": "adj.",
+      "example": "Consider divergent viewpoints.",
+      "exampleTranslation": "考虑分歧的观点。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "elaborate",
+      "chinese": "详细阐述",
+      "pronunciation": "IlæbEreIt",
+      "partOfSpeech": "v.",
+      "example": "Elaborate on your thesis.",
+      "exampleTranslation": "详细阐述你的论点。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "eloquent",
+      "chinese": "雄辩的",
+      "pronunciation": "elEkwEnt",
+      "partOfSpeech": "adj.",
+      "example": "Write in an eloquent style.",
+      "exampleTranslation": "以雄辩的风格写作。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "empirical",
+      "chinese": "经验主义的",
+      "pronunciation": "EmpIrIkEl",
+      "partOfSpeech": "adj.",
+      "example": "Rely on empirical research.",
+      "exampleTranslation": "依赖经验研究。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "enumerate",
+      "chinese": "枚举",
+      "pronunciation": "InjuːmEreIt",
+      "partOfSpeech": "v.",
+      "example": "Enumerate supporting points.",
+      "exampleTranslation": "枚举支持性要点。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "ephemeral",
+      "chinese": "短暂的",
+      "pronunciation": "IfemErEl",
+      "partOfSpeech": "adj.",
+      "example": "Some trends are ephemeral.",
+      "exampleTranslation": "一些趋势是短暂的。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "eradicate",
+      "chinese": "根除",
+      "pronunciation": "IrædEkeIt",
+      "partOfSpeech": "v.",
+      "example": "Eradicate logical fallacies.",
+      "exampleTranslation": "根除逻辑谬误。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "evaluate",
+      "chinese": "评判",
+      "pronunciation": "IvæLjueIt",
+      "partOfSpeech": "v.",
+      "example": "Evaluate arguments carefully.",
+      "exampleTranslation": "仔细评判论点。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "evolve",
+      "chinese": "发展演变",
+      "pronunciation": "IvɑːLv",
+      "partOfSpeech": "v.",
+      "example": "Arguments evolve with evidence.",
+      "exampleTranslation": "论点随证据发展演变。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "exacerbate",
+      "chinese": "加剧",
+      "pronunciation": "IɡzæsErbeIt",
+      "partOfSpeech": "v.",
+      "example": "Poor planning exacerbates problems.",
+      "exampleTranslation": "糟糕的计划加剧问题。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "exemplify",
+      "chinese": "例证",
+      "pronunciation": "IɡzemplEfaI",
+      "partOfSpeech": "v.",
+      "example": "Exemplify with real cases.",
+      "exampleTranslation": "用真实案例例证。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "explicit",
+      "chinese": "清楚明确的",
+      "pronunciation": "IksplIsIt",
+      "partOfSpeech": "adj.",
+      "example": "Be explicit about your stance.",
+      "exampleTranslation": "明确表明你的立场。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "facilitate",
+      "chinese": "促进",
+      "pronunciation": "fEsIlEteIt",
+      "partOfSpeech": "v.",
+      "example": "Facilitate knowledge transfer.",
+      "exampleTranslation": "促进知识转移。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "fallacy",
+      "chinese": "谬误",
+      "pronunciation": "fæLEsi",
+      "partOfSpeech": "n.",
+      "example": "Avoid the straw man fallacy.",
+      "exampleTranslation": "避免稻草人谬误。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "formulate",
+      "chinese": "构建",
+      "pronunciation": "fɔːrmjEleIt",
+      "partOfSpeech": "v.",
+      "example": "Formulate a strong thesis.",
+      "exampleTranslation": "构建有力的论点。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "fundamental",
+      "chinese": "根本",
+      "pronunciation": "fʌndEmentEl",
+      "partOfSpeech": "adj.",
+      "example": "Understand fundamental concepts.",
+      "exampleTranslation": "理解根本概念。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "generate",
+      "chinese": "生成",
+      "pronunciation": "DZenEreIt",
+      "partOfSpeech": "v.",
+      "example": "Generate original ideas.",
+      "exampleTranslation": "生成原创想法。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "hypothesize",
+      "chinese": "假设",
+      "pronunciation": "haIpɑːθEsaIz",
+      "partOfSpeech": "v.",
+      "example": "Hypothesize before testing.",
+      "exampleTranslation": "测试前进行假设。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "illustrate",
+      "chinese": "阐明",
+      "pronunciation": "IlEstreIt",
+      "partOfSpeech": "v.",
+      "example": "Illustrate with concrete examples.",
+      "exampleTranslation": "用具体例子阐明。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "implicit",
+      "chinese": "隐性的",
+      "pronunciation": "ImplIsIt",
+      "partOfSpeech": "adj.",
+      "example": "Note implicit assumptions.",
+      "exampleTranslation": "注意隐性假设。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "inevitable",
+      "chinese": "必然的",
+      "pronunciation": "InevItEbEl",
+      "partOfSpeech": "adj.",
+      "example": "Change is inevitable in science.",
+      "exampleTranslation": "科学中的变化是必然的。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "infer",
+      "chinese": "推论",
+      "pronunciation": "InfɜːR",
+      "partOfSpeech": "v.",
+      "example": "Infer the authors intention.",
+      "exampleTranslation": "推论作者的意图。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "inherent",
+      "chinese": "内在固有的",
+      "pronunciation": "InhIrEnt",
+      "partOfSpeech": "adj.",
+      "example": "Address inherent contradictions.",
+      "exampleTranslation": "解决内在固有的矛盾。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "innovative",
+      "chinese": "创新性的",
+      "pronunciation": "InEveItIv",
+      "partOfSpeech": "adj.",
+      "example": "Present innovative solutions.",
+      "exampleTranslation": "提出创新性的解决方案。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "insight",
+      "chinese": "见解",
+      "pronunciation": "InsaIt",
+      "partOfSpeech": "n.",
+      "example": "Offer original insights.",
+      "exampleTranslation": "提供独到的见解。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "integrate",
+      "chinese": "整合",
+      "pronunciation": "IntEgreIt",
+      "partOfSpeech": "v.",
+      "example": "Integrate multiple sources.",
+      "exampleTranslation": "整合多个来源。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "interpret",
+      "chinese": "阐释",
+      "pronunciation": "IntɜːrprEt",
+      "partOfSpeech": "v.",
+      "example": "Interpret results objectively.",
+      "exampleTranslation": "客观地阐释结果。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "investigate",
+      "chinese": "研究",
+      "pronunciation": "InvestEgeIt",
+      "partOfSpeech": "v.",
+      "example": "Investigate the root cause.",
+      "exampleTranslation": "研究根本原因。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "justify",
+      "chinese": "论证",
+      "pronunciation": "DZʌstEfaI",
+      "partOfSpeech": "v.",
+      "example": "Justify each claim made.",
+      "exampleTranslation": "论证每个主张。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "lucid",
+      "chinese": "清晰的",
+      "pronunciation": "luːsId",
+      "partOfSpeech": "adj.",
+      "example": "Write in a lucid style.",
+      "exampleTranslation": "以清晰的风格写作。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "maintain",
+      "chinese": "坚持",
+      "pronunciation": "meInteIn",
+      "partOfSpeech": "v.",
+      "example": "Maintain a consistent argument.",
+      "exampleTranslation": "坚持一致的论点。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "manifest",
+      "chinese": "体现",
+      "pronunciation": "mænEfest",
+      "partOfSpeech": "v.",
+      "example": "Manifest ideas through examples.",
+      "exampleTranslation": "通过例子体现想法。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "mitigate",
+      "chinese": "减轻",
+      "pronunciation": "mItEgeIt",
+      "partOfSpeech": "v.",
+      "example": "Mitigate the effect of bias.",
+      "exampleTranslation": "减轻偏见的影响。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "nuanced",
+      "chinese": "有细微差别的",
+      "pronunciation": "njuːɑːnst",
+      "partOfSpeech": "adj.",
+      "example": "Develop a nuanced argument.",
+      "exampleTranslation": "建立有细微差别的论点。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "objective",
+      "chinese": "客观",
+      "pronunciation": "EbDZektIv",
+      "partOfSpeech": "adj.",
+      "example": "Maintain an objective tone.",
+      "exampleTranslation": "保持客观的语气。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "omit",
+      "chinese": "遗漏",
+      "pronunciation": "EUmIt",
+      "partOfSpeech": "v.",
+      "example": "Do not omit vital evidence.",
+      "exampleTranslation": "不要遗漏重要证据。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "paraphrase",
+      "chinese": "转述",
+      "pronunciation": "pærEfreIz",
+      "partOfSpeech": "v.",
+      "example": "Paraphrase sources accurately.",
+      "exampleTranslation": "准确转述来源。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "perceive",
+      "chinese": "理解",
+      "pronunciation": "pErsIv",
+      "partOfSpeech": "v.",
+      "example": "Perceive logical inconsistencies.",
+      "exampleTranslation": "理解逻辑上的不一致。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "phenomenon",
+      "chinese": "现象",
+      "pronunciation": "fEnɑːmEnEn",
+      "partOfSpeech": "n.",
+      "example": "Study the social phenomenon.",
+      "exampleTranslation": "研究社会现象。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "profound",
+      "chinese": "深刻的",
+      "pronunciation": "prEfaʊnd",
+      "partOfSpeech": "adj.",
+      "example": "Make a profound point.",
+      "exampleTranslation": "提出一个深刻的观点。"
+    },
+    {
+      "wordbookId": 5,
+      "english": "synthesize",
+      "chinese": "综合归纳",
+      "pronunciation": "sInθEsaIz",
+      "partOfSpeech": "v.",
+      "example": "Synthesize information from sources.",
+      "exampleTranslation": "综合归纳来源中的信息。"
     }
   ]
 }

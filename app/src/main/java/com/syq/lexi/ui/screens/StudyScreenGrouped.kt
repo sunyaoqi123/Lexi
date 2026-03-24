@@ -22,6 +22,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -31,14 +34,17 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.syq.lexi.data.database.WordEntity
 import com.syq.lexi.ui.viewmodel.WordbookViewModel
 import kotlinx.coroutines.launch
@@ -228,7 +234,8 @@ fun StudyScreenGrouped(
                                 onMasteredToggle = { isMastered ->
                                     if (isMastered) viewModel?.markWordAsMastered(word.id)
                                     else viewModel?.markWordAsUnmastered(word.id)
-                                }
+                                },
+                                onDelete = { viewModel?.deleteWord(word) }
                             )
                             // 每个单词之间的间距
                             Spacer(modifier = Modifier.height(6.dp))
@@ -302,8 +309,12 @@ fun LetterNavigationBar(
 @Composable
 fun SimpleWordCard(
     word: WordEntity,
-    onMasteredToggle: (Boolean) -> Unit = {}
+    onMasteredToggle: (Boolean) -> Unit = {},
+    onDelete: (() -> Unit)? = null
 ) {
+    var showMenu by remember { mutableStateOf(false) }
+    var showDetail by remember { mutableStateOf(false) }
+    var showDeleteConfirm by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -345,5 +356,74 @@ fun SimpleWordCard(
                 modifier = Modifier.padding(start = 8.dp)
             )
         }
+        Box {
+            IconButton(onClick = { showMenu = true }) {
+                Text("⋮", fontSize = 20.sp, fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.error)
+            }
+            DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
+                DropdownMenuItem(
+                    text = { Text("详情") },
+                    onClick = { showMenu = false; showDetail = true })
+                DropdownMenuItem(
+                    text = { Text("删除", color = MaterialTheme.colorScheme.error) },
+                    onClick = { showMenu = false; showDeleteConfirm = true })
+            }
+        }
+    }
+
+    if (showDetail) {
+        Dialog(onDismissRequest = { showDetail = false }) {
+            androidx.compose.material3.Card(
+                shape = RoundedCornerShape(16.dp),
+                colors = androidx.compose.material3.CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.background)) {
+                Column(modifier = Modifier.padding(24.dp)) {
+                    Text(word.english, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                    if (word.pronunciation.isNotEmpty()) {
+                        Spacer(Modifier.height(4.dp))
+                        Text(word.pronunciation, fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.primary)
+                    }
+                    Spacer(Modifier.height(12.dp))
+                    Text(word.chinese, fontSize = 18.sp, color = MaterialTheme.colorScheme.onSurface)
+                    if (word.example.isNotEmpty()) {
+                        Spacer(Modifier.height(12.dp))
+                        Text("例句", fontSize = 12.sp, fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Spacer(Modifier.height(4.dp))
+                        Text(word.example, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
+                        if (word.exampleTranslation.isNotEmpty()) {
+                            Spacer(Modifier.height(4.dp))
+                            Text(word.exampleTranslation, fontSize = 13.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+                    }
+                    Spacer(Modifier.height(20.dp))
+                    androidx.compose.material3.TextButton(
+                        onClick = { showDetail = false },
+                        modifier = Modifier.align(Alignment.End)
+                    ) { Text("关闭") }
+                }
+            }
+        }
+    }
+
+    if (showDeleteConfirm) {
+        AlertDialog(
+            onDismissRequest = { showDeleteConfirm = false },
+            title = { Text("删除单词") },
+            text = { Text("确定要删除「" + word.english + "」吗？") },
+            confirmButton = {
+                androidx.compose.material3.TextButton(
+                    onClick = { showDeleteConfirm = false; onDelete?.invoke() }
+                ) { Text("删除", color = MaterialTheme.colorScheme.error) }
+            },
+            dismissButton = {
+                androidx.compose.material3.TextButton(
+                    onClick = { showDeleteConfirm = false }
+                ) { Text("取消") }
+            }
+        )
     }
 }

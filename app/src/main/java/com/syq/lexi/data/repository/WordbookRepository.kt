@@ -55,6 +55,39 @@ class WordbookRepository(
         wordDao.deleteWord(word)
     }
 
+    suspend fun deleteWordsByWordbook(wordbookId: Int) {
+        wordDao.deleteWordsByWordbook(wordbookId)
+    }
+
+    // 带查重的批量添加：已存在同英文单词时合并释义
+    suspend fun addWordsWithDedup(
+        wordbookId: Int,
+        words: List<WordEntity>
+    ): Triple<Int, Int, Int> { // added, merged, skipped
+        var added = 0; var merged = 0; var skipped = 0
+        for (word in words) {
+            val existing = wordDao.getWordByEnglish(wordbookId, word.english)
+            if (existing == null) {
+                wordDao.insertWord(word)
+                added++
+            } else {
+                val newMeanings = word.chinese.split("[,，]".toRegex())
+                    .map { it.trim() }.filter { it.isNotEmpty() }
+                val existingMeanings = existing.chinese.split("[,，]".toRegex())
+                    .map { it.trim() }.filter { it.isNotEmpty() }
+                val toAdd = newMeanings.filter { it !in existingMeanings }
+                if (toAdd.isEmpty()) {
+                    skipped++
+                } else {
+                    val merged_chinese = (existingMeanings + toAdd).joinToString("，")
+                    wordDao.updateChinese(existing.id, merged_chinese)
+                    merged++
+                }
+            }
+        }
+        return Triple(added, merged, skipped)
+    }
+
     fun getWordsByWordbook(wordbookId: Int): Flow<List<WordEntity>> {
         return wordDao.getWordsByWordbook(wordbookId)
     }

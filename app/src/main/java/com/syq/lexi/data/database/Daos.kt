@@ -65,6 +65,15 @@ interface WordDao {
 
     @Query("UPDATE words SET isMastered = 0 WHERE id = :wordId")
     suspend fun markWordAsUnmastered(wordId: Int)
+
+    @Query("SELECT * FROM words WHERE wordbookId = :wordbookId AND LOWER(english) = LOWER(:english) LIMIT 1")
+    suspend fun getWordByEnglish(wordbookId: Int, english: String): WordEntity?
+
+    @Query("UPDATE words SET chinese = :chinese WHERE id = :wordId")
+    suspend fun updateChinese(wordId: Int, chinese: String)
+
+    @Query("DELETE FROM words WHERE wordbookId = :wordbookId")
+    suspend fun deleteWordsByWordbook(wordbookId: Int)
 }
 
 @Dao

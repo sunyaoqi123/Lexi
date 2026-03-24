@@ -170,15 +170,43 @@ class WordbookViewModel(private val repository: WordbookRepository) : ViewModel(
                         chinese = parsed.chinese
                     )
                 }
-                repository.insertWords(wordEntities)
+                val (added, merged, skipped) = repository.addWordsWithDedup(wordbookId, wordEntities)
 
                 // 更新单词本的 totalWords 字段
                 val wordbook = repository.getWordbookById(wordbookId).first()
-                repository.updateWordbook(wordbook.copy(totalWords = wordbook.totalWords + words.size))
+                repository.updateWordbook(wordbook.copy(totalWords = wordbook.totalWords + added))
 
-                Log.d("WordbookViewModel", "Added ${words.size} words to wordbook $wordbookId")
+                Log.d("WordbookViewModel", "Words added=$added merged=$merged skipped=$skipped")
             } catch (e: Exception) {
                 Log.e("WordbookViewModel", "Error adding words to wordbook", e)
+            }
+        }
+    }
+
+    fun deleteWord(word: com.syq.lexi.data.database.WordEntity) {
+        viewModelScope.launch {
+            try {
+                repository.deleteWord(word)
+                // 更新单词本的 totalWords
+                val wordbook = repository.getWordbookById(word.wordbookId).first()
+                if (wordbook.totalWords > 0) {
+                    repository.updateWordbook(wordbook.copy(totalWords = wordbook.totalWords - 1))
+                }
+                Log.d("WordbookViewModel", "Deleted word: ${word.english}")
+            } catch (e: Exception) {
+                Log.e("WordbookViewModel", "Error deleting word", e)
+            }
+        }
+    }
+
+    fun deleteWordbookWithWords(wordbook: com.syq.lexi.data.database.WordbookEntity) {
+        viewModelScope.launch {
+            try {
+                repository.deleteWordsByWordbook(wordbook.id)
+                repository.deleteWordbook(wordbook)
+                Log.d("WordbookViewModel", "Deleted wordbook: ${wordbook.name}")
+            } catch (e: Exception) {
+                Log.e("WordbookViewModel", "Error deleting wordbook", e)
             }
         }
     }
