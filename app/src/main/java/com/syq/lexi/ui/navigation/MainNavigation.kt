@@ -4,12 +4,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -17,6 +15,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -29,16 +28,23 @@ import com.syq.lexi.ui.screens.DrawerContent
 import com.syq.lexi.ui.screens.HomeScreen
 import com.syq.lexi.ui.screens.WordbookScreen
 import com.syq.lexi.ui.screens.GameScreen
+import com.syq.lexi.ui.screens.LearningScreen
 import com.syq.lexi.ui.screens.StudyScreenGrouped
+import com.syq.lexi.ui.viewmodel.LearningViewModel
+import com.syq.lexi.ui.viewmodel.StudyPlanViewModel
 import com.syq.lexi.ui.viewmodel.WordbookViewModel
 import kotlinx.coroutines.launch
 
 enum class NavigationItem {
-    HOME, WORDBOOK, GAME, STUDY
+    HOME, WORDBOOK, GAME, STUDY, LEARNING
 }
 
 @Composable
-fun MainNavigation(drawerOpen: MutableState<Boolean>) {
+fun MainNavigation(
+    drawerOpen: MutableState<Boolean>,
+    isDarkTheme: Boolean = false,
+    onToggleDarkTheme: () -> Unit = {}
+) {
     val currentScreen = remember { mutableStateOf(NavigationItem.HOME) }
     val selectedWordbook = remember { mutableStateOf<WordbookEntity?>(null) }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -55,16 +61,38 @@ fun MainNavigation(drawerOpen: MutableState<Boolean>) {
         WordbookViewModel(repository)
     }
 
+    val learningViewModel = remember {
+        val database = LexiDatabase.getDatabase(context)
+        val repository = WordbookRepository(
+            database.wordbookDao(),
+            database.wordDao(),
+            database.studyRecordDao()
+        )
+        LearningViewModel(repository)
+    }
+
+    val studyPlanViewModel = remember {
+        val database = LexiDatabase.getDatabase(context)
+        StudyPlanViewModel(database.studyPlanDao())
+    }
+
+    val selectedLearningWordbook = remember { mutableStateOf<WordbookEntity?>(null) }
+    val selectedGroupSize = remember { mutableStateOf(10) }
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            DrawerContent()
+            DrawerContent(
+                isDarkTheme = isDarkTheme,
+                onToggleDarkTheme = onToggleDarkTheme
+            )
         }
     ) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             bottomBar = {
-                if (currentScreen.value != NavigationItem.STUDY) {
+                if (currentScreen.value != NavigationItem.STUDY &&
+                    currentScreen.value != NavigationItem.LEARNING) {
                     NavigationBar {
                         NavigationBarItem(
                             icon = { Icon(Icons.Default.Home, contentDescription = "首页") },
@@ -92,7 +120,22 @@ fun MainNavigation(drawerOpen: MutableState<Boolean>) {
                 when (currentScreen.value) {
                     NavigationItem.HOME -> HomeScreen(
                         onMenuClick = { scope.launch { drawerState.open() } },
-                        innerPadding = innerPadding
+                        innerPadding = innerPadding,
+                        wordbooks = wordbookViewModel.wordbooks.collectAsState().value,
+                        wordCounts = wordbookViewModel.wordCounts.collectAsState().value,
+                        masteredCounts = wordbookViewModel.masteredCounts.collectAsState().value,
+                        plans = studyPlanViewModel.plans.collectAsState().value,
+                        onStartLearning = { wordbook, groupSize ->
+                            selectedLearningWordbook.value = wordbook
+                            selectedGroupSize.value = groupSize
+                            currentScreen.value = NavigationItem.LEARNING
+                        },
+                        onAddPlan = { wordbookId, dailyWords ->
+                            studyPlanViewModel.addPlan(wordbookId, dailyWords)
+                        },
+                        onDeletePlan = { plan ->
+                            studyPlanViewModel.deletePlan(plan)
+                        }
                     )
                     NavigationItem.WORDBOOK -> WordbookScreen(
                         onMenuClick = { scope.launch { drawerState.open() } },
@@ -117,6 +160,18 @@ fun MainNavigation(drawerOpen: MutableState<Boolean>) {
                                 onBackClick = { currentScreen.value = NavigationItem.WORDBOOK },
                                 innerPadding = innerPadding,
                                 viewModel = wordbookViewModel
+                            )
+                        }
+                    }
+                    NavigationItem.LEARNING -> {
+                        selectedLearningWordbook.value?.let { wordbook ->
+                            LearningScreen(
+                                wordbookId = wordbook.id,
+                                wordbookName = wordbook.name,
+                                groupSize = selectedGroupSize.value,
+                                onBackClick = { currentScreen.value = NavigationItem.HOME },
+                                innerPadding = innerPadding,
+                                viewModel = learningViewModel
                             )
                         }
                     }

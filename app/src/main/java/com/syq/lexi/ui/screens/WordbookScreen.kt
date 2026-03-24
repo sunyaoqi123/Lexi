@@ -47,6 +47,7 @@ fun WordbookScreen(
 ) {
     val wordbooks = viewModel?.wordbooks?.collectAsState()?.value ?: emptyList()
     val isLoading = viewModel?.isLoading?.collectAsState()?.value ?: false
+    val wordCounts = viewModel?.wordCounts?.collectAsState()?.value ?: emptyMap()
     val showImportDialog = remember { mutableStateOf(false) }
 
     Column(
@@ -97,6 +98,7 @@ fun WordbookScreen(
                 items(wordbooks) { wordbook ->
                     WordbookCard(
                         wordbook = wordbook,
+                        actualWordCount = wordCounts[wordbook.id] ?: wordbook.totalWords,
                         onCardClick = { onWordbookClick(wordbook) }
                     )
                 }
@@ -106,11 +108,21 @@ fun WordbookScreen(
 
     // 导入对话框
     if (showImportDialog.value) {
+        val context = androidx.compose.ui.platform.LocalContext.current
         ImportWordbookDialog(
             onDismiss = { showImportDialog.value = false },
-            onImport = { name, description ->
-                // TODO: 实现导入逻辑
-                // 这里可以调用 viewModel 的方法来添加新的单词本
+            onImport = { name, category, description, words ->
+                viewModel?.addWordbook(
+                    name = name,
+                    category = category,
+                    description = description,
+                    words = words
+                )
+                android.widget.Toast.makeText(
+                    context,
+                    "单词本\"$name\"创建成功！共${words.size}个单词",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
             }
         )
     }
@@ -119,6 +131,7 @@ fun WordbookScreen(
 @Composable
 fun WordbookCard(
     wordbook: WordbookEntity,
+    actualWordCount: Int = wordbook.totalWords,
     onCardClick: () -> Unit = {}
 ) {
     Card(
@@ -152,7 +165,7 @@ fun WordbookCard(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     Text(
-                        "共${wordbook.totalWords}词",
+                        "共${actualWordCount}词",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

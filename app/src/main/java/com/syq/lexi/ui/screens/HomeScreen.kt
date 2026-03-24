@@ -13,23 +13,29 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,201 +43,234 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-data class StudyPlan(
-    val id: Int,
-    val name: String,
-    val dailyWords: Int,
-    val progress: Float
-)
+import com.syq.lexi.data.database.StudyPlanEntity
+import com.syq.lexi.data.database.WordbookEntity
+import kotlin.math.ceil
 
 @Composable
 fun HomeScreen(
     onMenuClick: () -> Unit,
-    innerPadding: PaddingValues
+    innerPadding: PaddingValues,
+    wordbooks: List<WordbookEntity> = emptyList(),
+    wordCounts: Map<Int, Int> = emptyMap(),
+    masteredCounts: Map<Int, Int> = emptyMap(),
+    plans: List<StudyPlanEntity> = emptyList(),
+    onStartLearning: (WordbookEntity, Int) -> Unit = { _, _ -> },
+    onAddPlan: (wordbookId: Int, dailyWords: Int) -> Unit = { _, _ -> },
+    onDeletePlan: (StudyPlanEntity) -> Unit = {}
 ) {
-    val studyPlans = remember {
-        mutableStateOf(
-            listOf(
-                StudyPlan(1, "高考词汇", 20, 0.45f),
-                StudyPlan(2, "四级词汇", 15, 0.30f),
-                StudyPlan(3, "六级词汇", 25, 0.60f)
-            )
-        )
-    }
+    var selectedWordbook by remember(wordbooks) { mutableStateOf(wordbooks.firstOrNull()) }
+    var dropdownExpanded by remember { mutableStateOf(false) }
+    var showAddPlanDialog by remember { mutableStateOf(false) }
+    var selectedGroupSize by remember { mutableIntStateOf(10) }
+    val groupSizeOptions = listOf(5, 10, 15, 20)
+    val planWordbookIds = plans.map { it.wordbookId }.toSet()
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)
+        modifier = Modifier.fillMaxSize().padding(innerPadding)
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // 顶部菜单栏
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+        Row(modifier = Modifier.fillMaxWidth().padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = onMenuClick) {
-                Icon(Icons.Default.Menu, contentDescription = "菜单")
-            }
-            Text(
-                "Lexi",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
-            )
+            verticalAlignment = Alignment.CenterVertically) {
+            IconButton(onClick = onMenuClick) { Icon(Icons.Default.Menu, "菜单") }
+            Text("Lexi", fontSize = 24.sp, fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary)
             Box(modifier = Modifier.size(48.dp))
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // 中间圆形背诵按钮
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-            contentAlignment = Alignment.Center
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(200.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.primary,
-                        shape = CircleShape
-                    )
-                    .clickable { }
-                    .padding(16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        "进入",
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                    Text(
-                        "单词背诵",
-                        fontSize = 20.sp,
-                        color = Color.White
-                    )
+        if (wordbooks.isEmpty()) {
+            Box(Modifier.fillMaxSize(), Alignment.Center) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text("还没有单词本", fontSize = 18.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Spacer(Modifier.height(8.dp))
+                    Text("前往单词本页面添加或创建单词本", fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(horizontal = 32.dp))
                 }
             }
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // 背诵计划部分
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .weight(1f)
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 12.dp),
+        } else {
+            Spacer(Modifier.height(16.dp))
+            Box(Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
+                Row(modifier = Modifier.fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(12.dp))
+                    .clickable { dropdownExpanded = true }
+                    .padding(horizontal = 16.dp, vertical = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween) {
+                    Column(Modifier.weight(1f)) {
+                        Text("当前单词本", fontSize = 11.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(selectedWordbook?.name ?: "请选择", fontSize = 16.sp,
+                            fontWeight = FontWeight.SemiBold)
+                    }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        selectedWordbook?.let {
+                            Text(it.category, fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.primary)
+                            Spacer(Modifier.width(4.dp))
+                        }
+                        Icon(Icons.Default.KeyboardArrowDown, "选择",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
+                DropdownMenu(expanded = dropdownExpanded,
+                    onDismissRequest = { dropdownExpanded = false },
+                    modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
+                    wordbooks.forEach { wb ->
+                        DropdownMenuItem(text = {
+                            Column {
+                                Text(wb.name, fontSize = 15.sp,
+                                    fontWeight = if (wb.id == selectedWordbook?.id)
+                                        FontWeight.Bold else FontWeight.Normal,
+                                    color = if (wb.id == selectedWordbook?.id)
+                                        MaterialTheme.colorScheme.primary
+                                    else MaterialTheme.colorScheme.onSurface)
+                                Text(wb.category, fontSize = 12.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                        }, onClick = { selectedWordbook = wb; dropdownExpanded = false })
+                    }
+                }
+            }
+            Spacer(Modifier.height(12.dp))
+            Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween) {
+                Text("每组单词数", fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    groupSizeOptions.forEach { size ->
+                        val isSelected = size == selectedGroupSize
+                        Box(modifier = Modifier
+                            .background(
+                                if (isSelected) MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.surfaceVariant,
+                                RoundedCornerShape(20.dp))
+                            .clickable { selectedGroupSize = size }
+                            .padding(horizontal = 14.dp, vertical = 6.dp),
+                            contentAlignment = Alignment.Center) {
+                            Text("$size", fontSize = 13.sp,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                color = if (isSelected) Color.White
+                                        else MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+                    }
+                }
+            }
+            Spacer(Modifier.height(40.dp))
+            Box(Modifier.fillMaxWidth(), Alignment.Center) {
+                Box(modifier = Modifier.size(180.dp)
+                    .background(MaterialTheme.colorScheme.primary, CircleShape)
+                    .clickable { selectedWordbook?.let { onStartLearning(it, selectedGroupSize) } },
+                    contentAlignment = Alignment.Center) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text("开始", fontSize = 26.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                        Text("背单词", fontSize = 16.sp, color = Color.White)
+                    }
+                }
+            }
+            Spacer(Modifier.height(40.dp))
+            Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    "我的背诵计划",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Button(
-                    onClick = { },
-                    modifier = Modifier.size(32.dp),
-                    shape = CircleShape,
-                    contentPadding = PaddingValues(0.dp)
-                ) {
-                    Icon(Icons.Default.Add, contentDescription = "添加计划")
+                verticalAlignment = Alignment.CenterVertically) {
+                Text("我的背诵计划", fontSize = 17.sp, fontWeight = FontWeight.Bold)
+                IconButton(onClick = { showAddPlanDialog = true }, Modifier.size(32.dp)) {
+                    Icon(Icons.Default.Add, "新增计划", tint = MaterialTheme.colorScheme.primary)
                 }
             }
-
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(studyPlans.value) { plan ->
-                    PlanCard(plan)
+            Spacer(Modifier.height(10.dp))
+            if (plans.isEmpty()) {
+                Box(Modifier.fillMaxWidth().padding(vertical = 32.dp), Alignment.Center) {
+                    Text("点击 + 新增背诵计划", fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+            } else {
+                LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f)
+                    .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    contentPadding = PaddingValues(bottom = 16.dp)) {
+                    items(plans) { plan ->
+                        val wb = wordbooks.find { it.id == plan.wordbookId }
+                        if (wb != null) {
+                            val total = wordCounts[wb.id] ?: wb.totalWords
+                            val mastered = masteredCounts[wb.id] ?: 0
+                            val days = if (plan.dailyWords > 0 && total > 0)
+                                ceil(total.toFloat() / plan.dailyWords).toInt() else 0
+                            PlanCard(name = wb.name, category = wb.category,
+                                totalWords = total, masteredWords = mastered,
+                                dailyWords = plan.dailyWords, daysNeeded = days,
+                                onDelete = { onDeletePlan(plan) })
+                        }
+                    }
                 }
             }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
+    }
+    if (showAddPlanDialog) {
+        AddPlanDialog(wordbooks = wordbooks, wordCounts = wordCounts,
+            existingPlanWordbookIds = planWordbookIds,
+            onDismiss = { showAddPlanDialog = false },
+            onConfirm = { wid, dw -> onAddPlan(wid, dw) })
     }
 }
 
 @Composable
-fun PlanCard(plan: StudyPlan) {
+fun PlanCard(
+    name: String,
+    category: String,
+    totalWords: Int,
+    masteredWords: Int = 0,
+    dailyWords: Int = 0,
+    daysNeeded: Int = 0,
+    onDelete: (() -> Unit)? = null
+) {
+    val progress = if (totalWords > 0) masteredWords.toFloat() / totalWords else 0f
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { },
+        modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
+        Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+            Row(modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    plan.name,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Text(
-                    "${plan.dailyWords}词/天",
-                    fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.primary
-                )
+                verticalAlignment = Alignment.CenterVertically) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(name, fontSize = 15.sp, fontWeight = FontWeight.SemiBold)
+                    Text(category, fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                Column(horizontalAlignment = Alignment.End) {
+                    Text("$masteredWords / ${totalWords}词", fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.primary)
+                    if (dailyWords > 0) {
+                        Text("${dailyWords}词/天 · 约${daysNeeded}天", fontSize = 11.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
             }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // 进度条
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
+            Spacer(Modifier.height(8.dp))
+            Box(modifier = Modifier.fillMaxWidth().height(8.dp)
+                .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.2f),
+                    RoundedCornerShape(4.dp))) {
+                Box(modifier = Modifier
+                    .fillMaxWidth(progress.coerceIn(0f, 1f))
                     .height(8.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f),
-                        shape = RoundedCornerShape(4.dp)
-                    )
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth(plan.progress)
-                        .height(8.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(4.dp)
-                        )
-                )
+                    .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(4.dp)))
             }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                "${(plan.progress * 100).toInt()}% 完成",
-                fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.End,
-                modifier = Modifier.fillMaxWidth()
-            )
+            Spacer(Modifier.height(4.dp))
+            Row(modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically) {
+                Text("${(progress * 100).toInt()}%已掌握", fontSize = 11.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                if (onDelete != null) {
+                    Text("删除计划", fontSize = 11.sp, color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.clickable { onDelete() })
+                }
+            }
         }
     }
 }

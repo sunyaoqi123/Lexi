@@ -41,6 +41,15 @@ data class WordEntity(
     val masteredDate: Long = 0
 )
 
+@Entity(tableName = "study_plans")
+data class StudyPlanEntity(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+    val wordbookId: Int,
+    val dailyWords: Int,       // 每天背多少个
+    val createdDate: Long = System.currentTimeMillis()
+)
+
 @Entity(tableName = "study_records")
 data class StudyRecordEntity(
     @PrimaryKey(autoGenerate = true)

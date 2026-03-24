@@ -2,24 +2,22 @@ package com.syq.lexi.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// 浅色主题
-val Primary = Color(0xFF6366F1)
-val PrimaryLight = Color(0xFF818CF8)
-val PrimaryDark = Color(0xFF4F46E5)
+// 蓝色主题
+val Primary = Color(0xFF1A4FA0)       // 深蓝主色
+val PrimaryLight = Color(0xFF5B9BF7)  // 浅蓝（深色模式用）
+val PrimaryDark = Color(0xFF0D2F6B)   // 更深蓝
 
-val Secondary = Color(0xFF8B5CF6)
-val SecondaryLight = Color(0xFFA78BFA)
-val SecondaryDark = Color(0xFF7C3AED)
+val Secondary = Color(0xFF0EA5E9)     // 天蓝
+val SecondaryLight = Color(0xFF38BDF8) // 浅天蓝
+val SecondaryDark = Color(0xFF0284C7) // 深天蓝
 
-val Tertiary = Color(0xFFEC4899)
-val TertiaryLight = Color(0xFFF472B6)
-val TertiaryDark = Color(0xFFDB2777)
+val Tertiary = Color(0xFF06B6D4)      // 青蓝
+val TertiaryLight = Color(0xFF67E8F9) // 浅青蓝
+val TertiaryDark = Color(0xFF0E7490)  // 深青蓝
 
-// 深色主题
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
-
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+// 背景和容器色
+val BlueBackground = Color(0xFFF0F6FF)    // 极浅蓝背景
+val BlueSurface = Color(0xFFE8F1FF)       // 浅蓝 surface
+val BlueSurfaceVariant = Color(0xFFDCEAFF) // 浅蓝 surfaceVariant
+val BluePrimaryContainer = Color(0xFFBDD7FF) // 浅蓝容器
+val BlueOnPrimaryContainer = Color(0xFF003D82) // 深蓝文字

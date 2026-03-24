@@ -13,17 +13,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -45,6 +43,9 @@ import com.syq.lexi.data.database.WordEntity
 import com.syq.lexi.ui.viewmodel.WordbookViewModel
 import kotlinx.coroutines.launch
 
+// 所有26个字母
+private val ALL_LETTERS = ('A'..'Z').toList()
+
 @Composable
 fun StudyScreenGrouped(
     wordbookId: Int,
@@ -56,8 +57,8 @@ fun StudyScreenGrouped(
 ) {
     val allWords = viewModel?.words?.collectAsState()?.value ?: emptyList()
     val searchQuery = remember { mutableStateOf("") }
-    
-    // 根据搜索词过滤单词
+    val showAddWordsDialog = remember { mutableStateOf(false) }
+
     val filteredWords = if (searchQuery.value.isEmpty()) {
         allWords
     } else {
@@ -66,25 +67,23 @@ fun StudyScreenGrouped(
             word.chinese.contains(searchQuery.value, ignoreCase = false)
         }
     }
-    
-    // 按首字母分组
+
+    // 按首字母分组（只含有单词的字母）
     val groupedWords = remember(filteredWords) {
         filteredWords.sortedBy { it.english }
             .groupBy { it.english.firstOrNull()?.uppercaseChar() ?: '?' }
             .toSortedMap()
     }
-    
-    val letters = remember(groupedWords) { groupedWords.keys.toList() }
+
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
-    
-    // 获取当前可见的首字母
-    val currentVisibleLetter = remember {
+
+    // 当前可见首字母 - 直接依赖 listState 和 groupedWords
+    val currentVisibleLetter = remember(groupedWords) {
         derivedStateOf {
             val firstVisibleIndex = listState.firstVisibleItemIndex
-            var currentLetter = 'A'
+            var currentLetter = groupedWords.keys.firstOrNull() ?: 'A'
             var currentIndex = 0
-            
             for ((letter, words) in groupedWords) {
                 if (currentIndex + words.size > firstVisibleIndex) {
                     currentLetter = letter
@@ -121,66 +120,86 @@ fun StudyScreenGrouped(
                     modifier = Modifier.weight(1f),
                     maxLines = 1
                 )
+                IconButton(onClick = { showAddWordsDialog.value = true }) {
+                    Icon(
+                        Icons.Default.Add,
+                        contentDescription = "添加单词"
+                    )
+                }
             }
 
-            // 搜索框
-            TextField(
-                value = searchQuery.value,
-                onValueChange = { searchQuery.value = it },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                placeholder = { Text("搜索单词...") },
-                singleLine = true,
-                trailingIcon = {
-                    if (searchQuery.value.isNotEmpty()) {
-                        IconButton(onClick = { searchQuery.value = "" }) {
-                            Icon(Icons.Default.Clear, contentDescription = "清除")
-                        }
+            // 添加单词对话框
+            if (showAddWordsDialog.value) {
+                val context = androidx.compose.ui.platform.LocalContext.current
+                AddWordsDialog(
+                    wordbookName = wordbookName,
+                    onDismiss = { showAddWordsDialog.value = false },
+                    onAdd = { words ->
+                        viewModel?.addWordsToWordbook(wordbookId, words)
+                        android.widget.Toast.makeText(
+                            context,
+                            "成功添加 ${words.size} 个单词",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
                     }
-                },
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-                    unfocusedIndicatorColor = MaterialTheme.colorScheme.outline
-                ),
-                shape = RoundedCornerShape(8.dp)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // 单词统计
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Text(
-                    "共${filteredWords.size}词",
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    "已掌握${filteredWords.count { it.isMastered }}词",
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.primary
                 )
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+        // 搜索框
+        TextField(
+            value = searchQuery.value,
+            onValueChange = { searchQuery.value = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            placeholder = { Text("搜索单词...") },
+            singleLine = true,
+            trailingIcon = {
+                if (searchQuery.value.isNotEmpty()) {
+                    IconButton(onClick = { searchQuery.value = "" }) {
+                        Icon(Icons.Default.Clear, contentDescription = "清除")
+                    }
+                }
+            },
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.outline
+            ),
+            shape = RoundedCornerShape(8.dp)
+        )
 
-            // 单词列表
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // 统计
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Text(
+                "共${filteredWords.size}词",
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                "已掌握${filteredWords.count { it.isMastered }}词",
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
             if (filteredWords.isEmpty()) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
+                    modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        "未找到匹配的单词",
+                        if (searchQuery.value.isEmpty()) "快来添加词汇吧！" else "未找到匹配的单词",
                         fontSize = 16.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -191,51 +210,49 @@ fun StudyScreenGrouped(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(0.dp),
                     contentPadding = PaddingValues(bottom = 16.dp)
                 ) {
                     groupedWords.forEach { (letter, words) ->
                         item {
-                            // 字母标题
                             Text(
                                 letter.toString(),
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.padding(vertical = 8.dp)
+                                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
                             )
                         }
-                        
                         items(words) { word ->
                             SimpleWordCard(
                                 word = word,
                                 onMasteredToggle = { isMastered ->
-                                    if (isMastered) {
-                                        viewModel?.markWordAsMastered(word.id)
-                                    } else {
-                                        viewModel?.markWordAsUnmastered(word.id)
-                                    }
+                                    if (isMastered) viewModel?.markWordAsMastered(word.id)
+                                    else viewModel?.markWordAsUnmastered(word.id)
                                 }
                             )
+                            // 每个单词之间的间距
+                            Spacer(modifier = Modifier.height(6.dp))
                         }
                     }
                 }
             }
         }
 
-        // 右侧字母导航栏
+        // 右侧全字母导航栏
         LetterNavigationBar(
-            letters = letters,
+            availableLetters = groupedWords.keys.toSet(),
             currentLetter = currentVisibleLetter.value,
             onLetterClick = { letter ->
-                scope.launch {
-                    var index = 0
-                    for ((l, words) in groupedWords) {
-                        if (l == letter) {
-                            listState.animateScrollToItem(index)
-                            break
+                if (groupedWords.containsKey(letter)) {
+                    scope.launch {
+                        var index = 0
+                        for ((l, words) in groupedWords) {
+                            if (l == letter) {
+                                listState.animateScrollToItem(index)
+                                break
+                            }
+                            index += words.size + 1
                         }
-                        index += words.size + 1
                     }
                 }
             }
@@ -245,7 +262,7 @@ fun StudyScreenGrouped(
 
 @Composable
 fun LetterNavigationBar(
-    letters: List<Char>,
+    availableLetters: Set<Char>,
     currentLetter: Char,
     onLetterClick: (Char) -> Unit
 ) {
@@ -253,21 +270,30 @@ fun LetterNavigationBar(
         modifier = Modifier
             .fillMaxHeight()
             .width(24.dp)
-            .background(MaterialTheme.colorScheme.surfaceVariant)
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .background(
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = RoundedCornerShape(12.dp)
+            )
+            .padding(vertical = 4.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        letters.forEach { letter ->
-            val isCurrentLetter = letter == currentLetter
+        ALL_LETTERS.forEach { letter ->
+            val isAvailable = availableLetters.contains(letter)
+            val isCurrent = letter == currentLetter
             Text(
                 letter.toString(),
-                fontSize = if (isCurrentLetter) 14.sp else 10.sp,
-                fontWeight = if (isCurrentLetter) FontWeight.Bold else FontWeight.Normal,
-                color = if (isCurrentLetter) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = if (isCurrent) 14.sp else 10.sp,
+                fontWeight = if (isCurrent) FontWeight.Bold else FontWeight.Normal,
+                color = when {
+                    isCurrent -> MaterialTheme.colorScheme.primary
+                    isAvailable -> MaterialTheme.colorScheme.onSurfaceVariant
+                    else -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
+                },
                 modifier = Modifier
-                    .clickable { onLetterClick(letter) }
-                    .padding(2.dp)
+                    .clickable(enabled = isAvailable) { onLetterClick(letter) }
+                    .padding(vertical = 1.dp)
             )
         }
     }
@@ -289,7 +315,7 @@ fun SimpleWordCard(
                     MaterialTheme.colorScheme.surfaceVariant,
                 shape = RoundedCornerShape(6.dp)
             )
-            .padding(12.dp),
+            .padding(horizontal = 12.dp, vertical = 10.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -311,7 +337,6 @@ fun SimpleWordCard(
                 modifier = Modifier.weight(1f)
             )
         }
-        
         if (word.isMastered) {
             Text(
                 "✓",

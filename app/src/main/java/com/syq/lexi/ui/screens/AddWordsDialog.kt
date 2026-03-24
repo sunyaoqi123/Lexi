@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -25,60 +26,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.compose.foundation.shape.RoundedCornerShape
-
-data class ParsedWord(
-    val english: String,
-    val chinese: String
-)
-
-fun parseWordText(text: String): List<ParsedWord> {
-    val result = mutableListOf<ParsedWord>()
-    text.lines().forEach { line ->
-        val trimmed = line.trim()
-        if (trimmed.isEmpty()) return@forEach
-        
-        // 支持多种分隔符：空格、制表符、逗号、中文逗号、破折号
-        val separators = listOf(",", "，", "\t", " - ", "-")
-        var parsed = false
-        
-        for (sep in separators) {
-            val idx = trimmed.indexOf(sep)
-            if (idx > 0) {
-                val english = trimmed.substring(0, idx).trim()
-                val chinese = trimmed.substring(idx + sep.length).trim()
-                if (english.isNotEmpty() && chinese.isNotEmpty()) {
-                    result.add(ParsedWord(english, chinese))
-                    parsed = true
-                    break
-                }
-            }
-        }
-        
-        // 如果没有找到分隔符，尝试按第一个空格分隔
-        if (!parsed) {
-            val idx = trimmed.indexOf(' ')
-            if (idx > 0) {
-                val english = trimmed.substring(0, idx).trim()
-                val chinese = trimmed.substring(idx + 1).trim()
-                if (english.isNotEmpty() && chinese.isNotEmpty()) {
-                    result.add(ParsedWord(english, chinese))
-                }
-            }
-        }
-    }
-    return result
-}
 
 @Composable
-fun ImportWordbookDialog(
+fun AddWordsDialog(
+    wordbookName: String,
     onDismiss: () -> Unit,
-    onImport: (name: String, category: String, description: String, words: List<ParsedWord>) -> Unit
+    onAdd: (words: List<ParsedWord>) -> Unit
 ) {
-    val wordbookName = remember { mutableStateOf("") }
-    val wordbookCategory = remember { mutableStateOf("") }
     val wordText = remember { mutableStateOf("") }
-    val nameError = remember { mutableStateOf(false) }
     val previewWords = remember(wordText.value) { parseWordText(wordText.value) }
 
     Dialog(
@@ -100,54 +55,28 @@ fun ImportWordbookDialog(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    "新建单词本",
+                    "添加单词",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
+                Text(
+                    "添加到：$wordbookName",
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
 
                 Spacer(modifier = Modifier.height(20.dp))
-
-                // 单词本名称
-                TextField(
-                    value = wordbookName.value,
-                    onValueChange = {
-                        wordbookName.value = it
-                        nameError.value = false
-                    },
-                    label = { Text("单词本名称 *") },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                    isError = nameError.value,
-                    supportingText = {
-                        if (nameError.value) {
-                            Text("请输入单词本名称", color = MaterialTheme.colorScheme.error)
-                        }
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // 分类
-                TextField(
-                    value = wordbookCategory.value,
-                    onValueChange = { wordbookCategory.value = it },
-                    label = { Text("分类（可选，如：高考、四级）") },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
 
                 // 单词文本输入
                 TextField(
                     value = wordText.value,
                     onValueChange = { wordText.value = it },
-                    label = { Text("粘贴单词（每行一个）") },
+                    label = { Text("粘贴或输入单词（每行一个）") },
                     placeholder = { Text("apple 苹果\nbanana 香蕉\ncherry 樱桃") },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(160.dp),
-                    maxLines = 10,
+                        .height(200.dp),
+                    maxLines = 15,
                     singleLine = false
                 )
 
@@ -185,6 +114,12 @@ fun ImportWordbookDialog(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
+                } else if (wordText.value.isNotEmpty()) {
+                    Text(
+                        "未识别到单词，请检查格式",
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.error
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -202,21 +137,15 @@ fun ImportWordbookDialog(
 
                     Button(
                         onClick = {
-                            if (wordbookName.value.isBlank()) {
-                                nameError.value = true
-                            } else {
-                                onImport(
-                                    wordbookName.value.trim(),
-                                    wordbookCategory.value.trim().ifEmpty { "自定义" },
-                                    "",
-                                    previewWords
-                                )
+                            if (previewWords.isNotEmpty()) {
+                                onAdd(previewWords)
                                 onDismiss()
                             }
                         },
+                        enabled = previewWords.isNotEmpty(),
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("创建（${previewWords.size}词）")
+                        Text("添加（${previewWords.size}词）")
                     }
                 }
             }

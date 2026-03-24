@@ -68,6 +68,21 @@ interface WordDao {
 }
 
 @Dao
+interface StudyPlanDao {
+    @Insert(onConflict = androidx.room.OnConflictStrategy.REPLACE)
+    suspend fun insertPlan(plan: StudyPlanEntity): Long
+
+    @Delete
+    suspend fun deletePlan(plan: StudyPlanEntity)
+
+    @Query("SELECT * FROM study_plans")
+    fun getAllPlans(): Flow<List<StudyPlanEntity>>
+
+    @Query("SELECT * FROM study_plans WHERE wordbookId = :wordbookId LIMIT 1")
+    fun getPlanByWordbook(wordbookId: Int): Flow<StudyPlanEntity?>
+}
+
+@Dao
 interface StudyRecordDao {
     @Insert
     suspend fun insertRecord(record: StudyRecordEntity): Long
