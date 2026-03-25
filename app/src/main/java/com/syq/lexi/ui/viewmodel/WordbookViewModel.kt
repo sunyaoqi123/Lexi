@@ -176,7 +176,10 @@ class WordbookViewModel(
         viewModelScope.launch {
             try {
                 repository.starWord(wordId)
+                // 收藏时立即取消已掌握状态
+                repository.markWordAsUnmastered(wordId)
                 syncStarToRemote(wordId, true)
+                syncMasteredToRemote(wordId, false)
             } catch (e: Exception) {
                 Log.e("WordbookViewModel", "Error starring word", e)
             }

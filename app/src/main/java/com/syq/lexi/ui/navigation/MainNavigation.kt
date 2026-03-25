@@ -16,6 +16,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -138,13 +139,16 @@ fun MainNavigation(
                         starredCounts = wordbookViewModel.starredCounts.collectAsState().value,
                         plans = studyPlanViewModel.plans.collectAsState().value,
                         onStartLearning = { wordbook, groupSize ->
+                            learningViewModel.resetState()
                             selectedLearningWordbook.value = wordbook
                             selectedGroupSize.value = groupSize
                             isStarredMode.value = false
                             currentScreen.value = NavigationItem.LEARNING
                         },
-                        onStartStarredLearning = { wordbook ->
+                        onStartStarredLearning = { wordbook, groupSize ->
+                            learningViewModel.resetState()
                             selectedLearningWordbook.value = wordbook
+                            selectedGroupSize.value = groupSize
                             isStarredMode.value = true
                             currentScreen.value = NavigationItem.LEARNING
                         },
@@ -191,19 +195,21 @@ fun MainNavigation(
                     }
                     NavigationItem.LEARNING -> {
                         selectedLearningWordbook.value?.let { wordbook ->
-                            LearningScreen(
-                                wordbookId = wordbook.id,
-                                wordbookName = wordbook.name,
-                                groupSize = selectedGroupSize.value,
-                                starredOnly = isStarredMode.value,
-                                onBackClick = { currentScreen.value = NavigationItem.HOME },
-                                innerPadding = innerPadding,
-                                viewModel = learningViewModel,
-                                onStarChanged = { wordId, isStarred ->
-                                    if (isStarred) wordbookViewModel.starWord(wordId)
-                                    else wordbookViewModel.unstarWord(wordId)
-                                }
-                            )
+                            key(wordbook.id, isStarredMode.value, selectedGroupSize.value) {
+                                LearningScreen(
+                                    wordbookId = wordbook.id,
+                                    wordbookName = wordbook.name,
+                                    groupSize = selectedGroupSize.value,
+                                    starredOnly = isStarredMode.value,
+                                    onBackClick = { currentScreen.value = NavigationItem.HOME },
+                                    innerPadding = innerPadding,
+                                    viewModel = learningViewModel,
+                                    onStarChanged = { wordId, isStarred ->
+                                        if (isStarred) wordbookViewModel.starWord(wordId)
+                                        else wordbookViewModel.unstarWord(wordId)
+                                    }
+                                )
+                            }
                         }
                     }
                     NavigationItem.STARRED -> {

@@ -115,6 +115,21 @@ class SyncRepository(
                     } else {
                         Log.d("SyncRepository", "'${sysWb.name}' already up to date")
                     }
+                    // 把本地最新单词列表上传到服务端用户词库（确保删词操作也持久化）
+                    try {
+                        val remoteUserWbs = api.getWordbooks(bearer)
+                        val userWb = remoteUserWbs.find { it.name == sysWb.name }
+                        if (userWb != null) {
+                            val latestLocal = wordbookRepository.getWordsByWordbook(existing.id).first()
+                            if (latestLocal.isNotEmpty()) {
+                                api.syncWords(bearer, userWb.id,
+                                    com.syq.lexi.data.network.SyncWordsRequest(latestLocal.map { it.toDto() }))
+                                Log.d("SyncRepository", "Uploaded local changes for '${sysWb.name}' to user server")
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.e("SyncRepository", "Upload changes for '${sysWb.name}' failed: ${e.message}")
+                    }
                 }
             }
 

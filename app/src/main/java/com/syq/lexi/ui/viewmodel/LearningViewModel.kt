@@ -33,8 +33,8 @@ data class LearningSessionState(
     val wordbookName: String = "",
     val phase: LearningPhase = LearningPhase.PHASE1_WORD_TO_MEANING,
     val currentQuestion: QuizQuestion? = null,
-    val currentIndex: Int = 0,
-    val totalInRound: Int = 0,       // 本轮题目数（含重复答错的）
+    val currentIndex: Int = 0,      // 已答对的数量（进度）
+    val totalInRound: Int = 0,       // 固定为 sessionWordCount
     val sessionWordCount: Int = 0,   // 原始单词数（固定不变）
     val correctCount: Int = 0,       // 本轮答对数
     val selectedAnswer: String? = null,
@@ -65,12 +65,19 @@ class LearningViewModel(private val repository: WordbookRepository) : ViewModel(
 
     // 当前题目在队列中的索引
     private var currentQueueIndex: Int = 0
+    // 当前阶段已答对数量（用于进度显示）
+    private var correctInPhase: Int = 0
 
     fun startSession(wordbookId: Int, wordbookName: String, groupSize: Int = 10, starredOnly: Boolean = false) {
         viewModelScope.launch {
             try {
                 this@LearningViewModel.starredOnly = starredOnly
-                _state.value = _state.value.copy(isLoading = true)
+                // 立刻清空旧状态，防止闪烁
+                _state.value = LearningSessionState(
+                    wordbookId = wordbookId,
+                    wordbookName = wordbookName,
+                    isLoading = true
+                )
                 allWords = repository.getWordsByWordbook(wordbookId).first()
 
                 if (allWords.size < 4) {
@@ -97,7 +104,9 @@ class LearningViewModel(private val repository: WordbookRepository) : ViewModel(
                 }
 
                 sessionWords = if (starredOnly) {
-                    candidateWords.shuffled()
+                    // 练习难词：groupSize 不能超过难词总数
+                    val actualSize = minOf(groupSize, candidateWords.size)
+                    candidateWords.shuffled().take(actualSize)
                 } else {
                     if (candidateWords.size >= groupSize) candidateWords.take(groupSize)
                     else candidateWords
@@ -107,6 +116,7 @@ class LearningViewModel(private val repository: WordbookRepository) : ViewModel(
                 phase2Queue = mutableListOf()
                 phase3Queue = mutableListOf()
                 currentQueueIndex = 0
+                correctInPhase = 0
 
                 _state.value = LearningSessionState(
                     wordbookId = wordbookId,
@@ -141,8 +151,8 @@ class LearningViewModel(private val repository: WordbookRepository) : ViewModel(
 
         _state.value = _state.value.copy(
             currentQuestion = question,
-            currentIndex = currentQueueIndex,
-            totalInRound = queue.size,
+            currentIndex = correctInPhase,
+            totalInRound = _state.value.sessionWordCount,
             selectedAnswer = null,
             isAnswered = false,
             isCorrect = false,
@@ -183,7 +193,9 @@ class LearningViewModel(private val repository: WordbookRepository) : ViewModel(
         val question = state.currentQuestion ?: return
         val isCorrect = answer.trim().equals(question.correctAnswer.trim(), ignoreCase = true)
 
-        if (!isCorrect) {
+        if (isCorrect) {
+            correctInPhase++
+        } else {
             // 答错：加入本阶段队列末尾，下轮重复
             when (state.phase) {
                 LearningPhase.PHASE1_WORD_TO_MEANING -> phase1Queue.add(question.word)
@@ -196,7 +208,8 @@ class LearningViewModel(private val repository: WordbookRepository) : ViewModel(
         _state.value = _state.value.copy(
             selectedAnswer = answer,
             isAnswered = true,
-            isCorrect = isCorrect
+            isCorrect = isCorrect,
+            currentIndex = correctInPhase
         )
     }
 
@@ -214,6 +227,7 @@ class LearningViewModel(private val repository: WordbookRepository) : ViewModel(
             LearningPhase.PHASE1_WORD_TO_MEANING -> {
                 phase2Queue = sessionWords.shuffled().toMutableList()
                 currentQueueIndex = 0
+                correctInPhase = 0
                 _state.value = _state.value.copy(
                     phase = LearningPhase.PHASE2_MEANING_TO_WORD,
                     totalInRound = phase2Queue.size,
@@ -224,6 +238,7 @@ class LearningViewModel(private val repository: WordbookRepository) : ViewModel(
             LearningPhase.PHASE2_MEANING_TO_WORD -> {
                 phase3Queue = sessionWords.shuffled().toMutableList()
                 currentQueueIndex = 0
+                correctInPhase = 0
                 _state.value = _state.value.copy(
                     phase = LearningPhase.PHASE3_SPELL_WORD,
                     totalInRound = phase3Queue.size,
@@ -239,11 +254,27 @@ class LearningViewModel(private val repository: WordbookRepository) : ViewModel(
         }
     }
 
+    fun resetState() {
+        _state.value = LearningSessionState(isLoading = false)
+        sessionWords = emptyList()
+        allWords = emptyList()
+        phase1Queue = mutableListOf()
+        phase2Queue = mutableListOf()
+        phase3Queue = mutableListOf()
+        currentQueueIndex = 0
+        correctInPhase = 0
+    }
+
     fun toggleStar(wordId: Int, isStarred: Boolean, onSyncToRemote: ((Int, Boolean) -> Unit)? = null) {
         viewModelScope.launch {
             try {
-                if (isStarred) repository.unstarWord(wordId)
-                else repository.starWord(wordId)
+                if (isStarred) {
+                    repository.unstarWord(wordId)
+                } else {
+                    repository.starWord(wordId)
+                    // 收藏时立即取消已掌握状态
+                    repository.markWordAsUnmastered(wordId)
+                }
                 val newStarred = !isStarred
                 // 更新 allWords 和 sessionWords 里的状态
                 allWords = allWords.map {

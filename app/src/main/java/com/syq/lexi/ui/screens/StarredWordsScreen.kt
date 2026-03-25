@@ -1,12 +1,14 @@
 package com.syq.lexi.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -88,7 +90,11 @@ fun StarredWordsScreen(
                 items(starredWords, key = { it.id }) { word ->
                     StarredWordCard(
                         word = word,
-                        onUnstar = { viewModel.unstarWord(word.id) }
+                        onUnstar = { viewModel.unstarWord(word.id) },
+                        onMasterAndUnstar = {
+                            viewModel.markWordAsMastered(word.id)
+                            viewModel.unstarWord(word.id)
+                        }
                     )
                 }
             }
@@ -97,21 +103,38 @@ fun StarredWordsScreen(
 }
 
 @Composable
-fun StarredWordCard(word: WordEntity, onUnstar: () -> Unit) {
-    var showConfirm by remember { mutableStateOf(false) }
+fun StarredWordCard(word: WordEntity, onUnstar: () -> Unit, onMasterAndUnstar: () -> Unit = {}) {
+    var showUnstarConfirm by remember { mutableStateOf(false) }
+    var showMasterConfirm by remember { mutableStateOf(false) }
 
-    if (showConfirm) {
+    if (showUnstarConfirm) {
         AlertDialog(
-            onDismissRequest = { showConfirm = false },
+            onDismissRequest = { showUnstarConfirm = false },
             title = { Text("取消收藏") },
             text = { Text("确定要从难词本移除「${word.english}」吗？") },
             confirmButton = {
-                TextButton(onClick = { showConfirm = false; onUnstar() }) {
+                TextButton(onClick = { showUnstarConfirm = false; onUnstar() }) {
                     Text("确定", color = MaterialTheme.colorScheme.error)
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showConfirm = false }) { Text("取消") }
+                TextButton(onClick = { showUnstarConfirm = false }) { Text("取消") }
+            }
+        )
+    }
+
+    if (showMasterConfirm) {
+        AlertDialog(
+            onDismissRequest = { showMasterConfirm = false },
+            title = { Text("标记为已掌握") },
+            text = { Text("确定将「${word.english}」标记为已掌握并取消收藏吗？") },
+            confirmButton = {
+                TextButton(onClick = { showMasterConfirm = false; onMasterAndUnstar() }) {
+                    Text("确定", color = MaterialTheme.colorScheme.primary)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showMasterConfirm = false }) { Text("取消") }
             }
         )
     }
@@ -150,13 +173,29 @@ fun StarredWordCard(word: WordEntity, onUnstar: () -> Unit) {
                         maxLines = 1)
                 }
             }
-            IconButton(onClick = { showConfirm = true }) {
-                Icon(
-                    Icons.Default.Star,
-                    contentDescription = "取消收藏",
-                    tint = Color(0xFFFFB300),
-                    modifier = Modifier.size(22.dp)
-                )
+            Row(horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically) {
+                // 对勾按钮：标记已掌握并取消收藏
+                IconButton(onClick = { showMasterConfirm = true }) {
+                    Icon(
+                        Icons.Default.Check,
+                        contentDescription = "标记已掌握",
+                        tint = MaterialTheme.colorScheme.outline,
+                        modifier = Modifier.size(20.dp)
+                            .border(1.5.dp, MaterialTheme.colorScheme.outline,
+                                RoundedCornerShape(4.dp))
+                            .padding(2.dp)
+                    )
+                }
+                // 星号按钮：取消收藏
+                IconButton(onClick = { showUnstarConfirm = true }) {
+                    Icon(
+                        Icons.Default.Star,
+                        contentDescription = "取消收藏",
+                        tint = Color(0xFFFFB300),
+                        modifier = Modifier.size(22.dp)
+                    )
+                }
             }
         }
     }

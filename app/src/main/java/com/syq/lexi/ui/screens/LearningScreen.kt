@@ -41,6 +41,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -92,6 +93,39 @@ fun LearningScreen(
             // 星标按钮：有当前题目时显示
             val currentWord = state.currentQuestion?.word
             if (currentWord != null && state.phase != LearningPhase.COMPLETED) {
+                // 对勾按钮：仅练习难词模式显示，点击标记已掌握并取消收藏
+                if (starredOnly) {
+                    val showMasterConfirmState = remember { mutableStateOf(false) }
+                    val showMasterConfirm = showMasterConfirmState.value
+                    if (showMasterConfirm) {
+                        androidx.compose.material3.AlertDialog(
+                            onDismissRequest = { showMasterConfirmState.value = false },
+                            title = { Text("标记为已掌握") },
+                            text = { Text("确定将「${currentWord.english}」标记为已掌握并取消收藏吗？") },
+                            confirmButton = {
+                                androidx.compose.material3.TextButton(onClick = {
+                                    showMasterConfirmState.value = false
+                                    onStarChanged?.invoke(currentWord.id, true) // unstar
+                                    viewModel.toggleStar(currentWord.id, true, onStarChanged)
+                                }) { Text("确定", color = MaterialTheme.colorScheme.primary) }
+                            },
+                            dismissButton = {
+                                androidx.compose.material3.TextButton(onClick = { showMasterConfirmState.value = false }) { Text("取消") }
+                            }
+                        )
+                    }
+                    IconButton(onClick = { showMasterConfirmState.value = true }) {
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = "标记已掌握",
+                            tint = MaterialTheme.colorScheme.outline,
+                            modifier = Modifier.size(20.dp)
+                                .border(1.5.dp, MaterialTheme.colorScheme.outline,
+                                    androidx.compose.foundation.shape.RoundedCornerShape(4.dp))
+                                .padding(2.dp)
+                        )
+                    }
+                }
                 IconButton(onClick = { viewModel.toggleStar(currentWord.id, currentWord.isStarred, onStarChanged) }) {
                     Icon(
                         imageVector = Icons.Default.Star,
@@ -129,7 +163,7 @@ fun LearningScreen(
                     color = MaterialTheme.colorScheme.primary,
                     trackColor = MaterialTheme.colorScheme.surfaceVariant
                 )
-                Text("${state.currentIndex + 1} / ${state.totalInRound}", fontSize = 12.sp,
+                Text("${state.currentIndex} / ${state.totalInRound}", fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
                     textAlign = TextAlign.End)

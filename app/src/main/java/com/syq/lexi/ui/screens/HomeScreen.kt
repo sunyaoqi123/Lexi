@@ -59,7 +59,7 @@ fun HomeScreen(
     starredCounts: Map<Int, Int> = emptyMap(),
     plans: List<StudyPlanEntity> = emptyList(),
     onStartLearning: (WordbookEntity, Int) -> Unit = { _, _ -> },
-    onStartStarredLearning: (WordbookEntity) -> Unit = { _ -> },
+    onStartStarredLearning: (WordbookEntity, Int) -> Unit = { _, _ -> },
     onAddPlan: (wordbookId: Int, dailyWords: Int) -> Unit = { _, _ -> },
     onDeletePlan: (StudyPlanEntity) -> Unit = {}
 ) {
@@ -187,7 +187,7 @@ fun HomeScreen(
                     Row(
                         modifier = Modifier
                             .background(Color(0xFFFFB300).copy(alpha = 0.12f), RoundedCornerShape(20.dp))
-                            .clickable { selectedWordbook?.let { onStartStarredLearning(it) } }
+                            .clickable { selectedWordbook?.let { onStartStarredLearning(it, selectedGroupSize) } }
                             .padding(horizontal = 20.dp, vertical = 8.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(6.dp)
