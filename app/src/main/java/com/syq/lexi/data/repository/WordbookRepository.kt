@@ -3,6 +3,7 @@ package com.syq.lexi.data.repository
 import com.syq.lexi.data.database.WordbookDao
 import com.syq.lexi.data.database.WordDao
 import com.syq.lexi.data.database.StudyRecordDao
+import com.syq.lexi.data.database.StudyPlanDao
 import com.syq.lexi.data.database.WordbookEntity
 import com.syq.lexi.data.database.WordEntity
 import com.syq.lexi.data.database.StudyRecordEntity
@@ -11,7 +12,8 @@ import kotlinx.coroutines.flow.Flow
 class WordbookRepository(
     private val wordbookDao: WordbookDao,
     private val wordDao: WordDao,
-    private val studyRecordDao: StudyRecordDao
+    private val studyRecordDao: StudyRecordDao,
+    private val studyPlanDao: StudyPlanDao? = null
 ) {
     // Wordbook 操作
     suspend fun insertWordbook(wordbook: WordbookEntity): Long {
@@ -96,6 +98,10 @@ class WordbookRepository(
         return wordDao.getWordById(id)
     }
 
+    suspend fun getWordByIdOnce(id: Int): WordEntity? {
+        return wordDao.getWordByIdOnce(id)
+    }
+
     fun getUnmasteredWords(wordbookId: Int): Flow<List<WordEntity>> {
         return wordDao.getUnmasteredWords(wordbookId)
     }
@@ -120,6 +126,22 @@ class WordbookRepository(
         wordDao.markWordAsUnmastered(wordId)
     }
 
+    suspend fun starWord(wordId: Int) {
+        wordDao.starWord(wordId)
+    }
+
+    suspend fun unstarWord(wordId: Int) {
+        wordDao.unstarWord(wordId)
+    }
+
+    fun getStarredWords(wordbookId: Int): Flow<List<WordEntity>> {
+        return wordDao.getStarredWords(wordbookId)
+    }
+
+    fun getStarredCount(wordbookId: Int): Flow<Int> {
+        return wordDao.getStarredCount(wordbookId)
+    }
+
     // Study Record 操作
     suspend fun insertStudyRecord(record: StudyRecordEntity): Long {
         return studyRecordDao.insertRecord(record)
@@ -135,5 +157,13 @@ class WordbookRepository(
 
     suspend fun deleteOldRecords(date: Long) {
         studyRecordDao.deleteOldRecords(date)
+    }
+
+    suspend fun deleteAllPlans() {
+        studyPlanDao?.deleteAllPlans()
+    }
+
+    suspend fun insertStudyPlan(plan: com.syq.lexi.data.database.StudyPlanEntity) {
+        studyPlanDao?.insertPlan(plan)
     }
 }

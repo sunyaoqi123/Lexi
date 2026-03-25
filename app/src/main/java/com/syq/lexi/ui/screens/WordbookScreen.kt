@@ -30,6 +30,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -65,11 +66,13 @@ fun WordbookScreen(
     onMenuClick: () -> Unit,
     innerPadding: PaddingValues,
     viewModel: com.syq.lexi.ui.viewmodel.WordbookViewModel? = null,
-    onWordbookClick: (WordbookEntity) -> Unit = {}
+    onWordbookClick: (WordbookEntity) -> Unit = {},
+    onStarredClick: (WordbookEntity) -> Unit = {}
 ) {
     val wordbooks = viewModel?.wordbooks?.collectAsState()?.value ?: emptyList()
     val isLoading = viewModel?.isLoading?.collectAsState()?.value ?: false
     val wordCounts = viewModel?.wordCounts?.collectAsState()?.value ?: emptyMap()
+    val starredCounts = viewModel?.starredCounts?.collectAsState()?.value ?: emptyMap()
     val showImportDialog = remember { mutableStateOf(false) }
 
     Column(
@@ -100,7 +103,9 @@ fun WordbookScreen(
                     SwipeableWordbookCard(
                         wordbook = wordbook,
                         actualWordCount = wordCounts[wordbook.id] ?: wordbook.totalWords,
+                        starredCount = starredCounts[wordbook.id] ?: 0,
                         onCardClick = { onWordbookClick(wordbook) },
+                        onStarredClick = { onStarredClick(wordbook) },
                         onDelete = { viewModel?.deleteWordbookWithWords(wordbook) }
                     )
                 }
@@ -127,7 +132,9 @@ fun WordbookScreen(
 fun SwipeableWordbookCard(
     wordbook: WordbookEntity,
     actualWordCount: Int = wordbook.totalWords,
+    starredCount: Int = 0,
     onCardClick: () -> Unit = {},
+    onStarredClick: () -> Unit = {},
     onDelete: () -> Unit = {}
 ) {
     val scope = rememberCoroutineScope()
@@ -214,6 +221,35 @@ fun SwipeableWordbookCard(
                             color = MaterialTheme.colorScheme.onSurfaceVariant)
                         Text("分类: ${wordbook.category}", fontSize = 12.sp,
                             color = MaterialTheme.colorScheme.primary)
+                        if (starredCount > 0) {
+                            androidx.compose.foundation.layout.Box(
+                                modifier = Modifier
+                                    .background(
+                                        Color(0xFFFFB300).copy(alpha = 0.15f),
+                                        RoundedCornerShape(4.dp)
+                                    )
+                                    .pointerInput(Unit) {
+                                        awaitEachGesture {
+                                            awaitFirstDown(requireUnconsumed = false).also { it.consume() }
+                                            onStarredClick()
+                                        }
+                                    }
+                                    .padding(horizontal = 6.dp, vertical = 1.dp)
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+                                    Icon(
+                                        imageVector = Icons.Default.Star,
+                                        contentDescription = "难词",
+                                        tint = Color(0xFFFFB300),
+                                        modifier = Modifier.size(11.dp)
+                                    )
+                                    Text("难词 $starredCount", fontSize = 11.sp,
+                                        color = Color(0xFFFFB300),
+                                        fontWeight = FontWeight.SemiBold)
+                                }
+                            }
+                        }
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(wordbook.description, fontSize = 11.sp,

@@ -24,7 +24,8 @@ data class WordbookEntity(
             childColumns = ["wordbookId"],
             onDelete = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [androidx.room.Index(value = ["wordbookId", "english"], unique = true)]
 )
 data class WordEntity(
     @PrimaryKey(autoGenerate = true)
@@ -37,6 +38,7 @@ data class WordEntity(
     val example: String = "",
     val exampleTranslation: String = "",
     val isMastered: Boolean = false,
+    val isStarred: Boolean = false,
     val learnDate: Long = 0,
     val masteredDate: Long = 0
 )

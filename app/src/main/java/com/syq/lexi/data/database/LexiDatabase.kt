@@ -9,7 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(
     entities = [WordbookEntity::class, WordEntity::class, StudyRecordEntity::class, StudyPlanEntity::class],
-    version = 2,
+    version = 4,
     exportSchema = false
 )
 abstract class LexiDatabase : RoomDatabase() {
@@ -34,6 +34,25 @@ abstract class LexiDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL(
+                    "DELETE FROM words WHERE id NOT IN (" +
+                    "SELECT MIN(id) FROM words GROUP BY wordbookId, english)"
+                )
+                database.execSQL(
+                    "CREATE UNIQUE INDEX IF NOT EXISTS index_words_wordbookId_english " +
+                    "ON words (wordbookId, english)"
+                )
+            }
+        }
+
+        private val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE words ADD COLUMN isStarred INTEGER NOT NULL DEFAULT 0")
+            }
+        }
+
         fun getDatabase(context: Context): LexiDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -41,7 +60,7 @@ abstract class LexiDatabase : RoomDatabase() {
                     LexiDatabase::class.java,
                     "lexi_database"
                 )
-                .addMigrations(MIGRATION_1_2)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
                 .build()
                 INSTANCE = instance
                 instance

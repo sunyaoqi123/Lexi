@@ -29,15 +29,17 @@ import com.syq.lexi.ui.screens.HomeScreen
 import com.syq.lexi.ui.screens.WordbookScreen
 import com.syq.lexi.ui.screens.GameScreen
 import com.syq.lexi.ui.screens.LearningScreen
+import com.syq.lexi.ui.screens.StarredWordsScreen
 import com.syq.lexi.ui.screens.StudyScreenGrouped
 import com.syq.lexi.ui.viewmodel.LearningViewModel
 import com.syq.lexi.ui.viewmodel.StudyPlanViewModel
 import com.syq.lexi.ui.viewmodel.WordbookViewModel
 import com.syq.lexi.ui.viewmodel.AuthViewModel
+import com.syq.lexi.ui.viewmodel.SyncViewModel
 import kotlinx.coroutines.launch
 
 enum class NavigationItem {
-    HOME, WORDBOOK, GAME, STUDY, LEARNING
+    HOME, WORDBOOK, GAME, STUDY, LEARNING, STARRED
 }
 
 @Composable
@@ -45,10 +47,12 @@ fun MainNavigation(
     drawerOpen: MutableState<Boolean>,
     isDarkTheme: Boolean = false,
     onToggleDarkTheme: () -> Unit = {},
-    authViewModel: AuthViewModel? = null
+    authViewModel: AuthViewModel? = null,
+    syncViewModel: SyncViewModel? = null
 ) {
     val currentScreen = remember { mutableStateOf(NavigationItem.HOME) }
     val selectedWordbook = remember { mutableStateOf<WordbookEntity?>(null) }
+    val selectedStarredWordbook = remember { mutableStateOf<WordbookEntity?>(null) }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -58,9 +62,10 @@ fun MainNavigation(
         val repository = WordbookRepository(
             database.wordbookDao(),
             database.wordDao(),
-            database.studyRecordDao()
+            database.studyRecordDao(),
+            database.studyPlanDao()
         )
-        WordbookViewModel(repository)
+        WordbookViewModel(repository, context)
     }
 
     val learningViewModel = remember {
@@ -75,11 +80,12 @@ fun MainNavigation(
 
     val studyPlanViewModel = remember {
         val database = LexiDatabase.getDatabase(context)
-        StudyPlanViewModel(database.studyPlanDao())
+        StudyPlanViewModel(database.studyPlanDao(), context)
     }
 
     val selectedLearningWordbook = remember { mutableStateOf<WordbookEntity?>(null) }
     val selectedGroupSize = remember { mutableStateOf(10) }
+    val isStarredMode = remember { mutableStateOf(false) }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -87,7 +93,8 @@ fun MainNavigation(
             DrawerContent(
                 isDarkTheme = isDarkTheme,
                 onToggleDarkTheme = onToggleDarkTheme,
-                authViewModel = authViewModel
+                authViewModel = authViewModel,
+                syncViewModel = syncViewModel
             )
         }
     ) {
@@ -95,7 +102,8 @@ fun MainNavigation(
             modifier = Modifier.fillMaxSize(),
             bottomBar = {
                 if (currentScreen.value != NavigationItem.STUDY &&
-                    currentScreen.value != NavigationItem.LEARNING) {
+                    currentScreen.value != NavigationItem.LEARNING &&
+                    currentScreen.value != NavigationItem.STARRED) {
                     NavigationBar {
                         NavigationBarItem(
                             icon = { Icon(Icons.Default.Home, contentDescription = "首页") },
@@ -127,17 +135,28 @@ fun MainNavigation(
                         wordbooks = wordbookViewModel.wordbooks.collectAsState().value,
                         wordCounts = wordbookViewModel.wordCounts.collectAsState().value,
                         masteredCounts = wordbookViewModel.masteredCounts.collectAsState().value,
+                        starredCounts = wordbookViewModel.starredCounts.collectAsState().value,
                         plans = studyPlanViewModel.plans.collectAsState().value,
                         onStartLearning = { wordbook, groupSize ->
                             selectedLearningWordbook.value = wordbook
                             selectedGroupSize.value = groupSize
+                            isStarredMode.value = false
+                            currentScreen.value = NavigationItem.LEARNING
+                        },
+                        onStartStarredLearning = { wordbook ->
+                            selectedLearningWordbook.value = wordbook
+                            isStarredMode.value = true
                             currentScreen.value = NavigationItem.LEARNING
                         },
                         onAddPlan = { wordbookId, dailyWords ->
-                            studyPlanViewModel.addPlan(wordbookId, dailyWords)
+                            val wb = wordbookViewModel.wordbooks.value.find { it.id == wordbookId }
+                            if (wb != null) studyPlanViewModel.addPlan(wb, dailyWords)
+                            else studyPlanViewModel.addPlan(wordbookId, dailyWords)
                         },
                         onDeletePlan = { plan ->
-                            studyPlanViewModel.deletePlan(plan)
+                            val wb = wordbookViewModel.wordbooks.value.find { it.id == plan.wordbookId }
+                            if (wb != null) studyPlanViewModel.deletePlan(plan, wb.name)
+                            else studyPlanViewModel.deletePlan(plan)
                         }
                     )
                     NavigationItem.WORDBOOK -> WordbookScreen(
@@ -148,6 +167,10 @@ fun MainNavigation(
                             selectedWordbook.value = wordbook
                             wordbookViewModel.selectWordbook(wordbook)
                             currentScreen.value = NavigationItem.STUDY
+                        },
+                        onStarredClick = { wordbook ->
+                            selectedStarredWordbook.value = wordbook
+                            currentScreen.value = NavigationItem.STARRED
                         }
                     )
                     NavigationItem.GAME -> GameScreen(
@@ -172,9 +195,25 @@ fun MainNavigation(
                                 wordbookId = wordbook.id,
                                 wordbookName = wordbook.name,
                                 groupSize = selectedGroupSize.value,
+                                starredOnly = isStarredMode.value,
                                 onBackClick = { currentScreen.value = NavigationItem.HOME },
                                 innerPadding = innerPadding,
-                                viewModel = learningViewModel
+                                viewModel = learningViewModel,
+                                onStarChanged = { wordId, isStarred ->
+                                    if (isStarred) wordbookViewModel.starWord(wordId)
+                                    else wordbookViewModel.unstarWord(wordId)
+                                }
+                            )
+                        }
+                    }
+                    NavigationItem.STARRED -> {
+                        selectedStarredWordbook.value?.let { wordbook ->
+                            StarredWordsScreen(
+                                wordbookId = wordbook.id,
+                                wordbookName = wordbook.name,
+                                onBackClick = { currentScreen.value = NavigationItem.WORDBOOK },
+                                innerPadding = innerPadding,
+                                viewModel = wordbookViewModel
                             )
                         }
                     }

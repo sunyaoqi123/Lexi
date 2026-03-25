@@ -4,9 +4,11 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.syq.lexi.data.auth.AuthPreferences
+import com.syq.lexi.data.database.LexiDatabase
 import com.syq.lexi.data.network.LoginRequest
 import com.syq.lexi.data.network.RegisterRequest
 import com.syq.lexi.data.network.RetrofitClient
+import com.syq.lexi.data.repository.WordbookRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -79,10 +81,30 @@ class AuthViewModel(private val context: Context) : ViewModel() {
 
     fun logout() {
         viewModelScope.launch {
+            // 清空本地 Room 数据库（防止多账号数据串）
+            clearLocalData()
             authPrefs.clearAuth()
             _token.value = null
             _username.value = null
             _authState.value = AuthState.Idle
+        }
+    }
+
+    private suspend fun clearLocalData() {
+        try {
+            val db = LexiDatabase.getDatabase(context)
+            val repo = WordbookRepository(
+                db.wordbookDao(), db.wordDao(),
+                db.studyRecordDao(), db.studyPlanDao()
+            )
+            val wordbooks = repo.getAllWordbooks().first()
+            for (wb in wordbooks) {
+                repo.deleteWordsByWordbook(wb.id)
+                repo.deleteWordbook(wb)
+            }
+            repo.deleteAllPlans()
+        } catch (e: Exception) {
+            android.util.Log.e("AuthViewModel", "Error clearing local data", e)
         }
     }
 

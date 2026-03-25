@@ -18,7 +18,8 @@ data class WordDto(
     val partOfSpeech: String = "",
     val example: String = "",
     val exampleTranslation: String = "",
-    val isMastered: Boolean = false
+    val isMastered: Boolean = false,
+    val isStarred: Boolean = false
 )
 
 data class SyncWordsRequest(val words: List<WordDto>)

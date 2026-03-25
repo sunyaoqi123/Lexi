@@ -26,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -33,6 +34,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -60,14 +62,16 @@ fun LearningScreen(
     wordbookId: Int,
     wordbookName: String,
     groupSize: Int = 10,
+    starredOnly: Boolean = false,
     onBackClick: () -> Unit,
     innerPadding: PaddingValues,
-    viewModel: LearningViewModel
+    viewModel: LearningViewModel,
+    onStarChanged: ((wordId: Int, isStarred: Boolean) -> Unit)? = null
 ) {
     val state by viewModel.state.collectAsState()
 
-    LaunchedEffect(wordbookId) {
-        viewModel.startSession(wordbookId, wordbookName, groupSize)
+    LaunchedEffect(wordbookId, starredOnly) {
+        viewModel.startSession(wordbookId, wordbookName, groupSize, starredOnly)
     }
 
     Column(
@@ -85,6 +89,17 @@ fun LearningScreen(
             }
             Text(wordbookName, fontSize = 18.sp, fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.weight(1f), maxLines = 1)
+            // 星标按钮：有当前题目时显示
+            val currentWord = state.currentQuestion?.word
+            if (currentWord != null && state.phase != LearningPhase.COMPLETED) {
+                IconButton(onClick = { viewModel.toggleStar(currentWord.id, currentWord.isStarred, onStarChanged) }) {
+                    Icon(
+                        imageVector = Icons.Default.Star,
+                        contentDescription = if (currentWord.isStarred) "取消收藏" else "收藏难词",
+                        tint = if (currentWord.isStarred) Color(0xFFFFB300) else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+                    )
+                }
+            }
             PhaseIndicator(phase = state.phase)
         }
         when {
@@ -99,7 +114,13 @@ fun LearningScreen(
                 }
             }
             state.phase == LearningPhase.COMPLETED -> CompletedScreen(
-                wordbookName = wordbookName, count = state.sessionWordCount, onBackClick = onBackClick)
+                wordbookName = wordbookName,
+                count = state.sessionWordCount,
+                onBackClick = onBackClick,
+                onContinue = {
+                    viewModel.startSession(wordbookId, wordbookName, groupSize, starredOnly)
+                }
+            )
             state.currentQuestion != null -> {
                 val progress = if (state.totalInRound > 0) state.currentIndex.toFloat() / state.totalInRound else 0f
                 LinearProgressIndicator(
@@ -309,7 +330,7 @@ fun ResultBar(isCorrect: Boolean, correctAnswer: String, onNext: () -> Unit) {
 }
 
 @Composable
-fun CompletedScreen(wordbookName: String, count: Int, onBackClick: () -> Unit) {
+fun CompletedScreen(wordbookName: String, count: Int, onBackClick: () -> Unit, onContinue: () -> Unit = {}) {
     Column(
         modifier = Modifier.fillMaxSize().padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -327,7 +348,11 @@ fun CompletedScreen(wordbookName: String, count: Int, onBackClick: () -> Unit) {
         Text("这些单词已标记为已掌握！", fontSize = 14.sp,
             color = MaterialTheme.colorScheme.primary, textAlign = TextAlign.Center)
         Spacer(modifier = Modifier.height(40.dp))
-        Button(onClick = onBackClick, modifier = Modifier.fillMaxWidth()) {
+        Button(onClick = onContinue, modifier = Modifier.fillMaxWidth()) {
+            Text("继续背诵", fontSize = 16.sp)
+        }
+        Spacer(modifier = Modifier.height(12.dp))
+        OutlinedButton(onClick = onBackClick, modifier = Modifier.fillMaxWidth()) {
             Text("返回首页", fontSize = 16.sp)
         }
     }

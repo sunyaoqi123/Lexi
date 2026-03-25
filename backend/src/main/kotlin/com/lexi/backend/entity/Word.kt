@@ -29,6 +29,9 @@ data class Word(
     @Column(name = "example_translation", length = 1000)
     val exampleTranslation: String = "",
 
-    @Column(name = "is_mastered")
-    val isMastered: Boolean = false
+    @Column(name = "is_mastered", columnDefinition = "boolean default false")
+    val isMastered: Boolean = false,
+
+    @Column(name = "is_starred", columnDefinition = "boolean default false")
+    val isStarred: Boolean = false
 )

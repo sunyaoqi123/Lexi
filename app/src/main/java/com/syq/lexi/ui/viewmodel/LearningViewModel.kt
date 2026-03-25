@@ -50,6 +50,9 @@ class LearningViewModel(private val repository: WordbookRepository) : ViewModel(
     private val _state = MutableStateFlow(LearningSessionState())
     val state: StateFlow<LearningSessionState> = _state.asStateFlow()
 
+    // 是否只练习难词模式
+    private var starredOnly: Boolean = false
+
     // 当前10个目标单词
     private var sessionWords: List<WordEntity> = emptyList()
     // 单词本所有单词（用于生成干扰选项）
@@ -63,9 +66,10 @@ class LearningViewModel(private val repository: WordbookRepository) : ViewModel(
     // 当前题目在队列中的索引
     private var currentQueueIndex: Int = 0
 
-    fun startSession(wordbookId: Int, wordbookName: String, groupSize: Int = 10) {
+    fun startSession(wordbookId: Int, wordbookName: String, groupSize: Int = 10, starredOnly: Boolean = false) {
         viewModelScope.launch {
             try {
+                this@LearningViewModel.starredOnly = starredOnly
                 _state.value = _state.value.copy(isLoading = true)
                 allWords = repository.getWordsByWordbook(wordbookId).first()
 
@@ -77,14 +81,26 @@ class LearningViewModel(private val repository: WordbookRepository) : ViewModel(
                     return@launch
                 }
 
-                // 优先选取未掌握的单词，取前 groupSize 个
-                val unmastered = allWords.filter { !it.isMastered }.shuffled()
-                sessionWords = if (unmastered.size >= groupSize) {
-                    unmastered.take(groupSize)
-                } else if (unmastered.isNotEmpty()) {
-                    unmastered
+                // 根据模式选词
+                val candidateWords = if (starredOnly) {
+                    allWords.filter { it.isStarred }
                 } else {
-                    allWords.shuffled().take(groupSize)
+                    allWords.filter { !it.isMastered }.shuffled()
+                }
+
+                if (candidateWords.isEmpty()) {
+                    _state.value = _state.value.copy(
+                        isLoading = false,
+                        errorMessage = if (starredOnly) "没有收藏的难词" else "没有未掌握的单词"
+                    )
+                    return@launch
+                }
+
+                sessionWords = if (starredOnly) {
+                    candidateWords.shuffled()
+                } else {
+                    if (candidateWords.size >= groupSize) candidateWords.take(groupSize)
+                    else candidateWords
                 }
 
                 phase1Queue = sessionWords.shuffled().toMutableList()
@@ -223,11 +239,42 @@ class LearningViewModel(private val repository: WordbookRepository) : ViewModel(
         }
     }
 
+    fun toggleStar(wordId: Int, isStarred: Boolean, onSyncToRemote: ((Int, Boolean) -> Unit)? = null) {
+        viewModelScope.launch {
+            try {
+                if (isStarred) repository.unstarWord(wordId)
+                else repository.starWord(wordId)
+                val newStarred = !isStarred
+                // 更新 allWords 和 sessionWords 里的状态
+                allWords = allWords.map {
+                    if (it.id == wordId) it.copy(isStarred = newStarred) else it
+                }
+                sessionWords = sessionWords.map {
+                    if (it.id == wordId) it.copy(isStarred = newStarred) else it
+                }
+                // 刷新当前题目
+                val q = _state.value.currentQuestion
+                if (q != null && q.word.id == wordId) {
+                    _state.value = _state.value.copy(
+                        currentQuestion = q.copy(word = q.word.copy(isStarred = newStarred))
+                    )
+                }
+                // 同步到服务端（通过 WordbookViewModel）
+                onSyncToRemote?.invoke(wordId, newStarred)
+            } catch (e: Exception) {
+                Log.e("LearningViewModel", "Error toggling star", e)
+            }
+        }
+    }
+
     private fun markSessionWordsAsMastered() {
         viewModelScope.launch {
             try {
-                sessionWords.forEach { word ->
-                    repository.markWordAsMastered(word.id)
+                // 难词模式下不自动标记已掌握
+                if (!starredOnly) {
+                    sessionWords.forEach { word ->
+                        repository.markWordAsMastered(word.id)
+                    }
                 }
                 _state.value = _state.value.copy(
                     phase = LearningPhase.COMPLETED

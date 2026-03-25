@@ -13,4 +13,10 @@ interface WordRepository : JpaRepository<Word, Int> {
     @Modifying
     @Query("UPDATE Word w SET w.isMastered = :mastered WHERE w.id = :id")
     fun updateMastered(id: Int, mastered: Boolean): Int
+
+    @Modifying
+    @Query("UPDATE Word w SET w.isStarred = :starred WHERE w.id = :id")
+    fun updateStarred(id: Int, starred: Boolean): Int
+
+    fun findByWordbookIdAndIsStarredTrue(wordbookId: Int): List<Word>
 }

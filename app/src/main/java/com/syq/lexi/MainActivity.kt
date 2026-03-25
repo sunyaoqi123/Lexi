@@ -8,16 +8,22 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import com.syq.lexi.data.database.LexiDatabase
+import com.syq.lexi.data.repository.WordbookRepository
 import com.syq.lexi.ui.navigation.MainNavigation
 import com.syq.lexi.ui.screens.AuthScreen
 import com.syq.lexi.ui.theme.LexiTheme
 import com.syq.lexi.ui.viewmodel.AuthViewModel
+import com.syq.lexi.ui.viewmodel.SyncState
+import com.syq.lexi.ui.viewmodel.SyncViewModel
+import kotlinx.coroutines.flow.first
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +59,26 @@ fun MainApp(
     val token by authViewModel.token.collectAsState()
     val drawerOpen = remember { mutableStateOf(false) }
 
+    val syncViewModel = remember {
+        val db = LexiDatabase.getDatabase(context)
+        val repo = WordbookRepository(db.wordbookDao(), db.wordDao(), db.studyRecordDao(), db.studyPlanDao())
+        SyncViewModel(context, repo)
+    }
+    val syncState by syncViewModel.syncState.collectAsState()
+
+    // 不自动同步，用户需手动点击同步
+    // 但登录后如果本地为空，自动从用户词库初始化一次
+    LaunchedEffect(token) {
+        if (!token.isNullOrEmpty()) {
+            val db = LexiDatabase.getDatabase(context)
+            val repo = WordbookRepository(db.wordbookDao(), db.wordDao(), db.studyRecordDao(), db.studyPlanDao())
+            val localWordbooks = repo.getAllWordbooks().first()
+            if (localWordbooks.isEmpty()) {
+                syncViewModel.syncFromUserWordbooks()
+            }
+        }
+    }
+
     if (token.isNullOrEmpty()) {
         AuthScreen(
             viewModel = authViewModel,
@@ -64,7 +90,8 @@ fun MainApp(
                 drawerOpen = drawerOpen,
                 isDarkTheme = isDarkTheme,
                 onToggleDarkTheme = onToggleDarkTheme,
-                authViewModel = authViewModel
+                authViewModel = authViewModel,
+                syncViewModel = syncViewModel
             )
         }
     }

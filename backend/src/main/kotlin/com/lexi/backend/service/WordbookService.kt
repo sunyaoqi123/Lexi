@@ -85,6 +85,15 @@ class WordbookService(
     }
 
     @Transactional
+    fun updateStarred(userId: Int, wordbookId: Int, wordId: Int, starred: Boolean) {
+        val wb = wordbookRepository.findByIdAndUserId(wordbookId, userId)
+        if (wb == null) {
+            throw IllegalArgumentException("单词本不存在或无权限: wordbookId=$wordbookId, userId=$userId")
+        }
+        wordRepository.updateStarred(wordId, starred)
+    }
+
+    @Transactional
     fun deleteWord(userId: Int, wordbookId: Int, wordId: Int) {
         wordbookRepository.findByIdAndUserId(wordbookId, userId)
             ?: throw IllegalArgumentException("单词本不存在")

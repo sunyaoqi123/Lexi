@@ -33,7 +33,7 @@ interface WordDao {
     @Insert
     suspend fun insertWord(word: WordEntity): Long
 
-    @Insert
+    @Insert(onConflict = androidx.room.OnConflictStrategy.IGNORE)
     suspend fun insertWords(words: List<WordEntity>)
 
     @Update
@@ -47,6 +47,9 @@ interface WordDao {
 
     @Query("SELECT * FROM words WHERE id = :id")
     fun getWordById(id: Int): Flow<WordEntity>
+
+    @Query("SELECT * FROM words WHERE id = :id")
+    suspend fun getWordByIdOnce(id: Int): WordEntity?
 
     @Query("SELECT * FROM words WHERE wordbookId = :wordbookId AND isMastered = 0")
     fun getUnmasteredWords(wordbookId: Int): Flow<List<WordEntity>>
@@ -65,6 +68,18 @@ interface WordDao {
 
     @Query("UPDATE words SET isMastered = 0 WHERE id = :wordId")
     suspend fun markWordAsUnmastered(wordId: Int)
+
+    @Query("UPDATE words SET isStarred = 1 WHERE id = :wordId")
+    suspend fun starWord(wordId: Int)
+
+    @Query("UPDATE words SET isStarred = 0 WHERE id = :wordId")
+    suspend fun unstarWord(wordId: Int)
+
+    @Query("SELECT * FROM words WHERE wordbookId = :wordbookId AND isStarred = 1")
+    fun getStarredWords(wordbookId: Int): Flow<List<WordEntity>>
+
+    @Query("SELECT COUNT(*) FROM words WHERE wordbookId = :wordbookId AND isStarred = 1")
+    fun getStarredCount(wordbookId: Int): Flow<Int>
 
     @Query("SELECT * FROM words WHERE wordbookId = :wordbookId AND LOWER(english) = LOWER(:english) LIMIT 1")
     suspend fun getWordByEnglish(wordbookId: Int, english: String): WordEntity?
@@ -89,6 +104,12 @@ interface StudyPlanDao {
 
     @Query("SELECT * FROM study_plans WHERE wordbookId = :wordbookId LIMIT 1")
     fun getPlanByWordbook(wordbookId: Int): Flow<StudyPlanEntity?>
+
+    @Query("DELETE FROM study_plans WHERE wordbookId = :wordbookId")
+    suspend fun deletePlanByWordbookId(wordbookId: Int)
+
+    @Query("DELETE FROM study_plans")
+    suspend fun deleteAllPlans()
 }
 
 @Dao

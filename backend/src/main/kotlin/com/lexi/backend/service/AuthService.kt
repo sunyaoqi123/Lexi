@@ -13,7 +13,8 @@ import org.springframework.stereotype.Service
 class AuthService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
-    private val jwtUtil: JwtUtil
+    private val jwtUtil: JwtUtil,
+    private val systemDataService: SystemDataService
 ) {
     fun register(req: RegisterRequest): AuthResponse {
         if (userRepository.existsByUsername(req.username))
@@ -21,6 +22,8 @@ class AuthService(
         val user = userRepository.save(
             User(username = req.username, password = passwordEncoder.encode(req.password))
         )
+        // 新用户注册后自动初始化系统默认单词本
+        systemDataService.initUserData(user.id)
         val token = jwtUtil.generateToken(user.id, user.username)
         return AuthResponse(token, user.username)
     }
@@ -30,6 +33,8 @@ class AuthService(
             .orElseThrow { IllegalArgumentException("用户名或密码错误") }
         if (!passwordEncoder.matches(req.password, user.password))
             throw IllegalArgumentException("用户名或密码错误")
+        // 登录时也检查是否需要初始化（兼容老用户）
+        systemDataService.initUserData(user.id)
         val token = jwtUtil.generateToken(user.id, user.username)
         return AuthResponse(token, user.username)
     }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -54,8 +56,10 @@ fun HomeScreen(
     wordbooks: List<WordbookEntity> = emptyList(),
     wordCounts: Map<Int, Int> = emptyMap(),
     masteredCounts: Map<Int, Int> = emptyMap(),
+    starredCounts: Map<Int, Int> = emptyMap(),
     plans: List<StudyPlanEntity> = emptyList(),
     onStartLearning: (WordbookEntity, Int) -> Unit = { _, _ -> },
+    onStartStarredLearning: (WordbookEntity) -> Unit = { _ -> },
     onAddPlan: (wordbookId: Int, dailyWords: Int) -> Unit = { _, _ -> },
     onDeletePlan: (StudyPlanEntity) -> Unit = {}
 ) {
@@ -118,7 +122,9 @@ fun HomeScreen(
                 }
                 DropdownMenu(expanded = dropdownExpanded,
                     onDismissRequest = { dropdownExpanded = false },
-                    modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.surface)
+                        .heightIn(max = 260.dp)) {
                     wordbooks.forEach { wb ->
                         DropdownMenuItem(text = {
                             Column {
@@ -161,7 +167,12 @@ fun HomeScreen(
                 }
             }
             Spacer(Modifier.height(40.dp))
-            Box(Modifier.fillMaxWidth(), Alignment.Center) {
+            // 开始背单词 + 练习难词按钮
+            val starredCount = starredCounts[selectedWordbook?.id] ?: 0
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Box(modifier = Modifier.size(180.dp)
                     .background(MaterialTheme.colorScheme.primary, CircleShape)
                     .clickable { selectedWordbook?.let { onStartLearning(it, selectedGroupSize) } },
@@ -169,6 +180,22 @@ fun HomeScreen(
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text("开始", fontSize = 26.sp, fontWeight = FontWeight.Bold, color = Color.White)
                         Text("背单词", fontSize = 16.sp, color = Color.White)
+                    }
+                }
+                if (starredCount > 0) {
+                    Spacer(Modifier.height(16.dp))
+                    Row(
+                        modifier = Modifier
+                            .background(Color(0xFFFFB300).copy(alpha = 0.12f), RoundedCornerShape(20.dp))
+                            .clickable { selectedWordbook?.let { onStartStarredLearning(it) } }
+                            .padding(horizontal = 20.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Icon(Icons.Default.Star, null, tint = Color(0xFFFFB300),
+                            modifier = Modifier.size(16.dp))
+                        Text("练习难词 ($starredCount)", fontSize = 14.sp,
+                            color = Color(0xFFFFB300), fontWeight = FontWeight.SemiBold)
                     }
                 }
             }
