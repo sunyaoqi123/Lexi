@@ -8,12 +8,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.syq.lexi.ui.navigation.MainNavigation
+import com.syq.lexi.ui.screens.AuthScreen
 import com.syq.lexi.ui.theme.LexiTheme
+import com.syq.lexi.ui.viewmodel.AuthViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,13 +48,24 @@ fun MainApp(
     isDarkTheme: Boolean = false,
     onToggleDarkTheme: () -> Unit = {}
 ) {
+    val context = LocalContext.current
+    val authViewModel = remember { AuthViewModel(context) }
+    val token by authViewModel.token.collectAsState()
     val drawerOpen = remember { mutableStateOf(false) }
 
-    Scaffold(modifier = Modifier.fillMaxSize()) { _ ->
-        MainNavigation(
-            drawerOpen = drawerOpen,
-            isDarkTheme = isDarkTheme,
-            onToggleDarkTheme = onToggleDarkTheme
+    if (token.isNullOrEmpty()) {
+        AuthScreen(
+            viewModel = authViewModel,
+            onAuthSuccess = {}
         )
+    } else {
+        Scaffold(modifier = Modifier.fillMaxSize()) { _ ->
+            MainNavigation(
+                drawerOpen = drawerOpen,
+                isDarkTheme = isDarkTheme,
+                onToggleDarkTheme = onToggleDarkTheme,
+                authViewModel = authViewModel
+            )
+        }
     }
 }

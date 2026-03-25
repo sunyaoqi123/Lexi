@@ -33,6 +33,7 @@ import com.syq.lexi.ui.screens.StudyScreenGrouped
 import com.syq.lexi.ui.viewmodel.LearningViewModel
 import com.syq.lexi.ui.viewmodel.StudyPlanViewModel
 import com.syq.lexi.ui.viewmodel.WordbookViewModel
+import com.syq.lexi.ui.viewmodel.AuthViewModel
 import kotlinx.coroutines.launch
 
 enum class NavigationItem {
@@ -43,7 +44,8 @@ enum class NavigationItem {
 fun MainNavigation(
     drawerOpen: MutableState<Boolean>,
     isDarkTheme: Boolean = false,
-    onToggleDarkTheme: () -> Unit = {}
+    onToggleDarkTheme: () -> Unit = {},
+    authViewModel: AuthViewModel? = null
 ) {
     val currentScreen = remember { mutableStateOf(NavigationItem.HOME) }
     val selectedWordbook = remember { mutableStateOf<WordbookEntity?>(null) }
@@ -84,7 +86,8 @@ fun MainNavigation(
         drawerContent = {
             DrawerContent(
                 isDarkTheme = isDarkTheme,
-                onToggleDarkTheme = onToggleDarkTheme
+                onToggleDarkTheme = onToggleDarkTheme,
+                authViewModel = authViewModel
             )
         }
     ) {
