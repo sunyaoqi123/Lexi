@@ -98,10 +98,30 @@ class SyncRepository(
                     }
                 }
             }
+            // 同步背诵计划
+            syncStudyPlans(bearer)
             SyncStatus(true, "初始化成功", wordbooksSynced, wordsSynced)
         } catch (e: Exception) {
             Log.e("SyncRepository", "InitSync failed", e)
             SyncStatus(false, e.message ?: "初始化失败")
+        }
+    }
+
+    private suspend fun syncStudyPlans(bearer: String) {
+        try {
+            val remotePlans = api.getStudyPlans(bearer)
+            val latestLocal = wordbookRepository.getAllWordbooks().first()
+            for (plan in remotePlans) {
+                val localWb = latestLocal.find { it.name == plan.wordbookName }
+                if (localWb != null) {
+                    wordbookRepository.insertStudyPlan(
+                        StudyPlanEntity(wordbookId = localWb.id, dailyWords = plan.dailyWords)
+                    )
+                }
+            }
+            Log.d("SyncRepository", "syncStudyPlans: synced ${remotePlans.size} plans")
+        } catch (e: Exception) {
+            Log.e("SyncRepository", "syncStudyPlans failed: ${e.message}")
         }
     }
 
@@ -165,23 +185,6 @@ class SyncRepository(
                     }
                     if (toAdd.isEmpty()) Log.d("SyncRepository", "syncAll: '${sysWb.name}' already up to date")
                 }
-            }
-
-            // 同步背诵计划
-            try {
-                val remotePlans = api.getStudyPlans(bearer)
-                val latestLocal = wordbookRepository.getAllWordbooks().first()
-                for (plan in remotePlans) {
-                    val localWb = latestLocal.find { it.name == plan.wordbookName }
-                    if (localWb != null) {
-                        wordbookRepository.insertStudyPlan(
-                            StudyPlanEntity(wordbookId = localWb.id, dailyWords = plan.dailyWords)
-                        )
-                    }
-                }
-                Log.d("SyncRepository", "syncAll: study plans synced: ${remotePlans.size}")
-            } catch (e: Exception) {
-                Log.e("SyncRepository", "Sync study plans failed: ${e.message}")
             }
 
             Log.d("SyncRepository", "syncAll done: $wordbooksSynced wordbooks, $wordsSynced words")

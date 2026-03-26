@@ -132,8 +132,7 @@ app/src/main/java/com/syq/lexi/
 │   │   ├── WordbookViewModel.kt       # 词库 / 单词数据 + 远程同步
 │   │   ├── LearningViewModel.kt       # 学习会话状态管理 + 复习数据上传
 │   │   ├── SyncViewModel.kt           # 云端同步状态管理
-│   │   ├── StudyPlanViewModel.kt      # 背诵计划管理
-│   │   └── ViewModelFactory.kt        # ViewModel 工厂
+│   │   └── StudyPlanViewModel.kt      # 背诵计划管理
 │   └── theme/
 │       ├── Color.kt
 │       ├── Theme.kt

@@ -40,7 +40,6 @@ data class LearningSessionState(
     val currentIndex: Int = 0,      // 已答对的数量（进度）
     val totalInRound: Int = 0,       // 固定为 sessionWordCount
     val sessionWordCount: Int = 0,   // 原始单词数（固定不变）
-    val correctCount: Int = 0,       // 本轮答对数
     val selectedAnswer: String? = null,
     val isAnswered: Boolean = false,
     val isCorrect: Boolean = false,
