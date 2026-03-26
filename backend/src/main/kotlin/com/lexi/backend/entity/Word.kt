@@ -33,5 +33,15 @@ data class Word(
     val isMastered: Boolean = false,
 
     @Column(name = "is_starred", columnDefinition = "boolean default false")
-    val isStarred: Boolean = false
+    val isStarred: Boolean = false,
+
+    // 复习系统字段
+    @Column(name = "familiarity", columnDefinition = "float default 0")
+    val familiarity: Float = 0f,
+
+    @Column(name = "review_count", columnDefinition = "int default 0")
+    val reviewCount: Int = 0,
+
+    @Column(name = "next_review_date", columnDefinition = "bigint default 0")
+    val nextReviewDate: Long = 0
 )

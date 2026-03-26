@@ -58,6 +58,15 @@ fun MainNavigation(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
+    // 登录/注册时同步数据（只监听 authState，避免重复触发）
+    val authState = authViewModel?.authState?.collectAsState()?.value
+    val authToken = authViewModel?.token?.collectAsState()?.value
+    androidx.compose.runtime.LaunchedEffect(authToken) {
+        if (!authToken.isNullOrEmpty()) {
+            syncViewModel?.syncFromUserWordbooks()
+        }
+    }
+
     val wordbookViewModel = remember {
         val database = LexiDatabase.getDatabase(context)
         val repository = WordbookRepository(
@@ -76,7 +85,14 @@ fun MainNavigation(
             database.wordDao(),
             database.studyRecordDao()
         )
-        LearningViewModel(repository)
+        LearningViewModel(repository, context)
+    }
+
+    // 设置复习数据同步回调（用 SideEffect 确保每次重组都设置）
+    androidx.compose.runtime.SideEffect {
+        learningViewModel.onReviewDataUpdated = { wordId, familiarity, reviewCount, nextReviewDate ->
+            wordbookViewModel.syncReviewDataToRemote(wordId, familiarity, reviewCount, nextReviewDate)
+        }
     }
 
     val studyPlanViewModel = remember {
@@ -87,6 +103,7 @@ fun MainNavigation(
     val selectedLearningWordbook = remember { mutableStateOf<WordbookEntity?>(null) }
     val selectedGroupSize = remember { mutableStateOf(10) }
     val isStarredMode = remember { mutableStateOf(false) }
+    val isReviewOnly = remember { mutableStateOf(false) }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -137,12 +154,14 @@ fun MainNavigation(
                         wordCounts = wordbookViewModel.wordCounts.collectAsState().value,
                         masteredCounts = wordbookViewModel.masteredCounts.collectAsState().value,
                         starredCounts = wordbookViewModel.starredCounts.collectAsState().value,
+                        dueReviewCounts = wordbookViewModel.dueReviewCounts.collectAsState().value,
                         plans = studyPlanViewModel.plans.collectAsState().value,
                         onStartLearning = { wordbook, groupSize ->
                             learningViewModel.resetState()
                             selectedLearningWordbook.value = wordbook
                             selectedGroupSize.value = groupSize
                             isStarredMode.value = false
+                            isReviewOnly.value = false
                             currentScreen.value = NavigationItem.LEARNING
                         },
                         onStartStarredLearning = { wordbook, groupSize ->
@@ -150,6 +169,15 @@ fun MainNavigation(
                             selectedLearningWordbook.value = wordbook
                             selectedGroupSize.value = groupSize
                             isStarredMode.value = true
+                            isReviewOnly.value = false
+                            currentScreen.value = NavigationItem.LEARNING
+                        },
+                        onStartReview = { wordbook, groupSize ->
+                            learningViewModel.resetState()
+                            selectedLearningWordbook.value = wordbook
+                            selectedGroupSize.value = groupSize
+                            isStarredMode.value = false
+                            isReviewOnly.value = true
                             currentScreen.value = NavigationItem.LEARNING
                         },
                         onAddPlan = { wordbookId, dailyWords ->
@@ -195,12 +223,13 @@ fun MainNavigation(
                     }
                     NavigationItem.LEARNING -> {
                         selectedLearningWordbook.value?.let { wordbook ->
-                            key(wordbook.id, isStarredMode.value, selectedGroupSize.value) {
+                            key(wordbook.id, isStarredMode.value, selectedGroupSize.value, isReviewOnly.value) {
                                 LearningScreen(
                                     wordbookId = wordbook.id,
                                     wordbookName = wordbook.name,
                                     groupSize = selectedGroupSize.value,
                                     starredOnly = isStarredMode.value,
+                                    reviewOnly = isReviewOnly.value,
                                     onBackClick = { currentScreen.value = NavigationItem.HOME },
                                     innerPadding = innerPadding,
                                     viewModel = learningViewModel,

@@ -126,6 +126,23 @@ class WordbookRepository(
         wordDao.markWordAsUnmastered(wordId)
     }
 
+    suspend fun updateReviewData(wordId: Int, familiarity: Float, reviewCount: Int, nextReviewDate: Long) {
+        val word = wordDao.getWordByIdOnce(wordId) ?: return
+        wordDao.updateWord(word.copy(familiarity = familiarity, reviewCount = reviewCount, nextReviewDate = nextReviewDate))
+    }
+
+    suspend fun getDueReviewWords(wordbookId: Int): List<WordEntity> {
+        return wordDao.getDueReviewWords(wordbookId, System.currentTimeMillis())
+    }
+
+    suspend fun getNewWords(wordbookId: Int): List<WordEntity> {
+        return wordDao.getNewWords(wordbookId, System.currentTimeMillis())
+    }
+
+    fun getDueReviewCount(wordbookId: Int): Flow<Int> {
+        return wordDao.getDueReviewCount(wordbookId, System.currentTimeMillis())
+    }
+
     suspend fun starWord(wordId: Int) {
         wordDao.starWord(wordId)
     }
@@ -142,7 +159,10 @@ class WordbookRepository(
         return wordDao.getStarredCount(wordbookId)
     }
 
-    // Study Record 操作
+    suspend fun getRecentRecordsByWord(wordId: Int, limit: Int = 10): List<StudyRecordEntity> {
+        return studyRecordDao.getRecentRecordsByWord(wordId, limit)
+    }
+
     suspend fun insertStudyRecord(record: StudyRecordEntity): Long {
         return studyRecordDao.insertRecord(record)
     }

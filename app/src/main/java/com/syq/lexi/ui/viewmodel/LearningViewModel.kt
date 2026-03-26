@@ -3,8 +3,12 @@ package com.syq.lexi.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.syq.lexi.data.auth.AuthPreferences
+import com.syq.lexi.data.database.StudyRecordEntity
 import com.syq.lexi.data.database.WordEntity
 import com.syq.lexi.data.repository.WordbookRepository
+import com.syq.lexi.data.network.RetrofitClient
+import com.syq.lexi.util.ReviewAlgorithm
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -45,68 +49,82 @@ data class LearningSessionState(
     val errorMessage: String? = null
 )
 
-class LearningViewModel(private val repository: WordbookRepository) : ViewModel() {
+class LearningViewModel(private val repository: WordbookRepository, private val context: android.content.Context? = null) : ViewModel() {
+
+    private val authPrefs = context?.let { AuthPreferences(it) }
+    private val api = RetrofitClient.api
 
     private val _state = MutableStateFlow(LearningSessionState())
     val state: StateFlow<LearningSessionState> = _state.asStateFlow()
 
-    // 是否只练习难词模式
     private var starredOnly: Boolean = false
-
-    // 当前10个目标单词
     private var sessionWords: List<WordEntity> = emptyList()
-    // 单词本所有单词（用于生成干扰选项）
     private var allWords: List<WordEntity> = emptyList()
 
-    // 各阶段待完成的单词队列（答错的重复）
     private var phase1Queue: MutableList<WordEntity> = mutableListOf()
     private var phase2Queue: MutableList<WordEntity> = mutableListOf()
     private var phase3Queue: MutableList<WordEntity> = mutableListOf()
 
-    // 当前题目在队列中的索引
     private var currentQueueIndex: Int = 0
-    // 当前阶段已答对数量（用于进度显示）
     private var correctInPhase: Int = 0
 
-    fun startSession(wordbookId: Int, wordbookName: String, groupSize: Int = 10, starredOnly: Boolean = false) {
+    // 计时与答题记录
+    private var questionStartTime: Long = 0L
+    private val answerRecords = mutableMapOf<Int, MutableList<Triple<Boolean, Long, Int>>>()
+
+    // 学完后的回调：(wordId, familiarity, reviewCount, nextReviewDate)
+    var onReviewDataUpdated: ((Int, Float, Int, Long) -> Unit)? = null
+
+    fun startSession(wordbookId: Int, wordbookName: String, groupSize: Int = 10, starredOnly: Boolean = false, reviewOnly: Boolean = false) {
         viewModelScope.launch {
             try {
                 this@LearningViewModel.starredOnly = starredOnly
-                // 立刻清空旧状态，防止闪烁
                 _state.value = LearningSessionState(
                     wordbookId = wordbookId,
                     wordbookName = wordbookName,
                     isLoading = true
                 )
+                answerRecords.clear()
                 allWords = repository.getWordsByWordbook(wordbookId).first()
 
                 if (allWords.size < 4) {
-                    _state.value = _state.value.copy(
-                        isLoading = false,
-                        errorMessage = "单词本中至少需要4个单词才能开始学习"
-                    )
+                    _state.value = _state.value.copy(isLoading = false,
+                        errorMessage = "单词本中至少需要4个单词才能开始学习")
                     return@launch
                 }
 
-                // 根据模式选词
-                val candidateWords = if (starredOnly) {
-                    allWords.filter { it.isStarred }
+                val candidateWords: List<WordEntity>
+                if (starredOnly) {
+                    candidateWords = allWords.filter { it.isStarred }
+                } else if (reviewOnly) {
+                    // 纯复习模式：只取到期复习词，按紧迫程度排序（nextReviewDate 最早的优先）
+                    val dueWords = repository.getDueReviewWords(wordbookId)
+                    Log.d("LearningViewModel", "reviewOnly: dueWords=${dueWords.size}, groupSize=$groupSize")
+                    val actualSize = minOf(dueWords.size, groupSize)
+                    candidateWords = dueWords.take(actualSize)
                 } else {
-                    allWords.filter { !it.isMastered }.shuffled()
+                    // 优先复习到期词，不足则补充新词
+                    val dueWords = repository.getDueReviewWords(wordbookId)
+                    val newWords = repository.getNewWords(wordbookId)
+                    val reviewPart = dueWords.shuffled().take(groupSize)
+                    val remaining = groupSize - reviewPart.size
+                    val newPart = newWords.filter { w -> reviewPart.none { it.id == w.id } }
+                        .shuffled().take(remaining)
+                    candidateWords = reviewPart + newPart
                 }
 
                 if (candidateWords.isEmpty()) {
-                    _state.value = _state.value.copy(
-                        isLoading = false,
-                        errorMessage = if (starredOnly) "没有收藏的难词" else "没有未掌握的单词"
-                    )
+                    _state.value = _state.value.copy(isLoading = false,
+                        errorMessage = if (starredOnly) "没有收藏的难词" else if (reviewOnly) "没有需要复习的单词" else "没有未掌握的单词")
                     return@launch
                 }
 
                 sessionWords = if (starredOnly) {
-                    // 练习难词：groupSize 不能超过难词总数
                     val actualSize = minOf(groupSize, candidateWords.size)
                     candidateWords.shuffled().take(actualSize)
+                } else if (reviewOnly) {
+                    // 纯复习：取 min(到期词数, groupSize)
+                    candidateWords
                 } else {
                     if (candidateWords.size >= groupSize) candidateWords.take(groupSize)
                     else candidateWords
@@ -126,14 +144,11 @@ class LearningViewModel(private val repository: WordbookRepository) : ViewModel(
                     sessionWordCount = sessionWords.size,
                     isLoading = false
                 )
-
                 loadNextQuestion()
             } catch (e: Exception) {
                 Log.e("LearningViewModel", "Error starting session", e)
-                _state.value = _state.value.copy(
-                    isLoading = false,
-                    errorMessage = "加载失败：${e.message}"
-                )
+                _state.value = _state.value.copy(isLoading = false,
+                    errorMessage = "加载失败：${e.message}")
             }
         }
     }
@@ -141,14 +156,12 @@ class LearningViewModel(private val repository: WordbookRepository) : ViewModel(
     private fun loadNextQuestion() {
         val queue = getCurrentQueue()
         if (currentQueueIndex >= queue.size) {
-            // 本阶段完成，进入下一阶段
             advancePhase()
             return
         }
-
         val word = queue[currentQueueIndex]
         val question = buildQuestion(word, _state.value.phase)
-
+        questionStartTime = System.currentTimeMillis()
         _state.value = _state.value.copy(
             currentQuestion = question,
             currentIndex = correctInPhase,
@@ -189,14 +202,22 @@ class LearningViewModel(private val repository: WordbookRepository) : ViewModel(
     fun submitAnswer(answer: String) {
         val state = _state.value
         if (state.isAnswered) return
-
         val question = state.currentQuestion ?: return
         val isCorrect = answer.trim().equals(question.correctAnswer.trim(), ignoreCase = true)
+        val hesitationMs = System.currentTimeMillis() - questionStartTime
+        val phaseInt = when (state.phase) {
+            LearningPhase.PHASE1_WORD_TO_MEANING -> 0
+            LearningPhase.PHASE2_MEANING_TO_WORD -> 1
+            LearningPhase.PHASE3_SPELL_WORD -> 2
+            else -> 0
+        }
+        // 记录答题数据
+        answerRecords.getOrPut(question.word.id) { mutableListOf() }
+            .add(Triple(isCorrect, hesitationMs, phaseInt))
 
         if (isCorrect) {
             correctInPhase++
         } else {
-            // 答错：加入本阶段队列末尾，下轮重复
             when (state.phase) {
                 LearningPhase.PHASE1_WORD_TO_MEANING -> phase1Queue.add(question.word)
                 LearningPhase.PHASE2_MEANING_TO_WORD -> phase2Queue.add(question.word)
@@ -204,7 +225,6 @@ class LearningViewModel(private val repository: WordbookRepository) : ViewModel(
                 else -> {}
             }
         }
-
         _state.value = _state.value.copy(
             selectedAnswer = answer,
             isAnswered = true,
@@ -246,13 +266,30 @@ class LearningViewModel(private val repository: WordbookRepository) : ViewModel(
                 )
                 loadNextQuestion()
             }
-            LearningPhase.PHASE3_SPELL_WORD -> {
-                // 全部完成，标记已掌握
-                markSessionWordsAsMastered()
-            }
+            LearningPhase.PHASE3_SPELL_WORD -> finishSession()
             LearningPhase.COMPLETED -> {}
         }
     }
+
+    private suspend fun syncReviewToServer(word: WordEntity, familiarity: Float, reviewCount: Int, nextReviewDate: Long) {
+        try {
+            val token = authPrefs?.token?.first() ?: return
+            val bearer = "Bearer $token"
+            val wordbookEntity = repository.getWordsByWordbook(word.wordbookId).first()
+                .let { repository.getAllWordbooks().first().find { wb -> wb.id == word.wordbookId } } ?: return
+            val remoteWordbooks = api.getWordbooks(bearer)
+            val remoteWb = remoteWordbooks.find { it.name == wordbookEntity.name } ?: return
+            val remoteWords = api.getWords(bearer, remoteWb.id)
+            val remoteWord = remoteWords.find { it.english.equals(word.english, ignoreCase = true) } ?: return
+            api.updateReviewData(bearer, remoteWb.id, remoteWord.id, familiarity, reviewCount, nextReviewDate)
+            Log.d("LearningViewModel", "syncReviewToServer: '${word.english}' familiarity=$familiarity reviewCount=$reviewCount")
+        } catch (e: Exception) {
+            Log.e("LearningViewModel", "syncReviewToServer failed for '${word.english}': ${e.message}")
+        }
+    }
+
+    fun getRemainingReviewCount(wordbookId: Int): kotlinx.coroutines.flow.Flow<Int> =
+        repository.getDueReviewCount(wordbookId)
 
     fun resetState() {
         _state.value = LearningSessionState(isLoading = false)
@@ -263,6 +300,7 @@ class LearningViewModel(private val repository: WordbookRepository) : ViewModel(
         phase3Queue = mutableListOf()
         currentQueueIndex = 0
         correctInPhase = 0
+        answerRecords.clear()
     }
 
     fun toggleStar(wordId: Int, isStarred: Boolean, onSyncToRemote: ((Int, Boolean) -> Unit)? = null) {
@@ -298,20 +336,45 @@ class LearningViewModel(private val repository: WordbookRepository) : ViewModel(
         }
     }
 
-    private fun markSessionWordsAsMastered() {
+    private fun finishSession() {
         viewModelScope.launch {
             try {
-                // 难词模式下不自动标记已掌握
-                if (!starredOnly) {
-                    sessionWords.forEach { word ->
+                val wordbookId = _state.value.wordbookId
+                Log.d("LearningViewModel", "finishSession: sessionWords=${sessionWords.size}, answerRecords=${answerRecords.size}")
+                sessionWords.forEach { word ->
+                    val records = answerRecords[word.id] ?: emptyList()
+                    Log.d("LearningViewModel", "word=${word.english} records=${records.size}")
+                    records.forEach { (isCorrect, hesitationMs, phase) ->
+                        repository.insertStudyRecord(
+                            StudyRecordEntity(
+                                wordbookId = wordbookId,
+                                wordId = word.id,
+                                isCorrect = isCorrect,
+                                hesitationMs = hesitationMs,
+                                phase = phase
+                            )
+                        )
+                    }
+                    // 计算熟悉度并更新复习数据
+                    val recentRecords = repository.getRecentRecordsByWord(word.id)
+                    val familiarity = ReviewAlgorithm.calcFamiliarity(recentRecords)
+                    val newReviewCount = word.reviewCount + 1
+                    val nextReviewDate = ReviewAlgorithm.calcNextReviewDate(newReviewCount, familiarity)
+                    repository.updateReviewData(word.id, familiarity, newReviewCount, nextReviewDate)
+                    // 非难词模式：完成三阶段即标记已掌握
+                    if (!starredOnly) {
                         repository.markWordAsMastered(word.id)
                     }
+                    // 通知外部同步复习数据到服务端
+                    Log.d("LearningViewModel", "onReviewDataUpdated callback: ${onReviewDataUpdated != null}, wordId=${word.id}")
+                    onReviewDataUpdated?.invoke(word.id, familiarity, newReviewCount, nextReviewDate)
+                    // 直接调用 API 同步到服务端
+                    syncReviewToServer(word, familiarity, newReviewCount, nextReviewDate)
                 }
-                _state.value = _state.value.copy(
-                    phase = LearningPhase.COMPLETED
-                )
+                _state.value = _state.value.copy(phase = LearningPhase.COMPLETED)
             } catch (e: Exception) {
-                Log.e("LearningViewModel", "Error marking words as mastered", e)
+                Log.e("LearningViewModel", "Error finishing session", e)
+                _state.value = _state.value.copy(phase = LearningPhase.COMPLETED)
             }
         }
     }

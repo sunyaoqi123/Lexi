@@ -95,6 +95,23 @@ class WordbookController(private val wordbookService: WordbookService) {
         }
     }
 
+    @PatchMapping("/{wordbookId}/words/{wordId}/review")
+    fun updateReviewData(
+        @AuthenticationPrincipal userId: Int,
+        @PathVariable wordbookId: Int,
+        @PathVariable wordId: Int,
+        @RequestParam familiarity: Float,
+        @RequestParam reviewCount: Int,
+        @RequestParam nextReviewDate: Long
+    ): ResponseEntity<*> {
+        return try {
+            wordbookService.updateReviewData(userId, wordbookId, wordId, familiarity, reviewCount, nextReviewDate)
+            ResponseEntity.ok(mapOf("message" to "更新成功"))
+        } catch (e: IllegalArgumentException) {
+            ResponseEntity.badRequest().body(mapOf("error" to e.message))
+        }
+    }
+
     @DeleteMapping("/{wordbookId}/words/{wordId}")
     fun deleteWord(
         @AuthenticationPrincipal userId: Int,

@@ -64,6 +64,7 @@ fun LearningScreen(
     wordbookName: String,
     groupSize: Int = 10,
     starredOnly: Boolean = false,
+    reviewOnly: Boolean = false,
     onBackClick: () -> Unit,
     innerPadding: PaddingValues,
     viewModel: LearningViewModel,
@@ -71,8 +72,8 @@ fun LearningScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
-    LaunchedEffect(wordbookId, starredOnly) {
-        viewModel.startSession(wordbookId, wordbookName, groupSize, starredOnly)
+    LaunchedEffect(wordbookId, starredOnly, reviewOnly) {
+        viewModel.startSession(wordbookId, wordbookName, groupSize, starredOnly, reviewOnly)
     }
 
     Column(
@@ -147,14 +148,24 @@ fun LearningScreen(
                     Button(onClick = onBackClick) { Text("返回") }
                 }
             }
-            state.phase == LearningPhase.COMPLETED -> CompletedScreen(
-                wordbookName = wordbookName,
-                count = state.sessionWordCount,
-                onBackClick = onBackClick,
-                onContinue = {
-                    viewModel.startSession(wordbookId, wordbookName, groupSize, starredOnly)
-                }
-            )
+            state.phase == LearningPhase.COMPLETED -> {
+                val remainingReview by viewModel.getRemainingReviewCount(wordbookId).collectAsState(initial = 0)
+                CompletedScreen(
+                    wordbookName = wordbookName,
+                    count = state.sessionWordCount,
+                    remainingReviewCount = remainingReview,
+                    isReviewMode = reviewOnly,
+                    onBackClick = onBackClick,
+                    onContinue = {
+                        if (reviewOnly && remainingReview == 0) {
+                            // 没有更多复习词，切换到学新词模式
+                            viewModel.startSession(wordbookId, wordbookName, groupSize, starredOnly, false)
+                        } else {
+                            viewModel.startSession(wordbookId, wordbookName, groupSize, starredOnly, reviewOnly)
+                        }
+                    }
+                )
+            }
             state.currentQuestion != null -> {
                 val progress = if (state.totalInRound > 0) state.currentIndex.toFloat() / state.totalInRound else 0f
                 LinearProgressIndicator(
@@ -364,7 +375,8 @@ fun ResultBar(isCorrect: Boolean, correctAnswer: String, onNext: () -> Unit) {
 }
 
 @Composable
-fun CompletedScreen(wordbookName: String, count: Int, onBackClick: () -> Unit, onContinue: () -> Unit = {}) {
+fun CompletedScreen(wordbookName: String, count: Int, remainingReviewCount: Int = 0, isReviewMode: Boolean = false, onBackClick: () -> Unit, onContinue: () -> Unit = {}) {
+    val hasMoreReview = remainingReviewCount > 0
     Column(
         modifier = Modifier.fillMaxSize().padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -375,15 +387,52 @@ fun CompletedScreen(wordbookName: String, count: Int, onBackClick: () -> Unit, o
         Text("太棒了！", fontSize = 28.sp, fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary)
         Spacer(modifier = Modifier.height(12.dp))
-        Text("你已完成 $wordbookName 中 $count 个单词的学习",
-            fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center)
-        Spacer(modifier = Modifier.height(8.dp))
-        Text("这些单词已标记为已掌握！", fontSize = 14.sp,
-            color = MaterialTheme.colorScheme.primary, textAlign = TextAlign.Center)
+        if (isReviewMode) {
+            if (hasMoreReview) {
+                Text("恭喜完成了 $wordbookName 的 $count 个单词的复习",
+                    fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center)
+                Spacer(modifier = Modifier.height(8.dp))
+                Text("还有 $remainingReviewCount 个单词需要复习",
+                    fontSize = 14.sp, color = Color(0xFFFFB300), textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Medium)
+            } else {
+                Text("恭喜完成了 $wordbookName 的所有复习任务！",
+                    fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center)
+            }
+        } else {
+            Text("你已完成 $wordbookName 中 $count 个单词的学习",
+                fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text("这些单词已标记为已掌握！", fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.primary, textAlign = TextAlign.Center)
+        }
         Spacer(modifier = Modifier.height(40.dp))
-        Button(onClick = onContinue, modifier = Modifier.fillMaxWidth()) {
-            Text("继续背诵", fontSize = 16.sp)
+        if (isReviewMode && hasMoreReview) {
+            Button(
+                onClick = onContinue,
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFB300))
+            ) {
+                Text("继续复习", fontSize = 16.sp, color = Color.White)
+            }
+        } else if (!isReviewMode) {
+            Button(
+                onClick = onContinue,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("继续背诵", fontSize = 16.sp)
+            }
+        } else {
+            Button(
+                onClick = onContinue,
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+            ) {
+                Text("开始学新词", fontSize = 16.sp)
+            }
         }
         Spacer(modifier = Modifier.height(12.dp))
         OutlinedButton(onClick = onBackClick, modifier = Modifier.fillMaxWidth()) {

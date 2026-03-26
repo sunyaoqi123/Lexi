@@ -1,4 +1,4 @@
-package com.syq.lexi.ui.screens
+﻿package com.syq.lexi.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -60,6 +60,8 @@ fun HomeScreen(
     plans: List<StudyPlanEntity> = emptyList(),
     onStartLearning: (WordbookEntity, Int) -> Unit = { _, _ -> },
     onStartStarredLearning: (WordbookEntity, Int) -> Unit = { _, _ -> },
+    onStartReview: (WordbookEntity, Int) -> Unit = { _, _ -> },
+    dueReviewCounts: Map<Int, Int> = emptyMap(),
     onAddPlan: (wordbookId: Int, dailyWords: Int) -> Unit = { _, _ -> },
     onDeletePlan: (StudyPlanEntity) -> Unit = {}
 ) {
@@ -167,23 +169,50 @@ fun HomeScreen(
                 }
             }
             Spacer(Modifier.height(40.dp))
+            Spacer(Modifier.height(40.dp))
             // 开始背单词 + 练习难词按钮
             val starredCount = starredCounts[selectedWordbook?.id] ?: 0
+            val dueReviewCount = dueReviewCounts[selectedWordbook?.id] ?: 0
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                val btnColor = if (dueReviewCount > 0) Color(0xFFFFB300) else MaterialTheme.colorScheme.primary
                 Box(modifier = Modifier.size(180.dp)
-                    .background(MaterialTheme.colorScheme.primary, CircleShape)
-                    .clickable { selectedWordbook?.let { onStartLearning(it, selectedGroupSize) } },
+                    .background(btnColor, CircleShape)
+                    .clickable {
+                        selectedWordbook?.let {
+                            if (dueReviewCount > 0) onStartReview(it, selectedGroupSize)
+                            else onStartLearning(it, selectedGroupSize)
+                        }
+                    },
                     contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text("开始", fontSize = 26.sp, fontWeight = FontWeight.Bold, color = Color.White)
-                        Text("背单词", fontSize = 16.sp, color = Color.White)
+                        if (dueReviewCount > 0) {
+                            Text("复习", fontSize = 26.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                            Text("$dueReviewCount 个待复习", fontSize = 14.sp, color = Color.White)
+                        } else {
+                            Text("开始", fontSize = 26.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                            Text("背单词", fontSize = 16.sp, color = Color.White)
+                        }
+                    }
+                }
+                if (dueReviewCount > 0) {
+                    Spacer(Modifier.height(12.dp))
+                    Row(
+                        modifier = Modifier
+                            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f), RoundedCornerShape(20.dp))
+                            .clickable { selectedWordbook?.let { onStartLearning(it, selectedGroupSize) } }
+                            .padding(horizontal = 20.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Text("学新词", fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold)
                     }
                 }
                 if (starredCount > 0) {
-                    Spacer(Modifier.height(16.dp))
+                    Spacer(Modifier.height(12.dp))
                     Row(
                         modifier = Modifier
                             .background(Color(0xFFFFB300).copy(alpha = 0.12f), RoundedCornerShape(20.dp))

@@ -89,6 +89,19 @@ interface WordDao {
 
     @Query("DELETE FROM words WHERE wordbookId = :wordbookId")
     suspend fun deleteWordsByWordbook(wordbookId: Int)
+
+    // 复习系统
+    @Query("UPDATE words SET familiarity = :familiarity, reviewCount = :reviewCount, nextReviewDate = :nextReviewDate WHERE id = :wordId")
+    suspend fun updateReviewData(wordId: Int, familiarity: Float, reviewCount: Int, nextReviewDate: Long)
+
+    @Query("SELECT * FROM words WHERE wordbookId = :wordbookId AND nextReviewDate > 0 AND nextReviewDate <= :now AND isMastered = 0 ORDER BY nextReviewDate ASC")
+    suspend fun getDueReviewWords(wordbookId: Int, now: Long): List<WordEntity>
+
+    @Query("SELECT COUNT(*) FROM words WHERE wordbookId = :wordbookId AND nextReviewDate > 0 AND nextReviewDate <= :now AND isMastered = 0")
+    fun getDueReviewCount(wordbookId: Int, now: Long): Flow<Int>
+
+    @Query("SELECT * FROM words WHERE wordbookId = :wordbookId AND isMastered = 0 AND (nextReviewDate = 0 OR nextReviewDate > :now)")
+    suspend fun getNewWords(wordbookId: Int, now: Long): List<WordEntity>
 }
 
 @Dao
@@ -125,4 +138,14 @@ interface StudyRecordDao {
 
     @Query("DELETE FROM study_records WHERE studyDate < :date")
     suspend fun deleteOldRecords(date: Long)
+
+    // 统计查询
+    @Query("SELECT COUNT(*) FROM study_records WHERE studyDate >= :startOfDay")
+    fun getTodayStudyCount(startOfDay: Long): Flow<Int>
+
+    @Query("SELECT COUNT(DISTINCT wordId) FROM study_records WHERE studyDate >= :startOfDay AND isCorrect = 1")
+    fun getTodayCorrectCount(startOfDay: Long): Flow<Int>
+
+    @Query("SELECT * FROM study_records WHERE wordId = :wordId ORDER BY studyDate DESC LIMIT :limit")
+    suspend fun getRecentRecordsByWord(wordId: Int, limit: Int = 10): List<StudyRecordEntity>
 }

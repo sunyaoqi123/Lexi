@@ -40,7 +40,11 @@ data class WordEntity(
     val isMastered: Boolean = false,
     val isStarred: Boolean = false,
     val learnDate: Long = 0,
-    val masteredDate: Long = 0
+    val masteredDate: Long = 0,
+    // 复习系统字段
+    val familiarity: Float = 0f,        // 熟悉度 0~1
+    val reviewCount: Int = 0,           // 已复习次数
+    val nextReviewDate: Long = 0        // 下次复习时间（epoch ms，0=未安排）
 )
 
 @Entity(tableName = "study_plans")
@@ -60,5 +64,9 @@ data class StudyRecordEntity(
     val wordId: Int,
     val studyDate: Long = System.currentTimeMillis(),
     val reviewCount: Int = 0,
-    val isCorrect: Boolean = false
+    val isCorrect: Boolean = false,
+    // 复习系统字段
+    val phase: Int = 0,             // 0=Phase1, 1=Phase2, 2=Phase3
+    val hesitationMs: Long = 0,     // 题目出现到用户选择的时间差(ms)
+    val durationMs: Long = 0        // 本次学习总用时(ms)
 )

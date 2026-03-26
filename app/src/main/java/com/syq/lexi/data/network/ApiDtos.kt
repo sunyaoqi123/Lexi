@@ -21,7 +21,11 @@ data class WordDto(
     val example: String = "",
     val exampleTranslation: String = "",
     val isMastered: Boolean = false,
-    val isStarred: Boolean = false
+    val isStarred: Boolean = false,
+    // 复习系统字段
+    val familiarity: Float = 0f,
+    val reviewCount: Int = 0,
+    val nextReviewDate: Long = 0
 )
 
 data class SyncWordsRequest(val words: List<WordDto>)

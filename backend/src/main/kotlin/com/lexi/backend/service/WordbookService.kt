@@ -51,18 +51,29 @@ class WordbookService(
                     wordbookId = wordbookId, english = dto.english,
                     chinese = dto.chinese, pronunciation = dto.pronunciation,
                     partOfSpeech = dto.partOfSpeech, example = dto.example,
-                    exampleTranslation = dto.exampleTranslation, isMastered = dto.isMastered
+                    exampleTranslation = dto.exampleTranslation, isMastered = dto.isMastered,
+                    isStarred = dto.isStarred, familiarity = dto.familiarity,
+                    reviewCount = dto.reviewCount, nextReviewDate = dto.nextReviewDate
                 ))
                 added++
             } else {
                 val newMeanings = dto.chinese.split("[,\uff0c\u3001]".toRegex()).map { it.trim() }.filter { it.isNotEmpty() }
                 val existingMeanings = existing.chinese.split("[,\uff0c\u3001]".toRegex()).map { it.trim() }.filter { it.isNotEmpty() }
                 val toAdd = newMeanings.filter { it !in existingMeanings }
-                if (toAdd.isEmpty()) skipped++
-                else {
+                if (toAdd.isEmpty()) {
+                    // 即使释义一样，也更新复习字段
+                    wordRepository.save(existing.copy(
+                        isMastered = dto.isMastered, isStarred = dto.isStarred,
+                        familiarity = dto.familiarity, reviewCount = dto.reviewCount,
+                        nextReviewDate = dto.nextReviewDate
+                    ))
+                    skipped++
+                } else {
                     wordRepository.save(existing.copy(
                         chinese = (existingMeanings + toAdd).joinToString("\uff0c"),
-                        isMastered = dto.isMastered
+                        isMastered = dto.isMastered, isStarred = dto.isStarred,
+                        familiarity = dto.familiarity, reviewCount = dto.reviewCount,
+                        nextReviewDate = dto.nextReviewDate
                     ))
                     merged++
                 }
@@ -75,6 +86,13 @@ class WordbookService(
             updatedAt = LocalDateTime.now()
         ))
         return SyncResult(added, merged, skipped)
+    }
+
+    @Transactional
+    fun updateReviewData(userId: Int, wordbookId: Int, wordId: Int, familiarity: Float, reviewCount: Int, nextReviewDate: Long) {
+        wordbookRepository.findByIdAndUserId(wordbookId, userId)
+            ?: throw IllegalArgumentException("单词本不存在")
+        wordRepository.updateReviewData(wordId, familiarity, reviewCount, nextReviewDate)
     }
 
     @Transactional

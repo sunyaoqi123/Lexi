@@ -65,6 +65,16 @@ interface LexiApi {
         @Query("starred") starred: Boolean
     )
 
+    @PATCH("api/wordbooks/{wordbookId}/words/{wordId}/review")
+    suspend fun updateReviewData(
+        @Header("Authorization") token: String,
+        @Path("wordbookId") wordbookId: Int,
+        @Path("wordId") wordId: Int,
+        @Query("familiarity") familiarity: Float,
+        @Query("reviewCount") reviewCount: Int,
+        @Query("nextReviewDate") nextReviewDate: Long
+    )
+
     @DELETE("api/wordbooks/{wordbookId}/words/{wordId}")
     suspend fun deleteWord(
         @Header("Authorization") token: String,

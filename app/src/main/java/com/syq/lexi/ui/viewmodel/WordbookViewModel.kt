@@ -71,6 +71,9 @@ class WordbookViewModel(
     private val _starredCounts = MutableStateFlow<Map<Int, Int>>(emptyMap())
     val starredCounts: StateFlow<Map<Int, Int>> = _starredCounts.asStateFlow()
 
+    private val _dueReviewCounts = MutableStateFlow<Map<Int, Int>>(emptyMap())
+    val dueReviewCounts: StateFlow<Map<Int, Int>> = _dueReviewCounts.asStateFlow()
+
     init {
         loadAllWordbooks()
         loadWordCounts()
@@ -94,6 +97,11 @@ class WordbookViewModel(
                         launch {
                             repository.getStarredCount(wordbook.id).collect { count ->
                                 _starredCounts.value = _starredCounts.value + (wordbook.id to count)
+                            }
+                        }
+                        launch {
+                            repository.getDueReviewCount(wordbook.id).collect { count ->
+                                _dueReviewCounts.value = _dueReviewCounts.value + (wordbook.id to count)
                             }
                         }
                     }
@@ -143,6 +151,29 @@ class WordbookViewModel(
                 syncMasteredToRemote(wordId, false)
             } catch (e: Exception) {
                 Log.e("WordbookViewModel", "Error marking unmastered", e)
+            }
+        }
+    }
+
+    fun syncReviewDataToRemote(wordId: Int, familiarity: Float, reviewCount: Int, nextReviewDate: Long) {
+        viewModelScope.launch {
+            try {
+                Log.d("WordbookViewModel", "syncReviewDataToRemote called: wordId=$wordId")
+                val token = authPrefs?.token?.first() ?: run {
+                    Log.w("WordbookViewModel", "syncReviewDataToRemote: no token")
+                    return@launch
+                }
+                val bearer = "Bearer $token"
+                val word = repository.getWordByIdOnce(wordId) ?: return@launch
+                val wordbook = repository.getWordbookById(word.wordbookId).first()
+                val remoteWordbooks = api.getWordbooks(bearer)
+                val remote = remoteWordbooks.find { it.name == wordbook.name } ?: return@launch
+                val remoteWords = api.getWords(bearer, remote.id)
+                val remoteWord = remoteWords.find { it.english.equals(word.english, ignoreCase = true) } ?: return@launch
+                api.updateReviewData(bearer, remote.id, remoteWord.id, familiarity, reviewCount, nextReviewDate)
+                Log.d("WordbookViewModel", "syncReviewData: '${word.english}' familiarity=$familiarity reviewCount=$reviewCount")
+            } catch (e: Exception) {
+                Log.e("WordbookViewModel", "Error syncing review data to remote", e)
             }
         }
     }

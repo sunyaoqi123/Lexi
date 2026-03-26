@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 sealed class AuthState {
     object Idle : AuthState()
     object Loading : AuthState()
-    data class Success(val token: String, val username: String) : AuthState()
+    data class Success(val token: String, val username: String, val isNewUser: Boolean = false) : AuthState()
     data class Error(val message: String) : AuthState()
 }
 
@@ -53,7 +53,7 @@ class AuthViewModel(private val context: Context) : ViewModel() {
                 authPrefs.saveAuth(resp.token, resp.username)
                 _token.value = resp.token
                 _username.value = resp.username
-                _authState.value = AuthState.Success(resp.token, resp.username)
+                _authState.value = AuthState.Success(resp.token, resp.username, isNewUser = true)
             } catch (e: Exception) {
                 _authState.value = AuthState.Error(e.message ?: "注册失败")
             }
