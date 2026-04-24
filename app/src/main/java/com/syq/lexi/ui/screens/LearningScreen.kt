@@ -22,6 +22,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
@@ -43,6 +45,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,6 +60,7 @@ import androidx.compose.ui.unit.sp
 import com.syq.lexi.ui.viewmodel.LearningPhase
 import com.syq.lexi.ui.viewmodel.LearningViewModel
 import com.syq.lexi.ui.viewmodel.QuizQuestion
+import com.syq.lexi.ui.viewmodel.ReviewSelfAssessment
 
 @Composable
 fun LearningScreen(
@@ -166,6 +170,24 @@ fun LearningScreen(
                     }
                 )
             }
+            state.phase == LearningPhase.REVIEW_SELF_ASSESSMENT && state.currentAssessmentWord != null -> {
+                val assessmentWord = state.currentAssessmentWord ?: return@Column
+                val progress = if (state.totalInRound > 0) state.currentIndex.toFloat() / state.totalInRound else 0f
+                LinearProgressIndicator(
+                    progress = { progress },
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).height(6.dp).clip(RoundedCornerShape(3.dp)),
+                    color = MaterialTheme.colorScheme.primary,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant
+                )
+                Text("${state.currentIndex} / ${state.totalInRound}", fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
+                    textAlign = TextAlign.End)
+                ReviewAssessmentScreen(
+                    word = assessmentWord,
+                    onAssess = { assessment -> viewModel.submitSelfAssessment(assessment) }
+                )
+            }
             state.currentQuestion != null -> {
                 val progress = if (state.totalInRound > 0) state.currentIndex.toFloat() / state.totalInRound else 0f
                 LinearProgressIndicator(
@@ -197,6 +219,128 @@ fun LearningScreen(
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun ReviewAssessmentScreen(
+    word: com.syq.lexi.data.database.WordEntity,
+    onAssess: (ReviewSelfAssessment) -> Unit
+) {
+    var showMeaning by remember(word.id) { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier.fillMaxSize().padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            "这个单词你掌握得怎么样？",
+            fontSize = 14.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Spacer(modifier = Modifier.height(28.dp))
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(24.dp))
+                .padding(horizontal = 24.dp, vertical = 32.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    word.english,
+                    fontSize = 38.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+                if (word.pronunciation.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        word.pronunciation,
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.72f)
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(18.dp))
+
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Box(
+                modifier = Modifier
+                    .background(
+                        MaterialTheme.colorScheme.surface.copy(alpha = 0.96f),
+                        RoundedCornerShape(999.dp)
+                    )
+                    .pointerInput(word.id) {
+                        detectTapGestures(
+                            onPress = {
+                                showMeaning = true
+                                tryAwaitRelease()
+                                showMeaning = false
+                            }
+                        )
+                    }
+                    .padding(horizontal = 24.dp, vertical = 14.dp)
+            ) {
+                Text(
+                    "按住查看释义",
+                    fontSize = 15.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(28.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                if (showMeaning) {
+                    Text(
+                        word.chinese,
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontWeight = FontWeight.Medium,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(28.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            Button(
+                onClick = { onAssess(ReviewSelfAssessment.KNOW) },
+                modifier = Modifier.weight(1f),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Text("认识", fontSize = 16.sp)
+            }
+            OutlinedButton(
+                onClick = { onAssess(ReviewSelfAssessment.VAGUE) },
+                modifier = Modifier.weight(1f),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Text("模糊", fontSize = 16.sp)
+            }
+            OutlinedButton(
+                onClick = { onAssess(ReviewSelfAssessment.DONT_KNOW) },
+                modifier = Modifier.weight(1f),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error)
+            ) {
+                Text("不认识", fontSize = 16.sp)
             }
         }
     }
@@ -445,15 +589,21 @@ fun CompletedScreen(wordbookName: String, count: Int, remainingReviewCount: Int 
 fun PhaseIndicator(phase: LearningPhase) {
     Row(horizontalArrangement = Arrangement.spacedBy(6.dp),
         verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(end = 12.dp)) {
-        listOf(LearningPhase.PHASE1_WORD_TO_MEANING, LearningPhase.PHASE2_MEANING_TO_WORD,
-            LearningPhase.PHASE3_SPELL_WORD).forEachIndexed { index, p ->
+        listOf(
+            LearningPhase.REVIEW_SELF_ASSESSMENT,
+            LearningPhase.PHASE1_WORD_TO_MEANING,
+            LearningPhase.PHASE2_MEANING_TO_WORD,
+            LearningPhase.PHASE3_SPELL_WORD
+        ).forEachIndexed { index, p ->
             val isActive = phase == p
-            val isDone = when (phase) {
-                LearningPhase.PHASE2_MEANING_TO_WORD -> index == 0
-                LearningPhase.PHASE3_SPELL_WORD -> index < 2
-                LearningPhase.COMPLETED -> true
-                else -> false
+            val currentIndex = when (phase) {
+                LearningPhase.REVIEW_SELF_ASSESSMENT -> 0
+                LearningPhase.PHASE1_WORD_TO_MEANING -> 1
+                LearningPhase.PHASE2_MEANING_TO_WORD -> 2
+                LearningPhase.PHASE3_SPELL_WORD -> 3
+                LearningPhase.COMPLETED -> 4
             }
+            val isDone = currentIndex > index
             Box(modifier = Modifier.size(if (isActive) 10.dp else 8.dp).background(
                 color = if (isDone || isActive) MaterialTheme.colorScheme.primary
                         else MaterialTheme.colorScheme.surfaceVariant, shape = CircleShape))

@@ -10,6 +10,7 @@ import com.syq.lexi.data.database.WordEntity
 import com.syq.lexi.data.network.RetrofitClient
 import com.syq.lexi.data.network.SyncWordsRequest
 import com.syq.lexi.data.network.WordbookDto
+import com.syq.lexi.data.repository.LearningSummary
 import com.syq.lexi.data.repository.SyncRepository
 import com.syq.lexi.data.repository.WordbookRepository
 import com.syq.lexi.data.repository.toDto
@@ -24,6 +25,10 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.temporal.ChronoUnit
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class WordbookViewModel(
@@ -74,9 +79,92 @@ class WordbookViewModel(
     private val _dueReviewCounts = MutableStateFlow<Map<Int, Int>>(emptyMap())
     val dueReviewCounts: StateFlow<Map<Int, Int>> = _dueReviewCounts.asStateFlow()
 
+    private val _learningSummary = MutableStateFlow(LearningSummary())
+    val learningSummary: StateFlow<LearningSummary> = _learningSummary.asStateFlow()
+
+    private val _summaryWordbookId = MutableStateFlow<Int?>(null)
+
     init {
         loadAllWordbooks()
         loadWordCounts()
+        loadLearningSummary()
+    }
+
+    fun selectSummaryWordbook(wordbookId: Int?) {
+        _summaryWordbookId.value = wordbookId
+    }
+
+    private fun loadLearningSummary() {
+        viewModelScope.launch {
+            repository.getAllWordbooks().collect { wordbooks ->
+                repository.getAllRecords().collect { records ->
+                    val allWords = repository.getAllWords().first()
+                    val selectedId = _summaryWordbookId.value
+                    _learningSummary.value = buildLearningSummary(records, allWords, wordbooks, selectedId)
+                }
+            }
+        }
+    }
+
+    private fun buildLearningSummary(
+        records: List<com.syq.lexi.data.database.StudyRecordEntity>,
+        words: List<WordEntity>,
+        wordbooks: List<WordbookEntity>,
+        selectedWordbookId: Int?
+    ): LearningSummary {
+        val zone = ZoneId.systemDefault()
+        val today = LocalDate.now(zone)
+        val todayStart = today.atStartOfDay(zone).toInstant().toEpochMilli()
+        val weekStart = today.minusDays(6).atStartOfDay(zone).toInstant().toEpochMilli()
+
+        val uniqueStudyDays = records
+            .map { Instant.ofEpochMilli(it.studyDate).atZone(zone).toLocalDate() }
+            .distinct()
+            .sortedDescending()
+
+        var streak = 0
+        var cursor = today
+        while (uniqueStudyDays.contains(cursor)) {
+            streak++
+            cursor = cursor.minus(1, ChronoUnit.DAYS)
+        }
+
+        val todayStudyCount = records
+            .filter { it.studyDate >= todayStart }
+            .map { it.wordId }
+            .distinct()
+            .size
+
+        val weekStudyCount = records
+            .filter { it.studyDate >= weekStart }
+            .map { it.wordId }
+            .distinct()
+            .size
+
+        val learnedWordIds = records.map { it.wordId }.toSet()
+        val filteredWords = words.filter { word ->
+            word.id in learnedWordIds && (selectedWordbookId == null || word.wordbookId == selectedWordbookId)
+        }
+
+        val familiarityDistribution = mapOf(
+            "待提高" to filteredWords.count { it.familiarity < 0.3f },
+            "一般" to filteredWords.count { it.familiarity >= 0.3f && it.familiarity < 0.6f },
+            "熟悉" to filteredWords.count { it.familiarity >= 0.6f && it.familiarity < 0.85f },
+            "掌握" to filteredWords.count { it.familiarity >= 0.85f }
+        )
+
+        val wordbookOptions = listOf(null to "全部单词本") + wordbooks.map { it.id to it.name }
+        val selectedWordbookName = wordbooks.find { it.id == selectedWordbookId }?.name ?: "全部单词本"
+
+        return LearningSummary(
+            streakDays = streak,
+            todayStudyCount = todayStudyCount,
+            weekStudyCount = weekStudyCount,
+            selectedWordbookId = selectedWordbookId,
+            selectedWordbookName = selectedWordbookName,
+            wordbookOptions = wordbookOptions,
+            familiarityDistribution = familiarityDistribution
+        )
     }
 
     private fun loadWordCounts() {

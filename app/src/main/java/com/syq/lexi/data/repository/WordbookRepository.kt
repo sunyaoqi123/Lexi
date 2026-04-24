@@ -9,6 +9,21 @@ import com.syq.lexi.data.database.WordEntity
 import com.syq.lexi.data.database.StudyRecordEntity
 import kotlinx.coroutines.flow.Flow
 
+data class LearningSummary(
+    val streakDays: Int = 0,
+    val todayStudyCount: Int = 0,
+    val weekStudyCount: Int = 0,
+    val selectedWordbookId: Int? = null,
+    val selectedWordbookName: String = "全部单词本",
+    val wordbookOptions: List<Pair<Int?, String>> = emptyList(),
+    val familiarityDistribution: Map<String, Int> = mapOf(
+        "待提高" to 0,
+        "一般" to 0,
+        "熟悉" to 0,
+        "掌握" to 0
+    )
+)
+
 class WordbookRepository(
     private val wordbookDao: WordbookDao,
     private val wordDao: WordDao,
@@ -30,6 +45,14 @@ class WordbookRepository(
 
     fun getAllWordbooks(): Flow<List<WordbookEntity>> {
         return wordbookDao.getAllWordbooks()
+    }
+
+    fun getAllWords(): Flow<List<WordEntity>> {
+        return wordDao.getAllWords()
+    }
+
+    fun getAllRecords(): Flow<List<StudyRecordEntity>> {
+        return studyRecordDao.getAllRecords()
     }
 
     fun getWordbookById(id: Int): Flow<WordbookEntity> {

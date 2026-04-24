@@ -50,7 +50,8 @@ fun DrawerContent(
     isDarkTheme: Boolean = false,
     onToggleDarkTheme: () -> Unit = {},
     authViewModel: AuthViewModel? = null,
-    syncViewModel: SyncViewModel? = null
+    syncViewModel: SyncViewModel? = null,
+    onSummaryClick: () -> Unit = {}
 ) {
     val username by authViewModel?.username?.collectAsState() ?: remember { mutableStateOf<String?>(null) }
     val token by authViewModel?.token?.collectAsState() ?: remember { mutableStateOf<String?>(null) }
@@ -179,6 +180,8 @@ fun DrawerContent(
             Spacer(modifier = Modifier.height(8.dp))
         }
 
+        DrawerMenuItem(icon = Icons.Default.Refresh, label = "学习总结", onClick = onSummaryClick)
+        Spacer(modifier = Modifier.height(8.dp))
         DrawerMenuItem(icon = Icons.Default.Settings, label = "设置", onClick = {})
         Spacer(modifier = Modifier.height(8.dp))
         DrawerMenuItem(icon = Icons.Default.Info, label = "关于", onClick = {})

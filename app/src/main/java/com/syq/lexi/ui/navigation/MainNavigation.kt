@@ -30,6 +30,7 @@ import com.syq.lexi.ui.screens.HomeScreen
 import com.syq.lexi.ui.screens.WordbookScreen
 import com.syq.lexi.ui.screens.GameScreen
 import com.syq.lexi.ui.screens.LearningScreen
+import com.syq.lexi.ui.screens.SummaryScreen
 import com.syq.lexi.ui.screens.StarredWordsScreen
 import com.syq.lexi.ui.screens.StudyScreenGrouped
 import com.syq.lexi.ui.viewmodel.LearningViewModel
@@ -40,7 +41,7 @@ import com.syq.lexi.ui.viewmodel.SyncViewModel
 import kotlinx.coroutines.launch
 
 enum class NavigationItem {
-    HOME, WORDBOOK, GAME, STUDY, LEARNING, STARRED
+    HOME, WORDBOOK, GAME, STUDY, LEARNING, STARRED, SUMMARY
 }
 
 @Composable
@@ -112,7 +113,11 @@ fun MainNavigation(
                 isDarkTheme = isDarkTheme,
                 onToggleDarkTheme = onToggleDarkTheme,
                 authViewModel = authViewModel,
-                syncViewModel = syncViewModel
+                syncViewModel = syncViewModel,
+                onSummaryClick = {
+                    scope.launch { drawerState.close() }
+                    currentScreen.value = NavigationItem.SUMMARY
+                }
             )
         }
     ) {
@@ -121,7 +126,8 @@ fun MainNavigation(
             bottomBar = {
                 if (currentScreen.value != NavigationItem.STUDY &&
                     currentScreen.value != NavigationItem.LEARNING &&
-                    currentScreen.value != NavigationItem.STARRED) {
+                    currentScreen.value != NavigationItem.STARRED &&
+                    currentScreen.value != NavigationItem.SUMMARY) {
                     NavigationBar {
                         NavigationBarItem(
                             icon = { Icon(Icons.Default.Home, contentDescription = "首页") },
@@ -251,6 +257,14 @@ fun MainNavigation(
                                 viewModel = wordbookViewModel
                             )
                         }
+                    }
+                    NavigationItem.SUMMARY -> {
+                        SummaryScreen(
+                            onMenuClick = { scope.launch { drawerState.open() } },
+                            onBackClick = { currentScreen.value = NavigationItem.HOME },
+                            innerPadding = innerPadding,
+                            viewModel = wordbookViewModel
+                        )
                     }
                 }
             }

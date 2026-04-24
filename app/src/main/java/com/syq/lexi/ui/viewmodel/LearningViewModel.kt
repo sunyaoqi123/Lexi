@@ -17,10 +17,17 @@ import kotlinx.coroutines.launch
 
 // 学习阶段
 enum class LearningPhase {
+    REVIEW_SELF_ASSESSMENT,   // 复习前自评：认识 / 模糊 / 不认识
     PHASE1_WORD_TO_MEANING,  // 看单词选释义
     PHASE2_MEANING_TO_WORD,  // 看释义选单词
     PHASE3_SPELL_WORD,       // 看释义拼写单词
     COMPLETED                // 全部完成
+}
+
+enum class ReviewSelfAssessment {
+    KNOW,
+    VAGUE,
+    DONT_KNOW
 }
 
 // 单题状态
@@ -37,8 +44,9 @@ data class LearningSessionState(
     val wordbookName: String = "",
     val phase: LearningPhase = LearningPhase.PHASE1_WORD_TO_MEANING,
     val currentQuestion: QuizQuestion? = null,
+    val currentAssessmentWord: WordEntity? = null,
     val currentIndex: Int = 0,      // 已答对的数量（进度）
-    val totalInRound: Int = 0,       // 固定为 sessionWordCount
+    val totalInRound: Int = 0,       // 当前阶段队列总题数（答错会重新入队，可能大于 sessionWordCount）
     val sessionWordCount: Int = 0,   // 原始单词数（固定不变）
     val selectedAnswer: String? = null,
     val isAnswered: Boolean = false,
@@ -63,6 +71,7 @@ class LearningViewModel(private val repository: WordbookRepository, private val 
     private var phase1Queue: MutableList<WordEntity> = mutableListOf()
     private var phase2Queue: MutableList<WordEntity> = mutableListOf()
     private var phase3Queue: MutableList<WordEntity> = mutableListOf()
+    private var assessmentQueue: MutableList<WordEntity> = mutableListOf()
 
     private var currentQueueIndex: Int = 0
     private var correctInPhase: Int = 0
@@ -129,21 +138,36 @@ class LearningViewModel(private val repository: WordbookRepository, private val 
                     else candidateWords
                 }
 
-                phase1Queue = sessionWords.shuffled().toMutableList()
+                phase1Queue = mutableListOf()
                 phase2Queue = mutableListOf()
                 phase3Queue = mutableListOf()
+                assessmentQueue = mutableListOf()
                 currentQueueIndex = 0
                 correctInPhase = 0
 
-                _state.value = LearningSessionState(
-                    wordbookId = wordbookId,
-                    wordbookName = wordbookName,
-                    phase = LearningPhase.PHASE1_WORD_TO_MEANING,
-                    totalInRound = phase1Queue.size,
-                    sessionWordCount = sessionWords.size,
-                    isLoading = false
-                )
-                loadNextQuestion()
+                if (reviewOnly) {
+                    assessmentQueue = sessionWords.toMutableList()
+                    _state.value = LearningSessionState(
+                        wordbookId = wordbookId,
+                        wordbookName = wordbookName,
+                        phase = LearningPhase.REVIEW_SELF_ASSESSMENT,
+                        currentAssessmentWord = assessmentQueue.firstOrNull(),
+                        totalInRound = assessmentQueue.size,
+                        sessionWordCount = sessionWords.size,
+                        isLoading = false
+                    )
+                } else {
+                    phase1Queue = sessionWords.shuffled().toMutableList()
+                    _state.value = LearningSessionState(
+                        wordbookId = wordbookId,
+                        wordbookName = wordbookName,
+                        phase = LearningPhase.PHASE1_WORD_TO_MEANING,
+                        totalInRound = phase1Queue.size,
+                        sessionWordCount = sessionWords.size,
+                        isLoading = false
+                    )
+                    loadNextQuestion()
+                }
             } catch (e: Exception) {
                 Log.e("LearningViewModel", "Error starting session", e)
                 _state.value = _state.value.copy(isLoading = false,
@@ -163,8 +187,9 @@ class LearningViewModel(private val repository: WordbookRepository, private val 
         questionStartTime = System.currentTimeMillis()
         _state.value = _state.value.copy(
             currentQuestion = question,
+            currentAssessmentWord = null,
             currentIndex = correctInPhase,
-            totalInRound = _state.value.sessionWordCount,
+            totalInRound = queue.size,
             selectedAnswer = null,
             isAnswered = false,
             isCorrect = false,
@@ -173,16 +198,56 @@ class LearningViewModel(private val repository: WordbookRepository, private val 
     }
 
     private fun getCurrentQueue(): List<WordEntity> = when (_state.value.phase) {
+        LearningPhase.REVIEW_SELF_ASSESSMENT -> assessmentQueue
         LearningPhase.PHASE1_WORD_TO_MEANING -> phase1Queue
         LearningPhase.PHASE2_MEANING_TO_WORD -> phase2Queue
         LearningPhase.PHASE3_SPELL_WORD -> phase3Queue
         LearningPhase.COMPLETED -> emptyList()
     }
 
+    fun submitSelfAssessment(assessment: ReviewSelfAssessment) {
+        val state = _state.value
+        if (state.phase != LearningPhase.REVIEW_SELF_ASSESSMENT) return
+        val word = state.currentAssessmentWord ?: return
+
+        when (assessment) {
+            ReviewSelfAssessment.KNOW -> phase3Queue.add(word)
+            ReviewSelfAssessment.VAGUE -> {
+                phase2Queue.add(word)
+                phase3Queue.add(word)
+            }
+            ReviewSelfAssessment.DONT_KNOW -> {
+                phase1Queue.add(word)
+                phase2Queue.add(word)
+                phase3Queue.add(word)
+            }
+        }
+
+        currentQueueIndex++
+        val nextWord = assessmentQueue.getOrNull(currentQueueIndex)
+        if (nextWord != null) {
+            _state.value = _state.value.copy(
+                currentAssessmentWord = nextWord,
+                currentQuestion = null,
+                currentIndex = currentQueueIndex,
+                totalInRound = assessmentQueue.size,
+                selectedAnswer = null,
+                isAnswered = false,
+                isCorrect = false,
+                spellInput = ""
+            )
+        } else {
+            currentQueueIndex = 0
+            correctInPhase = 0
+            advancePhase()
+        }
+    }
+
     private fun buildQuestion(word: WordEntity, phase: LearningPhase): QuizQuestion {
         val others = allWords.filter { it.id != word.id }.shuffled().take(3)
 
         return when (phase) {
+            LearningPhase.REVIEW_SELF_ASSESSMENT -> QuizQuestion(word, emptyList(), "", phase)
             LearningPhase.PHASE1_WORD_TO_MEANING -> {
                 val options = (others.map { it.chinese } + word.chinese).shuffled()
                 QuizQuestion(word, options, word.chinese, phase)
@@ -243,27 +308,80 @@ class LearningViewModel(private val repository: WordbookRepository, private val 
 
     private fun advancePhase() {
         when (_state.value.phase) {
-            LearningPhase.PHASE1_WORD_TO_MEANING -> {
-                phase2Queue = sessionWords.shuffled().toMutableList()
+            LearningPhase.REVIEW_SELF_ASSESSMENT -> {
                 currentQueueIndex = 0
                 correctInPhase = 0
-                _state.value = _state.value.copy(
-                    phase = LearningPhase.PHASE2_MEANING_TO_WORD,
-                    totalInRound = phase2Queue.size,
-                    currentIndex = 0
-                )
-                loadNextQuestion()
+                when {
+                    phase1Queue.isNotEmpty() -> {
+                        phase1Queue = phase1Queue.shuffled().toMutableList()
+                        _state.value = _state.value.copy(
+                            phase = LearningPhase.PHASE1_WORD_TO_MEANING,
+                            currentAssessmentWord = null,
+                            currentIndex = 0,
+                            totalInRound = phase1Queue.size
+                        )
+                        loadNextQuestion()
+                    }
+                    phase2Queue.isNotEmpty() -> {
+                        phase2Queue = phase2Queue.shuffled().toMutableList()
+                        _state.value = _state.value.copy(
+                            phase = LearningPhase.PHASE2_MEANING_TO_WORD,
+                            currentAssessmentWord = null,
+                            currentIndex = 0,
+                            totalInRound = phase2Queue.size
+                        )
+                        loadNextQuestion()
+                    }
+                    phase3Queue.isNotEmpty() -> {
+                        phase3Queue = phase3Queue.shuffled().toMutableList()
+                        _state.value = _state.value.copy(
+                            phase = LearningPhase.PHASE3_SPELL_WORD,
+                            currentAssessmentWord = null,
+                            currentIndex = 0,
+                            totalInRound = phase3Queue.size
+                        )
+                        loadNextQuestion()
+                    }
+                    else -> finishSession()
+                }
+            }
+            LearningPhase.PHASE1_WORD_TO_MEANING -> {
+                currentQueueIndex = 0
+                correctInPhase = 0
+                if (phase2Queue.isNotEmpty()) {
+                    phase2Queue = phase2Queue.shuffled().toMutableList()
+                    _state.value = _state.value.copy(
+                        phase = LearningPhase.PHASE2_MEANING_TO_WORD,
+                        currentIndex = 0,
+                        totalInRound = phase2Queue.size
+                    )
+                    loadNextQuestion()
+                } else if (phase3Queue.isNotEmpty()) {
+                    phase3Queue = phase3Queue.shuffled().toMutableList()
+                    _state.value = _state.value.copy(
+                        phase = LearningPhase.PHASE3_SPELL_WORD,
+                        currentIndex = 0,
+                        totalInRound = phase3Queue.size
+                    )
+                    loadNextQuestion()
+                } else {
+                    finishSession()
+                }
             }
             LearningPhase.PHASE2_MEANING_TO_WORD -> {
-                phase3Queue = sessionWords.shuffled().toMutableList()
                 currentQueueIndex = 0
                 correctInPhase = 0
-                _state.value = _state.value.copy(
-                    phase = LearningPhase.PHASE3_SPELL_WORD,
-                    totalInRound = phase3Queue.size,
-                    currentIndex = 0
-                )
-                loadNextQuestion()
+                if (phase3Queue.isNotEmpty()) {
+                    phase3Queue = phase3Queue.shuffled().toMutableList()
+                    _state.value = _state.value.copy(
+                        phase = LearningPhase.PHASE3_SPELL_WORD,
+                        currentIndex = 0,
+                        totalInRound = phase3Queue.size
+                    )
+                    loadNextQuestion()
+                } else {
+                    finishSession()
+                }
             }
             LearningPhase.PHASE3_SPELL_WORD -> finishSession()
             LearningPhase.COMPLETED -> {}
@@ -294,6 +412,7 @@ class LearningViewModel(private val repository: WordbookRepository, private val 
         _state.value = LearningSessionState(isLoading = false)
         sessionWords = emptyList()
         allWords = emptyList()
+        assessmentQueue = mutableListOf()
         phase1Queue = mutableListOf()
         phase2Queue = mutableListOf()
         phase3Queue = mutableListOf()

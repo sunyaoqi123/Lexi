@@ -42,6 +42,9 @@ interface WordDao {
     @Delete
     suspend fun deleteWord(word: WordEntity)
 
+    @Query("SELECT * FROM words")
+    fun getAllWords(): Flow<List<WordEntity>>
+
     @Query("SELECT * FROM words WHERE wordbookId = :wordbookId")
     fun getWordsByWordbook(wordbookId: Int): Flow<List<WordEntity>>
 
@@ -129,6 +132,9 @@ interface StudyPlanDao {
 interface StudyRecordDao {
     @Insert
     suspend fun insertRecord(record: StudyRecordEntity): Long
+
+    @Query("SELECT * FROM study_records ORDER BY studyDate DESC")
+    fun getAllRecords(): Flow<List<StudyRecordEntity>>
 
     @Query("SELECT * FROM study_records WHERE wordbookId = :wordbookId ORDER BY studyDate DESC")
     fun getRecordsByWordbook(wordbookId: Int): Flow<List<StudyRecordEntity>>
