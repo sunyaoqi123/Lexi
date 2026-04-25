@@ -7,6 +7,8 @@ import com.syq.lexi.data.auth.AuthPreferences
 import com.syq.lexi.data.network.FriendReminderDto
 import com.syq.lexi.data.network.FriendRequestDto
 import com.syq.lexi.data.network.FriendUserDto
+import com.syq.lexi.data.network.GameLeaderboardDto
+import com.syq.lexi.data.network.GameResultUploadDto
 import com.syq.lexi.data.network.RetrofitClient
 import com.syq.lexi.data.network.SendFriendReminderDto
 import com.syq.lexi.data.network.SendFriendRequestDto
@@ -24,6 +26,8 @@ data class FriendUiState(
     val sentRequests: List<FriendRequestDto> = emptyList(),
     val friends: List<FriendUserDto> = emptyList(),
     val unreadReminders: List<FriendReminderDto> = emptyList(),
+    val leaderboardByMetric: Map<String, GameLeaderboardDto> = emptyMap(),
+    val isLeaderboardLoading: Boolean = false,
     val isLoading: Boolean = false,
     val message: String? = null,
     val error: String? = null
@@ -151,6 +155,59 @@ class FriendViewModel(private val context: Context) : ViewModel() {
                 refreshAll()
             } catch (e: Exception) {
                 _state.value = _state.value.copy(error = e.message ?: "处理申请失败")
+            }
+        }
+    }
+
+    fun uploadGameResult(
+        gameKey: String,
+        groupSignature: String,
+        pairCount: Int,
+        elapsedSeconds: Int,
+        errors: Int,
+        onDone: ((Int?) -> Unit)? = null
+    ) {
+        viewModelScope.launch {
+            val token = authPrefs.token.first() ?: return@launch
+            val bearer = authPrefs.bearerToken(token)
+            val accuracy = if (pairCount <= 0) 0f else ((pairCount * 10 - errors).coerceAtLeast(0).toFloat() / (pairCount * 10).toFloat())
+            try {
+                api.uploadGameResult(
+                    bearer,
+                    GameResultUploadDto(
+                        gameKey = gameKey,
+                        groupSignature = groupSignature,
+                        pairCount = pairCount,
+                        elapsedSeconds = elapsedSeconds,
+                        errors = errors,
+                        accuracy = accuracy
+                    )
+                )
+                fetchGameLeaderboard(gameKey, "cleared") {
+                    onDone?.invoke(it["cleared"]?.myRank)
+                }
+            } catch (_: Exception) {
+                onDone?.invoke(null)
+            }
+        }
+    }
+
+    fun fetchGameLeaderboard(gameKey: String, metric: String, onDone: ((Map<String, GameLeaderboardDto>) -> Unit)? = null) {
+        viewModelScope.launch {
+            val token = authPrefs.token.first() ?: return@launch
+            val bearer = authPrefs.bearerToken(token)
+            try {
+                _state.value = _state.value.copy(isLeaderboardLoading = true)
+                val metrics = if (metric == "all") listOf("cleared", "avg_time", "accuracy") else listOf(metric)
+                val current = _state.value.leaderboardByMetric.toMutableMap()
+                metrics.forEach { m ->
+                    current[m] = api.getGameLeaderboard(bearer, gameKey, m)
+                }
+                _state.value = _state.value.copy(isLeaderboardLoading = false, leaderboardByMetric = current)
+                onDone?.invoke(current)
+            } catch (e: Exception) {
+                _state.value = _state.value.copy(isLeaderboardLoading = false, error = e.message ?: "加载排行榜失败")
+                onDone?.invoke(_state.value.leaderboardByMetric)
             }
         }
     }

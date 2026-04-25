@@ -170,4 +170,17 @@ interface LexiApi {
         @Header("Authorization") token: String,
         @Path("id") reminderId: Int
     ): Map<String, String>
+
+    @POST("api/games/results")
+    suspend fun uploadGameResult(
+        @Header("Authorization") token: String,
+        @Body req: GameResultUploadDto
+    ): Map<String, String>
+
+    @GET("api/games/leaderboard")
+    suspend fun getGameLeaderboard(
+        @Header("Authorization") token: String,
+        @Query("gameKey") gameKey: String,
+        @Query("metric") metric: String
+    ): GameLeaderboardDto
 }

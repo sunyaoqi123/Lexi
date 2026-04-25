@@ -34,7 +34,7 @@ import kotlinx.coroutines.flow.first
 
 data class Game(val id:Int,val name:String,val description:String,val icon:String,val color:Color)
 data class MatchWordItem(val id:Int,val english:String,val chinese:String)
-private enum class Page{GAME,FRIENDS,NEW_FRIENDS,WORD_MATCH}
+private enum class Page{GAME,FRIENDS,NEW_FRIENDS,WORD_MATCH,LEADERBOARD}
 
 @Composable
 fun GameScreen(onMenuClick:()->Unit,innerPadding:PaddingValues,friendViewModel:FriendViewModel,onInGameDetailChanged:(Boolean)->Unit){
@@ -59,7 +59,10 @@ fun GameScreen(onMenuClick:()->Unit,innerPadding:PaddingValues,friendViewModel:F
             Page.GAME->{
                 Row(Modifier.fillMaxWidth().padding(16.dp),Arrangement.SpaceBetween,Alignment.CenterVertically){
                     IconButton(onClick=onMenuClick){Icon(Icons.Default.Menu,"菜单")};Text("趣味游戏",fontSize=20.sp,fontWeight=FontWeight.Bold)
-                    Box(Modifier.size(48.dp),contentAlignment=Alignment.TopEnd){IconButton(onClick={page=Page.FRIENDS}){Icon(Icons.Default.AccountCircle,"好友")};if(st.pendingCount>0)Box(Modifier.padding(top=10.dp,end=10.dp).size(10.dp).background(Color(0xFFE53935),CircleShape))}
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        IconButton(onClick={page=Page.LEADERBOARD}){ Text("🏆", fontSize = 20.sp) }
+                        Box(Modifier.size(48.dp),contentAlignment=Alignment.TopEnd){IconButton(onClick={page=Page.FRIENDS}){Icon(Icons.Default.AccountCircle,"好友")};if(st.pendingCount>0)Box(Modifier.padding(top=10.dp,end=10.dp).size(10.dp).background(Color(0xFFE53935),CircleShape))}
+                    }
                 }
                 Spacer(Modifier.height(16.dp))
                 LazyVerticalGrid(columns=GridCells.Fixed(2),modifier=Modifier.fillMaxSize().padding(horizontal=16.dp),verticalArrangement=Arrangement.spacedBy(16.dp),horizontalArrangement=Arrangement.spacedBy(16.dp),contentPadding=PaddingValues(bottom=16.dp)){items(games){g->GameCard(g){if(g.id==1)page=Page.WORD_MATCH}}}
@@ -79,13 +82,14 @@ fun GameScreen(onMenuClick:()->Unit,innerPadding:PaddingValues,friendViewModel:F
                     items(st.sentRequests){r->val s=when(r.status){"PENDING"->"待处理";"ACCEPTED"->"已通过";"REJECTED"->"已拒绝";else->r.status};Card(shape=RoundedCornerShape(10.dp)){Row(Modifier.fillMaxWidth().padding(12.dp),Arrangement.SpaceBetween){Text(r.toUsername);Text(s)}}}
                 }
             }
-            Page.WORD_MATCH->WordMatchGame(onBack={page=Page.GAME}, onBackToMenu={page=Page.GAME})
+            Page.LEADERBOARD->GameLeaderboardScreen(friendViewModel=friendViewModel,onBack={page=Page.GAME})
+            Page.WORD_MATCH->WordMatchGame(onBack={page=Page.GAME}, onBackToMenu={page=Page.GAME}, friendViewModel=friendViewModel)
         }
     }
 }
 
 @Composable
-private fun WordMatchGame(onBack:()->Unit, onBackToMenu:()->Unit){
+private fun WordMatchGame(onBack:()->Unit, onBackToMenu:()->Unit, friendViewModel: FriendViewModel){
     val context=LocalContext.current
     var sourceWords by remember{mutableStateOf<List<MatchWordItem>>(emptyList())}
     var left by remember{mutableStateOf<List<MatchWordItem>>(emptyList())}
@@ -99,7 +103,10 @@ private fun WordMatchGame(onBack:()->Unit, onBackToMenu:()->Unit){
     var errors by remember{mutableIntStateOf(0)}
     var reloadToken by remember{mutableIntStateOf(0)}
     var pulseId by remember{mutableIntStateOf(-1)}
+    var myRank by remember{mutableStateOf<Int?>(null)}
+    var uploadedThisRound by remember{mutableStateOf(false)}
     var showVictory by remember{mutableStateOf(false)}
+    var isLoadingWords by remember { mutableStateOf(true) }
 
     val pairColors=listOf(Color(0xFFDDF4FF),Color(0xFFE6F7E7),Color(0xFFFFF4D8),Color(0xFFFFE8F1),Color(0xFFEDE7FF),Color(0xFFFFEDD5),Color(0xFFE0F2FE),Color(0xFFDCFCE7),Color(0xFFFEF9C3),Color(0xFFFCE7F3))
     fun pairColorForWordId(id:Int)=pairColors[(id-1)%pairColors.size]
@@ -108,21 +115,39 @@ private fun WordMatchGame(onBack:()->Unit, onBackToMenu:()->Unit){
         left=sourceWords.shuffled(); right=sourceWords.shuffled()
         leftPairColor.clear(); rightPairColor.clear(); leftToRight.clear()
         selectedSide=""; selectedId=-1
-        elapsed=0; errors=0; showVictory=false; pulseId=-1
+        elapsed=0; errors=0; showVictory=false; pulseId=-1; myRank=null; uploadedThisRound=false
     }
 
     LaunchedEffect(reloadToken){
+        isLoadingWords = true
         val all=LexiDatabase.getDatabase(context).wordDao().getAllWords().first()
-        if(all.size>=10){
-            sourceWords=all.shuffled().take(10).mapIndexed{i,w->MatchWordItem(i+1,w.english,w.chinese)}
+        val unique = all.distinctBy { "${it.english.trim().lowercase()}|${it.chinese.trim()}" }
+        if(unique.size>=10){
+            sourceWords=unique.shuffled().take(10).mapIndexed{i,w->MatchWordItem(i+1,w.english,w.chinese)}
             resetKeepWords()
         } else {
             sourceWords=emptyList(); left=emptyList(); right=emptyList()
         }
+        isLoadingWords = false
     }
     val running=left.isNotEmpty()&&leftToRight.size<left.size
     LaunchedEffect(running){while(running){delay(1000);elapsed++}}
-    LaunchedEffect(leftToRight.size,left.size){if(left.isNotEmpty()&&leftToRight.size==left.size)showVictory=true}
+    LaunchedEffect(leftToRight.size,left.size){
+        if(left.isNotEmpty()&&leftToRight.size==left.size){
+            showVictory=true
+            if(!uploadedThisRound){
+                uploadedThisRound=true
+                val signature = sourceWords.sortedBy { it.id }.joinToString("|") { "${it.english}=${it.chinese}" }
+                friendViewModel.uploadGameResult(
+                    gameKey = "word_match",
+                    groupSignature = signature,
+                    pairCount = left.size,
+                    elapsedSeconds = elapsed,
+                    errors = errors
+                ) { rank -> myRank = rank }
+            }
+        }
+    }
     LaunchedEffect(pulseId){ if(pulseId!=-1){ delay(180); pulseId=-1 } }
 
     val bg = MaterialTheme.colorScheme.surface
@@ -152,6 +177,7 @@ private fun WordMatchGame(onBack:()->Unit, onBackToMenu:()->Unit){
     }
 
     Header("单词连连看",onBack){Spacer(Modifier.size(48.dp))}
+    if(isLoadingWords){Box(Modifier.fillMaxSize(),contentAlignment=Alignment.Center){CircularProgressIndicator()};return}
     if(left.isEmpty()){Box(Modifier.fillMaxSize(),contentAlignment=Alignment.Center){Text("单词不足，至少需要 10 个单词")};return}
     Row(Modifier.fillMaxWidth().padding(horizontal=16.dp),Arrangement.SpaceBetween){Text("进度：${leftToRight.size}/${left.size}",fontWeight=FontWeight.SemiBold);Text("用时：${elapsed}s",fontWeight=FontWeight.SemiBold)}
     Row(Modifier.fillMaxWidth().padding(horizontal=16.dp),Arrangement.SpaceBetween,Alignment.CenterVertically){
@@ -169,28 +195,80 @@ private fun WordMatchGame(onBack:()->Unit, onBackToMenu:()->Unit){
     if(showVictory){
         AlertDialog(
             onDismissRequest={showVictory=false},
-            containerColor = MaterialTheme.colorScheme.surface,
-            shape = RoundedCornerShape(20.dp),
-            icon = { Text("🏆", fontSize = 28.sp) },
-            title={ Text("挑战完成", fontWeight = FontWeight.Bold) },
+            title={ Text("挑战成功", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, color = Color(0xFFFF9800), fontWeight = FontWeight.Bold, fontSize = 22.sp) },
             text={
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("全部配对成功！", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold)
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        AssistChip(onClick = {}, enabled = false, label = { Text("用时 ${elapsed}s") })
-                        AssistChip(onClick = {}, enabled = false, label = { Text("错误 $errors 次") })
+                Text(
+                    "用时 ${elapsed}s · 错误 $errors 次" + if (myRank != null) "\n\n好友第 ${myRank} 名" else "",
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            },
+            confirmButton={
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                        TextButton(onClick={resetKeepWords();showVictory=false}){Text("同组重开")}
+                        TextButton(onClick={reloadToken++;showVictory=false}){Text("新抽10词")}
+                        TextButton(onClick={showVictory=false;onBackToMenu()}){Text("返回菜单")}
                     }
-                    Text("可以选择再来一局，或返回游戏菜单。", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp)
                 }
             },
-            confirmButton={ TextButton(onClick={resetKeepWords();showVictory=false}){Text("同组再来")} },
-            dismissButton={
-                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                    TextButton(onClick={reloadToken++;showVictory=false}){Text("新抽10词")}
-                    TextButton(onClick={showVictory=false;onBackToMenu()}){Text("返回菜单")}
+            dismissButton={}
+        )
+    }
+}
+
+@Composable
+private fun GameLeaderboardScreen(friendViewModel: FriendViewModel, onBack: () -> Unit) {
+    var gameKey by remember { mutableStateOf("word_match") }
+    var metric by remember { mutableStateOf("cleared") }
+    val st by friendViewModel.state.collectAsState()
+    val board = st.leaderboardByMetric[metric]
+
+    LaunchedEffect(gameKey, metric) { friendViewModel.fetchGameLeaderboard(gameKey, metric) }
+
+    Header("好友排行榜", onBack) { Spacer(Modifier.size(48.dp)) }
+    Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        FilterChip(selected = gameKey == "word_match", onClick = { gameKey = "word_match" }, label = { Text("单词连连看") })
+    }
+    Spacer(Modifier.height(8.dp))
+    Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        FilterChip(selected = metric == "cleared", onClick = { metric = "cleared" }, label = { Text("通关组数") })
+        FilterChip(selected = metric == "avg_time", onClick = { metric = "avg_time" }, label = { Text("平均用时") })
+        FilterChip(selected = metric == "accuracy", onClick = { metric = "accuracy" }, label = { Text("正确率") })
+    }
+    Spacer(Modifier.height(10.dp))
+
+    if (st.isLeaderboardLoading) {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
+        return
+    }
+
+    val entries = board?.entries ?: emptyList()
+    if (entries.isEmpty()) {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("暂无好友参与", color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+        return
+    }
+
+    LazyColumn(Modifier.fillMaxSize().padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 16.dp)) {
+        items(entries) { e ->
+            Card(shape = RoundedCornerShape(12.dp)) {
+                Row(Modifier.fillMaxWidth().padding(12.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                    Text("#${e.rank}  ${e.username}", fontWeight = FontWeight.SemiBold)
+                    Text(
+                        when (metric) {
+                            "cleared" -> "${e.clearedGroups}组"
+                            "avg_time" -> "${"%.1f".format(e.avgSeconds)}s"
+                            else -> "${"%.1f".format(e.accuracy * 100)}%"
+                        },
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 }
             }
-        )
+        }
     }
 }
 

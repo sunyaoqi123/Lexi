@@ -3,6 +3,9 @@ package com.lexi.backend.service
 import com.lexi.backend.dto.FriendRequestDto
 import com.lexi.backend.dto.FriendReminderDto
 import com.lexi.backend.dto.FriendUserDto
+import com.lexi.backend.dto.GameLeaderboardDto
+import com.lexi.backend.dto.GameResultUploadDto
+import com.lexi.backend.dto.FriendLeaderboardEntryDto
 import com.lexi.backend.entity.FriendRelation
 import com.lexi.backend.entity.FriendReminder
 import com.lexi.backend.entity.FriendRequest
@@ -10,6 +13,7 @@ import com.lexi.backend.entity.FriendRequestStatus
 import com.lexi.backend.repository.FriendRelationRepository
 import com.lexi.backend.repository.FriendReminderRepository
 import com.lexi.backend.repository.FriendRequestRepository
+import com.lexi.backend.repository.GameResultRepository
 import com.lexi.backend.repository.UserRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -20,7 +24,8 @@ class FriendService(
     private val userRepository: UserRepository,
     private val friendRequestRepository: FriendRequestRepository,
     private val friendRelationRepository: FriendRelationRepository,
-    private val friendReminderRepository: FriendReminderRepository
+    private val friendReminderRepository: FriendReminderRepository,
+    private val gameResultRepository: GameResultRepository
 ) {
     private val fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 
@@ -126,6 +131,81 @@ class FriendService(
                 friendRelationRepository.save(FriendRelation(userId = req.toUserId, friendUserId = req.fromUserId))
             }
         }
+    }
+
+    @Transactional
+    fun uploadGameResult(currentUserId: Int, req: GameResultUploadDto) {
+        val exists = gameResultRepository.findByUserIdAndGameKeyAndGroupSignatureOrderByCreatedAtDesc(
+            currentUserId,
+            req.gameKey,
+            req.groupSignature
+        ).isNotEmpty()
+        if (exists) return
+
+        gameResultRepository.save(
+            com.lexi.backend.entity.GameResult(
+                userId = currentUserId,
+                gameKey = req.gameKey,
+                groupSignature = req.groupSignature,
+                pairCount = req.pairCount,
+                elapsedSeconds = req.elapsedSeconds,
+                errors = req.errors,
+                accuracy = req.accuracy
+            )
+        )
+    }
+
+    fun gameLeaderboard(currentUserId: Int, gameKey: String, metric: String): GameLeaderboardDto {
+        val meAndFriends = friendRelationRepository.findByUserIdOrderByCreatedAtDesc(currentUserId)
+            .map { it.friendUserId }
+            .toMutableSet()
+            .also { it.add(currentUserId) }
+
+        data class Agg(
+            val userId: Int,
+            val username: String,
+            val clearedGroups: Int,
+            val avgSeconds: Float,
+            val accuracy: Float,
+            val metricValue: Float
+        )
+
+        val rows = meAndFriends.mapNotNull { uid ->
+            val user = userRepository.findById(uid).orElse(null) ?: return@mapNotNull null
+            val rs = gameResultRepository.findByUserIdAndGameKeyOrderByCreatedAtDesc(uid, gameKey)
+            if (rs.isEmpty()) return@mapNotNull null
+
+            val cleared = rs.size
+            val avgTime = rs.map { it.elapsedSeconds }.average().toFloat()
+            val acc = rs.map { it.accuracy }.average().toFloat()
+            val metricValue = when (metric) {
+                "avg_time" -> avgTime
+                "accuracy" -> acc
+                else -> cleared.toFloat()
+            }
+            Agg(uid, user.username, cleared, avgTime, acc, metricValue)
+        }
+
+        val sorted = when (metric) {
+            "avg_time" -> rows.sortedBy { it.metricValue }
+            "accuracy" -> rows.sortedByDescending { it.metricValue }
+            else -> rows.sortedByDescending { it.metricValue }
+        }
+
+        val entries = sorted.mapIndexed { idx, r ->
+            FriendLeaderboardEntryDto(
+                userId = r.userId,
+                username = r.username,
+                clearedGroups = r.clearedGroups,
+                avgSeconds = r.avgSeconds,
+                accuracy = r.accuracy,
+                metricValue = r.metricValue,
+                rank = idx + 1
+            )
+        }
+
+        val myRank = entries.firstOrNull { it.userId == currentUserId }?.rank
+        return GameLeaderboardDto(gameKey = gameKey, metric = metric, entries = entries, myRank = myRank)
     }
 
     private fun toDto(req: FriendRequest): FriendRequestDto {

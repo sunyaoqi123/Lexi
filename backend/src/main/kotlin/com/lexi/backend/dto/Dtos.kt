@@ -66,3 +66,29 @@ data class FriendReminderDto(
 data class SendFriendReminderDto(
     val friendUserId: Int
 )
+
+data class GameResultUploadDto(
+    val gameKey: String,
+    val groupSignature: String,
+    val pairCount: Int,
+    val elapsedSeconds: Int,
+    val errors: Int,
+    val accuracy: Float
+)
+
+data class FriendLeaderboardEntryDto(
+    val userId: Int,
+    val username: String,
+    val clearedGroups: Int,
+    val avgSeconds: Float,
+    val accuracy: Float,
+    val metricValue: Float,
+    val rank: Int
+)
+
+data class GameLeaderboardDto(
+    val gameKey: String,
+    val metric: String,
+    val entries: List<FriendLeaderboardEntryDto>,
+    val myRank: Int?
+)
