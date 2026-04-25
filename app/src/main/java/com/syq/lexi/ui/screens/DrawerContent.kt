@@ -1,5 +1,6 @@
 package com.syq.lexi.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +14,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -27,23 +31,31 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.syq.lexi.notification.DailyReminderManager
 import com.syq.lexi.ui.viewmodel.AuthViewModel
 import com.syq.lexi.ui.viewmodel.SyncState
 import com.syq.lexi.ui.viewmodel.SyncViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun DrawerContent(
@@ -55,6 +67,12 @@ fun DrawerContent(
 ) {
     val username by authViewModel?.username?.collectAsState() ?: remember { mutableStateOf<String?>(null) }
     val token by authViewModel?.token?.collectAsState() ?: remember { mutableStateOf<String?>(null) }
+    val context = LocalContext.current
+    val savedReminderTime = remember { DailyReminderManager.getReminderTime(context) }
+    var reminderHour by remember { mutableStateOf(savedReminderTime.first) }
+    var reminderMinute by remember { mutableStateOf(savedReminderTime.second) }
+    var showReminderTimeDialog by remember { mutableStateOf(false) }
+    val reminderTimeText = DailyReminderManager.formatReminderTime(reminderHour, reminderMinute)
     val isLoggedIn = !token.isNullOrEmpty()
     val syncState by syncViewModel?.syncState?.collectAsState() ?: remember { mutableStateOf<SyncState>(SyncState.Idle) }
     var showLogoutDialog by remember { mutableStateOf(false) }
@@ -109,6 +127,29 @@ fun DrawerContent(
                 }
             }
         }
+    }
+
+    if (showReminderTimeDialog) {
+        ReminderTimePickerDialog(
+            initialHour = reminderHour,
+            initialMinute = reminderMinute,
+            onDismiss = { showReminderTimeDialog = false },
+            onConfirm = { hour, minute ->
+                reminderHour = hour
+                reminderMinute = minute
+                showReminderTimeDialog = false
+                DailyReminderManager.saveReminderTime(context, hour, minute)
+                if (DailyReminderManager.hasNotificationPermission(context)) {
+                    Toast.makeText(
+                        context,
+                        "已设置每天 ${DailyReminderManager.formatReminderTime(hour, minute)} 提醒",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(context, "请先在系统中允许通知权限", Toast.LENGTH_LONG).show()
+                }
+            }
+        )
     }
 
     Column(
@@ -182,7 +223,11 @@ fun DrawerContent(
 
         DrawerMenuItem(icon = Icons.Default.Refresh, label = "学习总结", onClick = onSummaryClick)
         Spacer(modifier = Modifier.height(8.dp))
-        DrawerMenuItem(icon = Icons.Default.Settings, label = "设置", onClick = {})
+        DrawerMenuItem(
+            icon = Icons.Default.Settings,
+            label = "提醒时间  $reminderTimeText",
+            onClick = { showReminderTimeDialog = true }
+        )
         Spacer(modifier = Modifier.height(8.dp))
         DrawerMenuItem(icon = Icons.Default.Info, label = "关于", onClick = {})
         Spacer(modifier = Modifier.height(8.dp))
@@ -254,6 +299,127 @@ fun GuestSection() {
         }
         Spacer(modifier = Modifier.height(16.dp))
         Text("未登录", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+}
+
+@Composable
+fun ReminderTimePickerDialog(
+    initialHour: Int,
+    initialMinute: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int, Int) -> Unit
+) {
+    var selectedHour by remember { mutableStateOf(initialHour) }
+    var selectedMinute by remember { mutableStateOf(initialMinute) }
+
+    androidx.compose.ui.window.Dialog(onDismissRequest = onDismiss) {
+        androidx.compose.material3.Surface(
+            shape = RoundedCornerShape(24.dp),
+            color = MaterialTheme.colorScheme.surface,
+            tonalElevation = 8.dp
+        ) {
+            Column(
+                modifier = Modifier.padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text("设置提醒时间", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.height(18.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    TimeWheel(
+                        values = (0..23).toList(),
+                        selectedValue = selectedHour,
+                        onValueSelected = { selectedHour = it }
+                    )
+                    Text("：", fontSize = 28.sp, fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface)
+                    TimeWheel(
+                        values = (0..59).toList(),
+                        selectedValue = selectedMinute,
+                        onValueSelected = { selectedMinute = it }
+                    )
+                }
+                Spacer(modifier = Modifier.height(22.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    OutlinedButton(onClick = onDismiss, modifier = Modifier.weight(1f)) {
+                        Text("取消")
+                    }
+                    Button(
+                        onClick = { onConfirm(selectedHour, selectedMinute) },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("确定")
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun TimeWheel(
+    values: List<Int>,
+    selectedValue: Int,
+    onValueSelected: (Int) -> Unit
+) {
+    val listState = rememberLazyListState(initialFirstVisibleItemIndex = selectedValue.coerceIn(values.indices))
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(listState, values) {
+        snapshotFlow { listState.firstVisibleItemIndex }
+            .collect { index ->
+                values.getOrNull(index)?.let { value ->
+                    if (value != selectedValue) onValueSelected(value)
+                }
+            }
+    }
+
+    Box(
+        modifier = Modifier
+            .width(88.dp)
+            .height(164.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp)
+                .background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(16.dp))
+        )
+        LazyColumn(
+            state = listState,
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            contentPadding = androidx.compose.foundation.layout.PaddingValues(vertical = 58.dp)
+        ) {
+            items(values) { value ->
+                val selected = value == selectedValue
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                        .clickable {
+                            onValueSelected(value)
+                            scope.launch {
+                                listState.animateScrollToItem(value.coerceIn(values.indices))
+                            }
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        "%02d".format(value),
+                        fontSize = if (selected) 24.sp else 18.sp,
+                        fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+                        color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
     }
 }
 

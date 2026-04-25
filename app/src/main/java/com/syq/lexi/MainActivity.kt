@@ -1,7 +1,11 @@
 package com.syq.lexi
 
 import android.content.Context
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -15,7 +19,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
+import android.content.pm.PackageManager
 import com.syq.lexi.data.database.LexiDatabase
+import com.syq.lexi.notification.DailyReminderManager
 import com.syq.lexi.data.repository.WordbookRepository
 import com.syq.lexi.ui.navigation.MainNavigation
 import com.syq.lexi.ui.screens.AuthScreen
@@ -65,6 +72,35 @@ fun MainApp(
         SyncViewModel(context, repo)
     }
     val syncState by syncViewModel.syncState.collectAsState()
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) {
+            DailyReminderManager.scheduleSavedDailyReminder(context)
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        DailyReminderManager.createNotificationChannel(context)
+    }
+
+    LaunchedEffect(token) {
+        if (!token.isNullOrEmpty()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                val granted = ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+                if (granted) {
+                    DailyReminderManager.scheduleSavedDailyReminder(context)
+                } else {
+                    notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+            } else {
+                DailyReminderManager.scheduleSavedDailyReminder(context)
+            }
+        }
+    }
 
     // 不自动同步，用户需手动点击同步
     // 但登录后如果本地为空，自动从用户词库初始化一次

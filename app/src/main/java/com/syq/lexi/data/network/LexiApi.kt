@@ -110,4 +110,64 @@ interface LexiApi {
         @Header("Authorization") token: String,
         @Query("wordbookName") wordbookName: String
     )
+
+    // 搜索用户（加好友）
+    @GET("api/friends/search")
+    suspend fun searchFriendUser(
+        @Header("Authorization") token: String,
+        @Query("username") username: String
+    ): FriendSearchResponse
+
+    // 发送好友申请
+    @POST("api/friends/requests")
+    suspend fun sendFriendRequest(
+        @Header("Authorization") token: String,
+        @Body req: SendFriendRequestDto
+    ): Map<String, String>
+
+    // 收到的待处理好友申请
+    @GET("api/friends/requests/pending")
+    suspend fun getPendingFriendRequests(
+        @Header("Authorization") token: String
+    ): List<FriendRequestDto>
+
+    // 我发送的好友申请（用于显示拒绝状态）
+    @GET("api/friends/requests/sent")
+    suspend fun getSentFriendRequests(
+        @Header("Authorization") token: String
+    ): List<FriendRequestDto>
+
+    // 处理好友申请
+    @PATCH("api/friends/requests/{id}")
+    suspend fun respondFriendRequest(
+        @Header("Authorization") token: String,
+        @Path("id") requestId: Int,
+        @Query("accept") accept: Boolean
+    )
+
+    // 好友列表
+    @GET("api/friends")
+    suspend fun getFriends(
+        @Header("Authorization") token: String
+    ): List<FriendUserDto>
+
+    // 发送好友学习提醒
+    @POST("api/friends/reminders")
+    suspend fun sendFriendStudyReminder(
+        @Header("Authorization") token: String,
+        @Body req: SendFriendReminderDto
+    ): Map<String, String>
+
+    // 获取未读好友提醒
+    @GET("api/friends/reminders/unread")
+    suspend fun getUnreadFriendReminders(
+        @Header("Authorization") token: String
+    ): List<FriendReminderDto>
+
+    // 标记好友提醒已读
+    @PATCH("api/friends/reminders/{id}/read")
+    suspend fun markFriendReminderRead(
+        @Header("Authorization") token: String,
+        @Path("id") reminderId: Int
+    ): Map<String, String>
 }

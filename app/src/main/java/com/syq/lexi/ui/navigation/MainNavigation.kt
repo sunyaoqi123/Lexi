@@ -37,6 +37,7 @@ import com.syq.lexi.ui.viewmodel.LearningViewModel
 import com.syq.lexi.ui.viewmodel.StudyPlanViewModel
 import com.syq.lexi.ui.viewmodel.WordbookViewModel
 import com.syq.lexi.ui.viewmodel.AuthViewModel
+import com.syq.lexi.ui.viewmodel.FriendViewModel
 import com.syq.lexi.ui.viewmodel.SyncViewModel
 import kotlinx.coroutines.launch
 
@@ -88,6 +89,8 @@ fun MainNavigation(
         )
         LearningViewModel(repository, context)
     }
+
+    val friendViewModel = remember { FriendViewModel(context) }
 
     // 设置复习数据同步回调（用 SideEffect 确保每次重组都设置）
     androidx.compose.runtime.SideEffect {
@@ -213,7 +216,8 @@ fun MainNavigation(
                     )
                     NavigationItem.GAME -> GameScreen(
                         onMenuClick = { scope.launch { drawerState.open() } },
-                        innerPadding = innerPadding
+                        innerPadding = innerPadding,
+                        friendViewModel = friendViewModel
                     )
                     NavigationItem.STUDY -> {
                         selectedWordbook.value?.let { wordbook ->

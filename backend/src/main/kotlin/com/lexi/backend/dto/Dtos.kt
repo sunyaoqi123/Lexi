@@ -33,3 +33,36 @@ data class SyncResult(
     val merged: Int,
     val skipped: Int
 )
+
+data class FriendUserDto(
+    val id: Int,
+    val username: String
+)
+
+data class SendFriendRequestDto(
+    val targetUsername: String
+)
+
+data class FriendRequestDto(
+    val id: Int,
+    val fromUserId: Int,
+    val fromUsername: String,
+    val toUserId: Int,
+    val toUsername: String,
+    val status: String,
+    val createdAt: String
+)
+
+data class FriendReminderDto(
+    val id: Int,
+    val fromUserId: Int,
+    val fromUsername: String,
+    val toUserId: Int,
+    val toUsername: String,
+    val message: String,
+    val createdAt: String
+)
+
+data class SendFriendReminderDto(
+    val friendUserId: Int
+)
