@@ -108,6 +108,11 @@ fun MainNavigation(
     val selectedGroupSize = remember { mutableStateOf(10) }
     val isStarredMode = remember { mutableStateOf(false) }
     val isReviewOnly = remember { mutableStateOf(false) }
+    val isInGameDetail = remember { mutableStateOf(false) }
+
+    androidx.compose.runtime.LaunchedEffect(currentScreen.value) {
+        if (currentScreen.value != NavigationItem.GAME) isInGameDetail.value = false
+    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -130,7 +135,8 @@ fun MainNavigation(
                 if (currentScreen.value != NavigationItem.STUDY &&
                     currentScreen.value != NavigationItem.LEARNING &&
                     currentScreen.value != NavigationItem.STARRED &&
-                    currentScreen.value != NavigationItem.SUMMARY) {
+                    currentScreen.value != NavigationItem.SUMMARY &&
+                    !isInGameDetail.value) {
                     NavigationBar {
                         NavigationBarItem(
                             icon = { Icon(Icons.Default.Home, contentDescription = "首页") },
@@ -217,7 +223,8 @@ fun MainNavigation(
                     NavigationItem.GAME -> GameScreen(
                         onMenuClick = { scope.launch { drawerState.open() } },
                         innerPadding = innerPadding,
-                        friendViewModel = friendViewModel
+                        friendViewModel = friendViewModel,
+                        onInGameDetailChanged = { isInGameDetail.value = it }
                     )
                     NavigationItem.STUDY -> {
                         selectedWordbook.value?.let { wordbook ->
