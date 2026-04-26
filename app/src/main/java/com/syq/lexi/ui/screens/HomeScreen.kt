@@ -1,4 +1,4 @@
-﻿package com.syq.lexi.ui.screens
+package com.syq.lexi.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,8 +15,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -98,6 +98,9 @@ fun HomeScreen(
                 }
             }
         } else {
+            Column(
+                modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
+            ) {
             Spacer(Modifier.height(16.dp))
             Box(Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
                 Row(modifier = Modifier.fillMaxWidth()
@@ -244,11 +247,11 @@ fun HomeScreen(
                         color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             } else {
-                LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f)
-                    .padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
-                    contentPadding = PaddingValues(bottom = 16.dp)) {
-                    items(plans) { plan ->
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    plans.forEach { plan ->
                         val wb = wordbooks.find { it.id == plan.wordbookId }
                         if (wb != null) {
                             val total = wordCounts[wb.id] ?: wb.totalWords
@@ -261,7 +264,9 @@ fun HomeScreen(
                                 onDelete = { onDeletePlan(plan) })
                         }
                     }
+                    Spacer(Modifier.height(16.dp))
                 }
+            }
             }
         }
     }
