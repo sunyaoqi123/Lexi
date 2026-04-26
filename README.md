@@ -1,6 +1,6 @@
 # Lexi - 智能单词背诵 App
 
-一款基于艾宾浩斯遗忘曲线的 Android 英语单词背诵应用，支持多阶段学习、智能复习调度、云端数据同步。
+一款基于艾宾浩斯遗忘曲线的 Android 英语学习应用，支持多阶段学习、智能复习调度、云端数据同步、好友互动和趣味游戏排行榜。
 
 ---
 
@@ -41,8 +41,11 @@
 - 为每个词库设置每日背诵目标（词数/天）
 - 首页展示计划进度
 
-### 趣味游戏
-- 游戏模块（GameScreen）提供多种趣味练习方式
+### 趣味游戏 + 排行榜
+- 游戏模块（GameScreen）提供：单词连连看、Hello Word、字母重组、Fives、Word Search、GuessWhat
+- GuessWhat 服务端题库统一维护（默认拉取 60 题并缓存），每轮抽取 10 题
+- GuessWhat 跳过规则：每局最多允许 3 次跳过，超过即判定失败
+- 好友排行榜支持「通关局数」「平均用时」两个维度（按游戏分别统计）
 
 ---
 
@@ -122,7 +125,7 @@ app/src/main/java/com/syq/lexi/
 │   │   ├── StudyScreen.kt             # 单词学习（单词卡片浏览）
 │   │   ├── StudyScreenGrouped.kt      # 分组学习界面
 │   │   ├── StarredWordsScreen.kt      # 收藏难词界面
-│   │   ├── GameScreen.kt              # 游戏模块
+│   │   ├── GameScreen.kt              # 游戏模块（含好友榜单）
 │   │   ├── DrawerContent.kt           # 左侧抽屉菜单
 │   │   ├── AddWordsDialog.kt          # 添加单词对话框
 │   │   ├── AddPlanDialog.kt           # 添加背诵计划对话框
@@ -155,18 +158,24 @@ backend/src/main/kotlin/com/lexi/backend/
 │   ├── AuthController.kt              # 注册 / 登录接口
 │   ├── WordbookController.kt          # 个人词库 CRUD + 单词同步
 │   ├── SystemController.kt            # 系统词库只读接口
-│   └── StudyPlanController.kt         # 背诵计划接口
+│   ├── StudyPlanController.kt         # 背诵计划接口
+│   ├── FriendController.kt            # 好友关系 / 好友提醒接口
+│   └── GameController.kt              # 游戏结果上传 / 榜单 / GuessWhat 题库接口
 ├── service/
 │   ├── AuthService.kt
 │   ├── WordbookService.kt
 │   ├── SystemDataService.kt
-│   └── StudyPlanService.kt
+│   ├── StudyPlanService.kt
+│   ├── FriendService.kt
+│   └── GuessWhatQuestionService.kt
 ├── entity/                            # JPA 实体
 │   ├── User.kt
 │   ├── Wordbook.kt / Word.kt          # 个人词库 & 单词
 │   ├── SystemWordbook.kt / SystemWord.kt  # 系统词库
 │   ├── StudyPlan.kt
-│   └── StudyRecord.kt
+│   ├── StudyRecord.kt
+│   ├── GameResult.kt
+│   └── GuessWhatQuestion.kt
 ├── repository/                        # Spring Data JPA Repository
 └── dto/
     └── Dtos.kt                        # 请求 / 响应 DTO
@@ -224,6 +233,15 @@ backend/src/main/kotlin/com/lexi/backend/
 | wordbookId | Int | 所属词库 |
 | dailyWords | Int | 每日目标词数 |
 
+**guess_what_questions 表**（GuessWhat 题库缓存）
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| answer | String (PK) | 答案单词 |
+| answerMeaning | String | 答案释义 |
+| cluesBlob | String | 提示词列表（JSON） |
+| clueMeaningsBlob | String | 提示词释义列表（JSON） |
+| updatedAt | Long | 缓存更新时间 |
+
 ### 服务端 MySQL 数据库
 
 | 表名 | 说明 |
@@ -234,6 +252,11 @@ backend/src/main/kotlin/com/lexi/backend/
 | `system_wordbooks` | 系统词库（只读，管理员维护） |
 | `system_words` | 系统单词（只读） |
 | `study_plans` | 背诵计划（关联 user_id + wordbook_name） |
+| `friend_requests` | 好友申请记录 |
+| `friend_relations` | 好友关系 |
+| `friend_reminders` | 好友学习提醒 |
+| `game_results` | 游戏通关结果（用于好友排行榜统计） |
+| `guess_what_questions` | GuessWhat 题库（答案+提示词+释义） |
 
 ---
 
@@ -270,6 +293,26 @@ backend/src/main/kotlin/com/lexi/backend/
 | GET | `/api/study-plans` | 获取背诵计划 |
 | POST | `/api/study-plans` | 保存背诵计划 |
 | DELETE | `/api/study-plans` | 删除背诵计划 |
+
+### 好友系统
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/api/friends/search` | 搜索用户 |
+| POST | `/api/friends/requests` | 发送好友申请 |
+| GET | `/api/friends/requests/pending` | 获取待处理申请 |
+| GET | `/api/friends/requests/sent` | 获取我发出的申请 |
+| PATCH | `/api/friends/requests/{id}` | 处理申请（同意/拒绝） |
+| GET | `/api/friends` | 获取好友列表 |
+| POST | `/api/friends/reminders` | 发送学习提醒 |
+| GET | `/api/friends/reminders/unread` | 获取未读提醒 |
+| PATCH | `/api/friends/reminders/{id}/read` | 标记提醒已读 |
+
+### 游戏与排行榜
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| POST | `/api/games/results` | 上传游戏结果 |
+| GET | `/api/games/leaderboard` | 获取好友排行榜（按游戏+指标） |
+| GET | `/api/games/guess-what/questions` | 获取 GuessWhat 在线题库（支持 limit） |
 
 ---
 
