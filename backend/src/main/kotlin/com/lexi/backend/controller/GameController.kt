@@ -2,13 +2,17 @@ package com.lexi.backend.controller
 
 import com.lexi.backend.dto.GameResultUploadDto
 import com.lexi.backend.service.FriendService
+import com.lexi.backend.service.GuessWhatQuestionService
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/games")
-class GameController(private val friendService: FriendService) {
+class GameController(
+    private val friendService: FriendService,
+    private val guessWhatQuestionService: GuessWhatQuestionService
+) {
 
     @PostMapping("/results")
     fun uploadGameResult(
@@ -21,6 +25,14 @@ class GameController(private val friendService: FriendService) {
         } catch (e: IllegalArgumentException) {
             ResponseEntity.badRequest().body(mapOf("error" to e.message))
         }
+    }
+
+    @GetMapping("/guess-what/questions")
+    fun guessWhatQuestions(
+        @AuthenticationPrincipal userId: Int,
+        @RequestParam(defaultValue = "60") limit: Int
+    ): ResponseEntity<*> {
+        return ResponseEntity.ok(guessWhatQuestionService.listQuestions(limit))
     }
 
     @GetMapping("/leaderboard")

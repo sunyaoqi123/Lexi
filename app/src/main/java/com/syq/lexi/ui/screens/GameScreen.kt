@@ -27,12 +27,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.syq.lexi.data.auth.AuthPreferences
+import com.syq.lexi.data.database.GuessWhatQuestionEntity
 import com.syq.lexi.data.database.LexiDatabase
 import com.syq.lexi.data.database.WordEntity
+import com.syq.lexi.data.network.RetrofitClient
 import com.syq.lexi.notification.DailyReminderManager
 import com.syq.lexi.ui.viewmodel.FriendViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 data class Game(val id:Int,val name:String,val description:String,val icon:String,val color:Color)
 data class MatchWordItem(val id:Int,val english:String,val chinese:String)
@@ -41,6 +46,12 @@ data class WordPlacement(
     val end: Pair<Int, Int>,
     val axis: String,
     val reversed: Boolean
+)
+
+data class WordSearchBuildResult(
+    val board: List<MutableList<Char>>,
+    val paths: Map<String, List<Pair<Int,Int>>>,
+    val placements: Map<String, WordPlacement>
 )
 
 data class FivesMode(val id:String,val title:String,val chances:Int,val wordLength:Int)
@@ -124,8 +135,8 @@ fun GameScreen(onMenuClick:()->Unit,innerPadding:PaddingValues,friendViewModel:F
             Page.HELLO_WORD->HelloWordGame(onBack={page=Page.GAME}, friendViewModel=friendViewModel)
             Page.LETTER_REORDER->LetterReorderGame(onBack={page=Page.GAME}, friendViewModel=friendViewModel)
             Page.FIVES->FivesGame(onBack={page=Page.GAME}, friendViewModel=friendViewModel)
-            Page.WORD_SEARCH->WordSearchGame(onBack={page=Page.GAME})
-            Page.GUESS_WHAT->GuessWhatGame(onBack={page=Page.GAME})
+            Page.WORD_SEARCH->WordSearchGame(onBack={page=Page.GAME}, friendViewModel=friendViewModel)
+            Page.GUESS_WHAT->GuessWhatGame(onBack={page=Page.GAME}, friendViewModel=friendViewModel)
             Page.WORD_MATCH->WordMatchGame(onBack={page=Page.GAME}, onBackToMenu={page=Page.GAME}, friendViewModel=friendViewModel)
         }
     }
@@ -730,7 +741,7 @@ private fun FivesGame(onBack:()->Unit, friendViewModel: FriendViewModel){
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun WordSearchGame(onBack:()->Unit){
+private fun WordSearchGame(onBack:()->Unit, friendViewModel: FriendViewModel){
     val context = LocalContext.current
     val size = 7
 
@@ -748,18 +759,17 @@ private fun WordSearchGame(onBack:()->Unit){
     var reloadToken by remember { mutableIntStateOf(0) }
     var cachedPool by remember { mutableStateOf<List<MatchWordItem>>(emptyList()) }
     var poolLoaded by remember { mutableStateOf(false) }
+    var nextBoard by remember { mutableStateOf<WordSearchBuildResult?>(null) }
+    var nextItems by remember { mutableStateOf<List<MatchWordItem>>(emptyList()) }
+    var boardSeed by remember { mutableIntStateOf(0) }
+    var myRank by remember { mutableStateOf<Int?>(null) }
+    var uploadedThisRound by remember { mutableStateOf(false) }
     var gaveUp by remember { mutableStateOf(false) }
     var missedCells by remember { mutableStateOf<Set<Pair<Int,Int>>>(emptySet()) }
 
     fun normalizeEnglish(s:String)=s.lowercase().filter { it.isLetter() }
 
-    data class BuildResult(
-        val board: List<MutableList<Char>>,
-        val paths: Map<String, List<Pair<Int,Int>>>,
-        val placements: Map<String, WordPlacement>
-    )
-
-    fun tryPlaceWords(words: List<String>): BuildResult? {
+    fun tryPlaceWords(words: List<String>): WordSearchBuildResult? {
         if (words.isEmpty()) return null
         val board = MutableList(size){ MutableList(size){ '#' } }
         val paths = mutableMapOf<String, List<Pair<Int,Int>>>()
@@ -796,17 +806,17 @@ private fun WordSearchGame(onBack:()->Unit){
             val reversed = (0..1).random() == 1
             val placeWord = if (reversed) raw.reversed() else raw
             var placed = false
-            repeat(120) {
+            for (attempt in 0 until 36) {
                 val horizontal = (0..1).random() == 1
                 val maxRow = if (horizontal) size - 1 else size - placeWord.length
                 val maxCol = if (horizontal) size - placeWord.length else size - 1
-                if (maxRow < 0 || maxCol < 0) return@repeat
+                if (maxRow < 0 || maxCol < 0) continue
                 val row = (0..maxRow).random()
                 val col = (0..maxCol).random()
                 if (canPlace(placeWord, row, col, horizontal)) {
                     doPlace(raw, placeWord, row, col, horizontal, reversed)
                     placed = true
-                    return@repeat
+                    break
                 }
             }
             if (!placed) return null
@@ -814,76 +824,76 @@ private fun WordSearchGame(onBack:()->Unit){
 
         for (r in 0 until size) {
             for (c in 0 until size) {
-                if (board[r][c] == '#') board[r][c] = listOf('q','x','z','v','j','k','w').random()
+                if (board[r][c] == '#') board[r][c] = ('a'..'z').random()
             }
         }
 
-        fun findOccurrences(word: String): List<List<Pair<Int,Int>>> {
-            val result = mutableListOf<List<Pair<Int,Int>>>()
-            val rev = word.reversed()
+        fun matchAt(word: String, row: Int, col: Int, horizontal: Boolean, reversed: Boolean): Boolean {
+            for (i in word.indices) {
+                val r = if (horizontal) row else row + i
+                val c = if (horizontal) col + i else col
+                val expected = if (reversed) word[word.lastIndex - i] else word[i]
+                if (board[r][c] != expected) return false
+            }
+            return true
+        }
 
+        fun countOccurrences(word: String): Int {
+            val n = word.length
+            var count = 0
             for (r in 0 until size) {
-                for (cStart in 0..(size - word.length)) {
-                    val cells = word.indices.map { i -> r to (cStart + i) }
-                    val s = cells.joinToString("") { (rr,cc) -> board[rr][cc].toString() }
-                    if (s == word || s == rev) result += cells
+                for (c in 0..(size - n)) {
+                    if (matchAt(word, r, c, horizontal = true, reversed = false) ||
+                        matchAt(word, r, c, horizontal = true, reversed = true)
+                    ) count++
                 }
             }
-
             for (c in 0 until size) {
-                for (rStart in 0..(size - word.length)) {
-                    val cells = word.indices.map { i -> (rStart + i) to c }
-                    val s = cells.joinToString("") { (rr,cc) -> board[rr][cc].toString() }
-                    if (s == word || s == rev) result += cells
+                for (r in 0..(size - n)) {
+                    if (matchAt(word, r, c, horizontal = false, reversed = false) ||
+                        matchAt(word, r, c, horizontal = false, reversed = true)
+                    ) count++
                 }
             }
-            return result
+            return count
         }
 
-        fun samePath(a: List<Pair<Int,Int>>, b: List<Pair<Int,Int>>): Boolean = (a == b || a == b.reversed())
+        // 不做重填循环，只做一次校验：若出现重复答案，直接判本次尝试失败
+        if (words.distinct().any { countOccurrences(it) != 1 }) return null
 
-        val allAnswerCells = paths.values.flatten().toSet()
-        val rareLetters = listOf('q','x','z','v','j','k','w')
-
-        repeat(120) {
-            var changed = false
-            for (word in words.distinct()) {
-                val answerPath = paths[word] ?: return null
-                val extras = findOccurrences(word).filterNot { samePath(it, answerPath) }
-                for (occ in extras) {
-                    val mutableCell = occ.firstOrNull { it !in allAnswerCells } ?: return null
-                    val (rr, cc) = mutableCell
-                    val current = board[rr][cc]
-                    board[rr][cc] = rareLetters.firstOrNull { it != current } ?: 'q'
-                    changed = true
-                }
-            }
-            if (!changed) return@repeat
-        }
-
-        // final strict check: each target word has exactly one valid occurrence (its answer path)
-        val ok = words.distinct().all { word ->
-            val answerPath = paths[word] ?: return null
-            val occ = findOccurrences(word)
-            occ.size == 1 && samePath(occ.first(), answerPath)
-        }
-        if (!ok) return null
-
-        return BuildResult(board, paths, placements)
+        return WordSearchBuildResult(board, paths, placements)
     }
 
-    fun buildFrom(items: List<MatchWordItem>) {
+    fun applyBoard(builtItems: List<MatchWordItem>, builtGrid: WordSearchBuildResult) {
+        targetItems = builtItems
+        grid = builtGrid.board
+        expectedPaths = builtGrid.paths
+        placements = builtGrid.placements
+        selected = emptyList()
+        foundEnglish = emptySet()
+        foundCells = emptySet()
+        gaveUp = false
+        missedCells = emptySet()
+        elapsed = 0
+        win = false
+        myRank = null
+        uploadedThisRound = false
+        boardSeed++
+        loading = false
+    }
+
+    fun produceBoard(items: List<MatchWordItem>): Pair<List<MatchWordItem>, WordSearchBuildResult> {
         val clean = items
             .map { MatchWordItem(it.id, normalizeEnglish(it.english), it.chinese.trim()) }
             .filter { it.english.length in 3..size && it.chinese.isNotBlank() }
             .distinctBy { it.english }
 
-        var builtGrid: BuildResult? = null
+        var builtGrid: WordSearchBuildResult? = null
         var builtItems: List<MatchWordItem> = emptyList()
 
-        val maxPick = minOf(4, clean.size)
+        val maxPick = minOf(3, clean.size)
         for (pick in maxPick downTo 3) {
-            repeat(120) {
+            repeat(24) {
                 val sample = clean.shuffled().take(pick)
                 val tryGrid = tryPlaceWords(sample.map { it.english })
                 if (tryGrid != null) {
@@ -902,15 +912,15 @@ private fun WordSearchGame(onBack:()->Unit){
                 MatchWordItem(3, "sun", "太阳")
             )
             builtItems = fallback
-            var fb: BuildResult? = null
-            repeat(80) {
+            var fb: WordSearchBuildResult? = null
+            repeat(30) {
                 val attempt = tryPlaceWords(fallback.map { it.english })
                 if (attempt != null) {
                     fb = attempt
                     return@repeat
                 }
             }
-            builtGrid = fb ?: BuildResult(
+            builtGrid = fb ?: WordSearchBuildResult(
                 board = List(size) { MutableList(size) { 'x' } },
                 paths = mapOf(
                     "cat" to listOf(0 to 0, 0 to 1, 0 to 2),
@@ -928,33 +938,75 @@ private fun WordSearchGame(onBack:()->Unit){
                 m[0][0]='c';m[0][1]='a';m[0][2]='t'
                 m[2][0]='d';m[2][1]='o';m[2][2]='g'
                 m[4][0]='s';m[4][1]='u';m[4][2]='n'
-                builtGrid = BuildResult(m, builtGrid!!.paths, builtGrid!!.placements)
+                builtGrid = WordSearchBuildResult(m, builtGrid!!.paths, builtGrid!!.placements)
             }
         }
 
-        targetItems = builtItems
-        grid = builtGrid!!.board
-        expectedPaths = builtGrid!!.paths
-        placements = builtGrid!!.placements
-        selected = emptyList()
-        foundEnglish = emptySet()
-        foundCells = emptySet()
-        gaveUp = false
-        missedCells = emptySet()
-        elapsed = 0
-        win = false
-        loading = false
+        return builtItems to builtGrid!!
+    }
+
+    fun buildFrom(items: List<MatchWordItem>) {
+        val (builtItems, builtGrid) = produceBoard(items)
+        applyBoard(builtItems, builtGrid)
+    }
+
+    LaunchedEffect(Unit){
+        loading = true
+        val all = LexiDatabase.getDatabase(context).wordDao().getAllWords().first()
+        cachedPool = all.mapIndexed { i, w -> MatchWordItem(i+1, w.english, w.chinese) }
+        poolLoaded = true
+
+        val first = withContext(Dispatchers.Default) { produceBoard(cachedPool) }
+        applyBoard(first.first, first.second)
+
+        val prefetched = withContext(Dispatchers.Default) { produceBoard(cachedPool) }
+        nextItems = prefetched.first
+        nextBoard = prefetched.second
     }
 
     LaunchedEffect(reloadToken){
+        if (!poolLoaded || reloadToken == 0) return@LaunchedEffect
         loading = true
-        val all = LexiDatabase.getDatabase(context).wordDao().getAllWords().first()
-        val pool = all.mapIndexed { i, w -> MatchWordItem(i+1, w.english, w.chinese) }
-        buildFrom(pool)
+
+        val readyBoard = nextBoard
+        val readyItems = nextItems
+        if (readyBoard != null && readyItems.isNotEmpty()) {
+            applyBoard(readyItems, readyBoard)
+        } else {
+            val built = withContext(Dispatchers.Default) { produceBoard(cachedPool) }
+            applyBoard(built.first, built.second)
+        }
+
+        val prefetched = withContext(Dispatchers.Default) { produceBoard(cachedPool) }
+        nextItems = prefetched.first
+        nextBoard = prefetched.second
+    }
+
+    LaunchedEffect(boardSeed){
+        if (!poolLoaded) return@LaunchedEffect
+        if (nextBoard == null) {
+            val prefetched = withContext(Dispatchers.Default) { produceBoard(cachedPool) }
+            nextItems = prefetched.first
+            nextBoard = prefetched.second
+        }
     }
 
     val running = !loading && !win && !gaveUp && !showRulesDialog
     LaunchedEffect(running){ while(running){ delay(1000); elapsed++ } }
+
+    LaunchedEffect(win){
+        if (win && !uploadedThisRound && targetItems.isNotEmpty()) {
+            uploadedThisRound = true
+            val signature = targetItems.sortedBy { it.id }.joinToString("|") { "${it.english}=${it.chinese}" }
+            friendViewModel.uploadGameResult(
+                gameKey = "word_search",
+                groupSignature = signature,
+                pairCount = targetItems.size,
+                elapsedSeconds = elapsed,
+                errors = 0
+            ) { rank -> myRank = rank }
+        }
+    }
 
     Header("Word Search",onBack){IconButton(onClick={showRulesDialog=true}){ Text("💡") }}
     if(loading){ Box(Modifier.fillMaxSize(), Alignment.Center){ CircularProgressIndicator() }; return }
@@ -962,7 +1014,7 @@ private fun WordSearchGame(onBack:()->Unit){
     Column(Modifier.fillMaxSize().padding(16.dp),horizontalAlignment=Alignment.CenterHorizontally){
         Text("目标释义（在下方找英文）", color=MaterialTheme.colorScheme.onSurfaceVariant)
         Text("已找到：${foundEnglish.size}/${targetItems.size}   用时：${elapsed}s",color=MaterialTheme.colorScheme.onSurfaceVariant)
-        GameRuleHint("7×7网格；按点选顺序取词；每个目标词仅一条正确路径（词间可共享格子）")
+        GameRuleHint("7×7网格；按点选顺序取词；其余格子由26字母随机填充，确认时按字符序列匹配")
         Spacer(Modifier.height(8.dp))
 
         FlowRow(
@@ -1066,10 +1118,18 @@ private fun WordSearchGame(onBack:()->Unit){
                 Button(onClick={
                     val word = lineWordBySelectionOrder(selected)
                     if (word != null) {
+                        val chars = selected.map { (r, c) -> grid[r][c] }
+                        fun matches(charsList: List<Char>, target: String): Boolean {
+                            if (charsList.size != target.length) return false
+                            for (i in target.indices) if (charsList[i] != target[i]) return false
+                            return true
+                        }
+
                         val hit = targetItems.firstOrNull { item ->
-                            val path = expectedPaths[item.english] ?: return@firstOrNull false
-                            (selected == path || selected == path.reversed()) && !foundEnglish.contains(item.english)
+                            !foundEnglish.contains(item.english) &&
+                                (matches(chars, item.english) || matches(chars, item.english.reversed()))
                         }?.english
+
                         if (hit != null) {
                             foundEnglish = foundEnglish + hit
                             foundCells = foundCells + selected.toSet()
@@ -1086,7 +1146,7 @@ private fun WordSearchGame(onBack:()->Unit){
         AlertDialog(
             onDismissRequest={showRulesDialog=false},
             title={Text("Word Search 规则")},
-            text={Text("上方显示中文释义列表，你需要在 7×7 字母网格中找出对应英文单词。\n选择方式必须是同一行或同一列的连续字母，支持反向点选。\n“当前”按你的点选顺序显示。\n每个目标词在网格中仅有一条正确路径（不同目标词可以共享格子）。\n点击“放弃”会暂停计时，并将未找到词与网格答案标红；此时确认位会变为红色“退出”。\n选好后点“确认”，命中会高亮并计入进度；全部找齐即通关。\n规则弹窗打开时倒计时暂停。")},
+            text={Text("上方显示中文释义列表，你需要在 7×7 字母网格中找出对应英文单词。\n选择方式必须是同一行或同一列的连续字母，支持反向点选。\n“当前”按你的点选顺序显示。\n其余格子使用 26 个字母随机填充，点击“确认”时按你选择的字符序列与目标英文匹配（支持反向）。\n点击“放弃”会暂停计时，并将未找到词与网格答案标红；此时确认位会变为红色“退出”。\n选好后点“确认”，命中会高亮并计入进度；全部找齐即通关。\n规则弹窗打开时倒计时暂停。")},
             confirmButton={TextButton(onClick={showRulesDialog=false}){Text("知道了")}}
         )
     }
@@ -1095,7 +1155,7 @@ private fun WordSearchGame(onBack:()->Unit){
         AlertDialog(
             onDismissRequest={win=false},
             title={Text("挑战成功")},
-            text={Text("全部找齐，用时 ${elapsed}s")},
+            text={Text("全部找齐，用时 ${elapsed}s\n" + if(myRank!=null) "好友第 ${myRank} 名" else "好友排名统计中...")},
             confirmButton={TextButton(onClick={reloadToken++}){Text("再来一局")}},
             dismissButton={TextButton(onClick={win=false;onBack()}){Text("返回菜单")}}
         )
@@ -1104,51 +1164,237 @@ private fun WordSearchGame(onBack:()->Unit){
 
 
 @Composable
-private fun GuessWhatGame(onBack:()->Unit){
-    data class Q(val answer:String,val clues:List<String>)
-    val qs=remember{listOf(Q("football",listOf("grass","goal","offside")),Q("hospital",listOf("doctor","nurse","emergency")),Q("library",listOf("books","quiet","borrow")),Q("airport",listOf("plane","passport","terminal")),Q("kitchen",listOf("cook","pan","fridge")))}
-    var idx by remember{mutableIntStateOf(0)};var clue by remember{mutableIntStateOf(1)};var input by remember{mutableStateOf("")};var errors by remember{mutableIntStateOf(0)};var elapsed by remember{mutableIntStateOf(0)};var win by remember{mutableStateOf(false)};var showRulesDialog by remember{mutableStateOf(false)}
-    fun reset(){idx=0;clue=1;input="";errors=0;elapsed=0;win=false}
-    val running=!win&&!showRulesDialog
-    LaunchedEffect(running){while(running){delay(1000);elapsed++}}
-    Header("GuessWhat",onBack){IconButton(onClick={showRulesDialog=true}){ Text("💡") }}
-    val q=qs[idx]
-    Column(Modifier.fillMaxSize().padding(16.dp),horizontalAlignment=Alignment.CenterHorizontally,verticalArrangement=Arrangement.Center){
-        Text("第 ${idx+1}/${qs.size} 题",color=MaterialTheme.colorScheme.onSurfaceVariant);Text("用时：${elapsed}s   错误：$errors",color=MaterialTheme.colorScheme.onSurfaceVariant);GameRuleHint("线索词是提示，不是备选答案；输入它们共同指向的目标英文单词") ;Spacer(Modifier.height(10.dp))
-        q.clues.take(clue).forEach{Text("• $it",fontSize=20.sp,fontWeight=FontWeight.SemiBold)}
-        Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){TextButton(onClick={if(clue<q.clues.size)clue++}){Text("更多提示")};TextButton(onClick={clue=1}){Text("重置提示")}}
-        OutlinedTextField(value=input,onValueChange={input=it.lowercase().trim()},singleLine=true,label={Text("输入答案")});Spacer(Modifier.height(8.dp))
-        Button(onClick={if(input==q.answer){if(idx==qs.lastIndex)win=true else{idx++;clue=1;input=""}} else errors++}){Text("提交")}
+private fun GuessWhatGame(onBack:()->Unit, friendViewModel: FriendViewModel){
+    data class Q(
+        val answer:String,
+        val clues:List<String>,
+        val clueMeanings: List<String>,
+        val answerMeaning:String
+    )
+
+    fun encodeList(values: List<String>): String = org.json.JSONArray(values).toString()
+    fun decodeList(blob: String): List<String> = try {
+        val arr = org.json.JSONArray(blob)
+        List(arr.length()) { i -> arr.optString(i) }
+    } catch (_: Exception) {
+        emptyList()
     }
+
+    val context = LocalContext.current
+    val api = RetrofitClient.api
+    val authPrefs = remember { AuthPreferences(context) }
+
+    val fallbackQs = remember {
+        listOf(
+            Q("football", listOf("grass","goal","offside"), listOf("草地","球门","越位"), "足球"),
+            Q("hospital", listOf("doctor","nurse","emergency"), listOf("医生","护士","急诊"), "医院"),
+            Q("library", listOf("books","quiet","borrow"), listOf("书籍","安静","借阅"), "图书馆"),
+            Q("airport", listOf("plane","passport","terminal"), listOf("飞机","护照","航站楼"), "机场"),
+            Q("kitchen", listOf("cook","pan","fridge"), listOf("烹饪","平底锅","冰箱"), "厨房"),
+            Q("teacher", listOf("school","lesson","homework"), listOf("学校","课程","作业"), "老师"),
+            Q("computer", listOf("screen","keyboard","mouse"), listOf("屏幕","键盘","鼠标"), "电脑"),
+            Q("bicycle", listOf("pedal","wheel","helmet"), listOf("踏板","车轮","头盔"), "自行车")
+        )
+    }
+
+    var qs by remember{mutableStateOf<List<Q>>(emptyList())}
+    var loading by remember{mutableStateOf(true)}
+    var idx by remember{mutableIntStateOf(0)}
+    var input by remember{mutableStateOf("")}
+    var errors by remember{mutableIntStateOf(0)}
+    var skipped by remember{mutableIntStateOf(0)}
+    var elapsed by remember{mutableIntStateOf(0)}
+    var win by remember{mutableStateOf(false)}
+    var failed by remember{mutableStateOf(false)}
+    var myRank by remember{mutableStateOf<Int?>(null)}
+    var uploadedThisRound by remember{mutableStateOf(false)}
+    var showRulesDialog by remember{mutableStateOf(false)}
+    var showSkipDialog by remember{mutableStateOf(false)}
+
+    fun resetRound(){
+        idx=0;input="";errors=0;skipped=0;elapsed=0;win=false;failed=false;myRank=null;uploadedThisRound=false;showSkipDialog=false
+    }
+
+    fun loadQuestions(){
+        loading = true
+        input = ""; idx = 0; errors = 0; skipped = 0; elapsed = 0; win = false; failed=false; myRank=null; uploadedThisRound=false; showSkipDialog = false
+    }
+
+    LaunchedEffect(Unit){
+        loadQuestions()
+        val db = LexiDatabase.getDatabase(context)
+
+        val cachedLocal = withContext(Dispatchers.IO) {
+            db.guessWhatQuestionDao().getAllOnce().mapNotNull { e ->
+                val clues = decodeList(e.cluesBlob).map { it.lowercase().trim() }.filter { it.isNotBlank() }
+                val clueMeanings = decodeList(e.clueMeaningsBlob).map { it.trim() }
+                if (e.answer.isBlank() || clues.isEmpty() || clueMeanings.size != clues.size || clueMeanings.any { it.isBlank() } || e.answerMeaning.isBlank()) {
+                    null
+                } else {
+                    Q(
+                        answer = e.answer.lowercase().trim(),
+                        clues = clues,
+                        clueMeanings = clueMeanings,
+                        answerMeaning = e.answerMeaning.trim()
+                    )
+                }
+            }
+        }
+
+        val online = try {
+            val token = authPrefs.token.first()
+            val bearer = token?.let { authPrefs.bearerToken(it) }
+            if (bearer != null) {
+                api.getGuessWhatQuestions(bearer, 60)
+                    .mapNotNull { dto ->
+                        val ans = dto.answer.lowercase().trim()
+                        val clues = dto.clues.map { c -> c.lowercase().trim() }.filter { c -> c.isNotBlank() }
+                        val meanings = dto.clueMeanings.map { m -> m.trim() }
+                        val answerMeaning = dto.answerMeaning.trim()
+                        if (ans.isBlank() || clues.isEmpty() || meanings.size != clues.size || meanings.any { it.isBlank() } || answerMeaning.isBlank()) {
+                            null
+                        } else {
+                            Q(ans, clues, meanings, answerMeaning)
+                        }
+                    }
+            } else emptyList()
+        } catch (_: Exception) {
+            emptyList()
+        }
+
+        val source = if (online.isNotEmpty()) {
+            withContext(Dispatchers.IO) {
+                db.guessWhatQuestionDao().clearAll()
+                db.guessWhatQuestionDao().upsertAll(
+                    online.map {
+                        GuessWhatQuestionEntity(
+                            answer = it.answer,
+                            answerMeaning = it.answerMeaning,
+                            cluesBlob = encodeList(it.clues),
+                            clueMeaningsBlob = encodeList(it.clueMeanings),
+                            updatedAt = System.currentTimeMillis()
+                        )
+                    }
+                )
+            }
+            online
+        } else if (cachedLocal.isNotEmpty()) {
+            cachedLocal
+        } else {
+            fallbackQs
+        }
+
+        qs = source.shuffled().take(10)
+        if (qs.isEmpty()) qs = fallbackQs
+        loading = false
+    }
+
+    val running=!loading&&!win&&!failed&&!showRulesDialog&&!showSkipDialog&&qs.isNotEmpty()
+    LaunchedEffect(running){while(running){delay(1000);elapsed++}}
+
+    LaunchedEffect(win){
+        if(win && !uploadedThisRound && qs.isNotEmpty()){
+            uploadedThisRound = true
+            val signature = qs.joinToString("|") { q ->
+                q.answer + "=" + q.answerMeaning + ":" + q.clues.zip(q.clueMeanings).joinToString(",") { (c, m) -> "$c=$m" }
+            }
+            val weightedErrors = errors + skipped
+            friendViewModel.uploadGameResult(
+                gameKey = "guess_what",
+                groupSignature = signature,
+                pairCount = qs.size,
+                elapsedSeconds = elapsed,
+                errors = weightedErrors
+            ) { rank -> myRank = rank }
+        }
+    }
+
+    Header("GuessWhat",onBack){IconButton(onClick={showRulesDialog=true}){ Text("💡") }}
+
+    if (loading) {
+        Box(Modifier.fillMaxSize(), Alignment.Center) { CircularProgressIndicator() }
+        return
+    }
+
+    val q = qs[idx]
+    Column(Modifier.fillMaxSize().padding(16.dp),horizontalAlignment=Alignment.CenterHorizontally,verticalArrangement=Arrangement.Center){
+        Text("第 ${idx+1}/${qs.size} 题",color=MaterialTheme.colorScheme.onSurfaceVariant)
+        val remainingSkips = (3 - skipped).coerceAtLeast(0)
+        Text("用时：${elapsed}s   错误：$errors   跳过：$skipped   剩余跳过：$remainingSkips",color=MaterialTheme.colorScheme.onSurfaceVariant)
+        GameRuleHint("每题直接显示全部线索词；可跳过查看提示词释义、答案与答案释义")
+        Spacer(Modifier.height(10.dp))
+
+        q.clues.forEach{Text("• $it",fontSize=20.sp,fontWeight=FontWeight.SemiBold)}
+
+        Row(horizontalArrangement=Arrangement.spacedBy(8.dp)){
+            TextButton(onClick={showSkipDialog=true}){Text("跳过")}
+        }
+
+        OutlinedTextField(value=input,onValueChange={input=it.lowercase().trim()},singleLine=true,label={Text("输入答案")})
+        Spacer(Modifier.height(8.dp))
+        Button(onClick={
+            if(input==q.answer){
+                if(idx==qs.lastIndex) win=true else { idx++; input="" }
+            } else errors++
+        }){Text("提交")}
+    }
+
+    if(showSkipDialog){
+        val clueWithMeaning = q.clues.zip(q.clueMeanings).joinToString("\n") { (c, m) -> "$c（$m）" }
+
+        AlertDialog(
+            onDismissRequest={showSkipDialog=false},
+            title={Text("本题已跳过")},
+            text={
+                Text(
+                    "提示词及释义：\n$clueWithMeaning\n\n" +
+                    "答案：${q.answer}\n" +
+                    "答案释义：${q.answerMeaning}"
+                )
+            },
+            confirmButton={
+                TextButton(onClick={
+                    skipped++
+                    showSkipDialog=false
+                    if (skipped > 3) {
+                        failed = true
+                    } else {
+                        if(idx==qs.lastIndex) win=true else { idx++; input="" }
+                    }
+                }){Text("下一题")}
+            },
+            dismissButton={TextButton(onClick={showSkipDialog=false}){Text("取消")}}
+        )
+    }
+
     if(showRulesDialog){
         AlertDialog(
             onDismissRequest={showRulesDialog=false},
             title={Text("GuessWhat 详细规则")},
-            text={
-                Text(
-                    "玩法目标：\n" +
-                    "每一题都有一个隐藏的目标英文单词（answer）。你看到的多个词（如 grass / goal / offside）只是线索，不是答案选项。\n\n" +
-                    "你要做什么：\n" +
-                    "根据当前显示的线索，输入它们共同指向的那个英文单词，然后点击“提交”。\n\n" +
-                    "例子：\n" +
-                    "线索：grass / goal / offside\n" +
-                    "应输入：football\n\n" +
-                    "判定规则：\n" +
-                    "1) 提交后若输入与目标词完全一致（当前为小写匹配）则本题通过，进入下一题；\n" +
-                    "2) 若不一致，错误次数 +1，本题继续；\n" +
-                    "3) 完成最后一题后通关。\n\n" +
-                    "提示系统：\n" +
-                    "- “更多提示”：在本题增加一条线索，帮助缩小范围；\n" +
-                    "- “重置提示”：把本题线索数量恢复到初始状态。\n\n" +
-                    "计时说明：\n" +
-                    "- 计时从开局开始，通关结束；\n" +
-                    "- 规则弹窗打开时计时暂停。"
-                )
-            },
+            text={Text("每题会直接显示全部线索词，你要输入对应英文答案。若不确定可点“跳过”，会显示提示词及其释义，并展示答案单词和答案释义，然后进入下一题。跳过次数超过3次判定本局失败。全部完成且未失败即通关，规则弹窗和跳过弹窗打开时计时暂停。")},
             confirmButton={TextButton(onClick={showRulesDialog=false}){Text("知道了")}}
         )
     }
-    if(win){AlertDialog(onDismissRequest={win=false},title={Text("挑战成功")},text={Text("完成 ${qs.size} 题\n用时 ${elapsed}s\n错误 $errors 次")},confirmButton={TextButton(onClick={reset()}){Text("再来一局")}},dismissButton={TextButton(onClick={win=false;onBack()}){Text("返回菜单")}})}
+
+    if(failed){
+        AlertDialog(
+            onDismissRequest={failed=false},
+            title={Text("挑战失败")},
+            text={Text("跳过次数超过3次，本局失败。\n用时 ${elapsed}s\n错误 $errors 次\n跳过 $skipped 次")},
+            confirmButton={TextButton(onClick={resetRound()}){Text("再来一局")}},
+            dismissButton={TextButton(onClick={failed=false;onBack()}){Text("返回菜单")}}
+        )
+    }
+
+    if(win){
+        AlertDialog(
+            onDismissRequest={win=false},
+            title={Text("挑战成功")},
+            text={Text("完成 ${qs.size} 题\n用时 ${elapsed}s\n错误 $errors 次\n跳过 $skipped 次\n" + if(myRank!=null) "好友第 ${myRank} 名" else "好友排名统计中...")},
+            confirmButton={TextButton(onClick={resetRound()}){Text("再来一局")}},
+            dismissButton={TextButton(onClick={win=false;onBack()}){Text("返回菜单")}}
+        )
+    }
 }
 
 @Composable
@@ -1192,9 +1438,6 @@ private fun GameLeaderboardScreen(friendViewModel: FriendViewModel, onBack: () -
     Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         FilterChip(selected = metric == "cleared", onClick = { metric = "cleared" }, label = { Text("通关局数") })
         FilterChip(selected = metric == "avg_time", onClick = { metric = "avg_time" }, label = { Text("平均用时") })
-        if (!isFives) {
-            FilterChip(selected = metric == "accuracy", onClick = { metric = "accuracy" }, label = { Text("正确率") })
-        }
     }
     Spacer(Modifier.height(10.dp))
 

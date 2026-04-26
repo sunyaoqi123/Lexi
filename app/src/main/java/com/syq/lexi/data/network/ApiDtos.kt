@@ -101,3 +101,11 @@ data class GameLeaderboardDto(
     val entries: List<FriendLeaderboardEntryDto>,
     val myRank: Int?
 )
+
+data class GuessWhatQuestionDto(
+    val answer: String,
+    val clues: List<String>,
+    val clueMeanings: List<String> = emptyList(),
+    val answerMeaning: String = ""
+)
+

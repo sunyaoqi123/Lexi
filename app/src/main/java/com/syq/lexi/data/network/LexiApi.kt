@@ -177,6 +177,12 @@ interface LexiApi {
         @Body req: GameResultUploadDto
     ): Map<String, String>
 
+    @GET("api/games/guess-what/questions")
+    suspend fun getGuessWhatQuestions(
+        @Header("Authorization") token: String,
+        @Query("limit") limit: Int = 60
+    ): List<GuessWhatQuestionDto>
+
     @GET("api/games/leaderboard")
     suspend fun getGameLeaderboard(
         @Header("Authorization") token: String,

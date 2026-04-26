@@ -129,6 +129,18 @@ interface StudyPlanDao {
 }
 
 @Dao
+interface GuessWhatQuestionDao {
+    @Insert(onConflict = androidx.room.OnConflictStrategy.REPLACE)
+    suspend fun upsertAll(items: List<GuessWhatQuestionEntity>)
+
+    @Query("SELECT * FROM guess_what_questions ORDER BY updatedAt DESC")
+    suspend fun getAllOnce(): List<GuessWhatQuestionEntity>
+
+    @Query("DELETE FROM guess_what_questions")
+    suspend fun clearAll()
+}
+
+@Dao
 interface StudyRecordDao {
     @Insert
     suspend fun insertRecord(record: StudyRecordEntity): Long

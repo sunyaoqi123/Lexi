@@ -8,8 +8,8 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(
-    entities = [WordbookEntity::class, WordEntity::class, StudyRecordEntity::class, StudyPlanEntity::class],
-    version = 5,
+    entities = [WordbookEntity::class, WordEntity::class, StudyRecordEntity::class, StudyPlanEntity::class, GuessWhatQuestionEntity::class],
+    version = 6,
     exportSchema = false
 )
 abstract class LexiDatabase : RoomDatabase() {
@@ -17,6 +17,7 @@ abstract class LexiDatabase : RoomDatabase() {
     abstract fun wordDao(): WordDao
     abstract fun studyRecordDao(): StudyRecordDao
     abstract fun studyPlanDao(): StudyPlanDao
+    abstract fun guessWhatQuestionDao(): GuessWhatQuestionDao
 
     companion object {
         @Volatile
@@ -66,6 +67,19 @@ abstract class LexiDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL(
+                    "CREATE TABLE IF NOT EXISTS guess_what_questions (" +
+                    "answer TEXT NOT NULL PRIMARY KEY, " +
+                    "answerMeaning TEXT NOT NULL, " +
+                    "cluesBlob TEXT NOT NULL, " +
+                    "clueMeaningsBlob TEXT NOT NULL, " +
+                    "updatedAt INTEGER NOT NULL)"
+                )
+            }
+        }
+
         fun getDatabase(context: Context): LexiDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -73,7 +87,7 @@ abstract class LexiDatabase : RoomDatabase() {
                     LexiDatabase::class.java,
                     "lexi_database"
                 )
-                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
                 .build()
                 INSTANCE = instance
                 instance

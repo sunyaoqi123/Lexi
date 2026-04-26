@@ -70,3 +70,14 @@ data class StudyRecordEntity(
     val hesitationMs: Long = 0,     // 题目出现到用户选择的时间差(ms)
     val durationMs: Long = 0        // 本次学习总用时(ms)
 )
+
+@Entity(tableName = "guess_what_questions")
+data class GuessWhatQuestionEntity(
+    @PrimaryKey
+    val answer: String,
+    val answerMeaning: String,
+    val cluesBlob: String,
+    val clueMeaningsBlob: String,
+    val updatedAt: Long = System.currentTimeMillis()
+)
+
